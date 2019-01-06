@@ -1,9 +1,17 @@
 ﻿@if (HttpContext.Current.IsDebuggingEnabled)
 {
-    <div>Debugging is enabled.</div>
+    <div>Configuration: Debug.</div>
+}
+else
+{
+    <div>Configuration: Release.</div>
 }
 <script type="text/javascript">
-    Nskd.Server.SessionId = '00000000-0000-0000-0000-000000000000';
-    Nskd.Client.EnvVars.selectedMenuNodeUrl = '/orders/f0/';
-    Nskd.Server.gotoTheNewPage(null, '#_layout_content');
+    $(document).ready(
+        setTimeout(function () {
+            let xhr = $.post('/supply/f0/', 'sessionId=00000000-0000-0000-0000-000000000000');
+            xhr.done(function (data) { $('#_layout_content').html(data); });
+            xhr.fail(function () { alert(xhr.responseText); });
+        }, 1000)
+    );
 </script>
