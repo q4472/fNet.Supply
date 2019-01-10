@@ -48,6 +48,7 @@ namespace FNet.Supply.Models
             {
                 public String uid;
                 public String id;
+                public String обработано;
                 public String менеджер;
             }
 
@@ -78,6 +79,7 @@ namespace FNet.Supply.Models
                         {
                             uid = ((Guid)dr["uid"]).ToString(),
                             id = ((Int32)dr["id"]).ToString(),
+                            обработано = ((Boolean)dr["обработано"]).ToString(),
                             менеджер = (dr["менеджер"] == DBNull.Value) ? "" : (String)dr["менеджер"]
                         };
                     }

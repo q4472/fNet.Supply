@@ -1,5 +1,101 @@
 ﻿@using FNet.Supply.Models
 @model F0Model
+<style type="text/css">
+    #supply_views_f0_table table.journal tr {
+        border-left: 1px solid black;
+    }
+
+    #supply_views_f0_table table.journal th {
+        border-top: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px;
+    }
+
+    #supply_views_f0_table table.journal td {
+        border-top: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px;
+    }
+
+    #supply_views_f0_table table.journal tr.table-head-row {
+        font-weight: bold;
+    }
+</style>
 <div id="supply_views_f0_table" style="width: 100%;">
-    @Model.Data.RowsCount
+    @if (Model != null && Model.Data != null)
+    {
+        F0Model.FilteredData.ItemArray prevRow = null;
+        F0Model.FilteredData.ItemArray currRow = null;
+        <table class="journal" style="margin: 6px;">
+            <tr class="table-head-row">
+                <th>uid</th>
+                <th>id</th>
+                <th>обработано</th>
+                <th>менеджер</th>
+            </tr>
+            @for (Int32 i = 0; i < Model.Data.RowsCount; i++)
+            {
+                prevRow = currRow;
+                currRow = Model.Data[i];
+                <tr class="table-body-row" data-uid="currRow.товар_uid">
+                    <td>@currRow.uid</td>
+                    <td>@currRow.id</td>
+                    @if (currRow.обработано == "True")
+                    {
+                        <td><input type="checkbox" name="обработано" data-modified="0" checked="checked" /></td>
+                    }
+                    else
+                    {
+                        <td><input type="checkbox" name="обработано" data-modified="0" /></td>
+                    }
+                    <td>@currRow.менеджер</td>
+                </tr>
+
+                <!--
+                        if (currRow.разрешено == "True")
+                        {
+                            <td><input type="checkbox" name="разрешено" checked="checked" data-modified="0" /></td>
+                        }
+                        else
+                        {
+                            <td><input type="checkbox" name="разрешено" data-modified="0" /></td>
+                        }
+                        <td>currRow.дата</td>
+                        <td>currRow.менеджер</td>
+                        <td>currRow.аукцион</td>
+                        <td>currRow.спецификация</td>
+                        <td>currRow.товар</td>
+                        <td style="text-align: right">currRow.количество</td>
+                    }
+                    else
+                    {
+                        if (currRow.обработано == "True")
+                        {
+                            <td style="border-top: none;"></td>
+                        }
+                        else
+                        {
+                            <td style="border-top: none;"></td>
+                        }
+                        if (currRow.разрешено == "True")
+                        {
+                            <td style="border-top: none;"></td>
+                        }
+                        else
+                        {
+                            <td style="border-top: none;"></td>
+                        }
+                        <td style="border-top: none;"></td>
+                        <td style="border-top: none;"></td>
+                        <td style="border-top: none;"></td>
+                        <td style="border-top: none;"></td>
+                        <td>currRow.товар</td>
+                        <td style="text-align: right">currRow.количество</td>
+                    }
+                -->
+            }
+            <tr style="border: 1px solid black"></tr>
+        </table>
+    }
 </div>
+
