@@ -10,24 +10,44 @@ namespace FNet.Supply.Controllers
     {
         public Object Index()
         {
-            Object v = "FNet.Supply.Controllers.F0Controller.Index()";
-            Guid sessionId = new Guid();
+            Object v = null;
+            RequestPackage rqp = null;
             StreamReader reader = new StreamReader(Request.InputStream, Request.ContentEncoding);
             String body = reader.ReadToEnd();
             if (!String.IsNullOrWhiteSpace(body))
             {
                 if (body[0] == '{')
                 {
-                    RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
-                    sessionId = rqp.SessionId;
+                    rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
                 }
                 else if (body[0] == 's' && body.Length == 46)
                 {
-                    Guid.TryParse(body.Substring(10, 36), out sessionId);
+                    if (Guid.TryParse(body.Substring(10, 36), out Guid sessionId))
+                    {
+                        rqp = new RequestPackage
+                        {
+                            SessionId = sessionId
+                        };
+                    }
                 }
             }
-            F0Model m = new F0Model(sessionId);
+            if (rqp == null)
+            {
+                rqp = new RequestPackage
+                {
+                    SessionId = new Guid()
+                };
+            }
+            F0Model m = new F0Model(rqp);
             v = PartialView("~/Views/F0/Index.cshtml", m);
+            return v;
+        }
+        public Object ApplyFilter()
+        {
+            Object v = null;
+            RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
+            F0Model m = new F0Model(rqp);
+            v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
     }

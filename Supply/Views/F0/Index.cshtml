@@ -33,16 +33,6 @@
             overflow: auto;
             padding: 2px;
         }
-            /* перенести в Filter.cshtml */
-            /*
-            #supply_views_f0_index div.section-filter table tr {
-                height: 40px;
-            }
-
-            #supply_views_f0_index div.section-filter table td {
-                padding: 2px;
-            }
-            */
         #supply_views_f0_index div.section-filtered_data {
             border-left: 2px solid green;
             position: absolute;
@@ -54,9 +44,9 @@
         }
 </style>
 <div id="supply_views_f0_index">
-    <div class="section-header"><span>Снабжение (закупки)</span></div>
+    <div class="section-header"><span>Снабжение (закупки товаров)</span></div>
     <div class="section-filter">
-        RenderPage("~/Views/F0/Filter.cshtml", Model)
+        @RenderPage("~/Views/F0/Filter.cshtml", Model)
         <br /><br />
         <div style="width: 100%; text-align: center; border-top: 2px solid green">
             <br /><br />
@@ -64,14 +54,32 @@
         </div>
     </div>
     <div class="section-filtered_data">
-        RenderPage("~/Views/F0/Table.cshtml", Model)
+        @RenderPage("~/Views/F0/Table.cshtml", Model)
     </div>
 </div>
 <script type="text/javascript">
     var SupplyF0Index = (function () {
+        let mainDiv = $('#supply_views_f0_index');
+        let sectionFilteredData = mainDiv.find('div.section-filtered_data');
         return {
             save: function() {
-                alert('save');
+                alert('SupplyF0Index.save()');
+            },
+            applyFilter: function (pars) {
+                //console.log(pars);
+                let rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Supply.F0.ApplyFilter',
+                    Parameters: pars
+                };
+                sectionFilteredData.html('');
+                Nskd.Http.post({
+                    url: '/supply/f0/applyfilter',
+                    rqp: rqp,
+                    done: function (data) {
+                        sectionFilteredData.html(data);
+                    }
+                });
             }
         };
     })();
