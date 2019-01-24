@@ -6,6 +6,7 @@
     }
 
     #supply_views_f0_table table.journal th {
+        font-weight: bold;
         border-top: 1px solid black;
         border-right: 1px solid black;
         padding: 2px;
@@ -52,91 +53,61 @@
         F0Model.FilteredData.ItemArray currRow = null;
         <table class="journal" style="margin: 6px;">
             <tr class="table-head-row">
-                <th style="display: none">uid</th>
-                <th style="display: none">id</th>
-                <th>Х</th>
-                <th style="display: none">товар</th>
-                <th>Товар</th>
-                <th>Менеджер</th>
-                <th>Спецификация</th>
-                <th style="display: none">поставщик</th>
-                <th>Поставщик</th>
-                <th style="display: none">состояние_заказа</th>
-                <th>Состояние заказа</th>
-                <th>Примечание</th>
+                <th>Х</th> <!-- 01 -->
+                <th>№ наш</th> <!-- 02 -->
+                <th>Поставщик</th> <!-- 03 -->
+                <th>№ их</th> <!-- 04 -->
+                <th>Состояние заказа</th> <!-- 05 -->
+                <th>Примечание</th> <!-- 06 -->
+                <th colspan="5"></th> <!-- 07-11 -->
+            </tr>
+            <tr>
+                <th></th> <!-- 01 -->
+                <th></th> <!-- 02 -->
+                <th colspan="4">Товар</th> <!-- 03-06 -->
+                <th>Цена (т)</th> <!-- 07 -->
+                <th>Кол-во (т)</th> <!-- 08 -->
+                <th>Срок (т)</th> <!-- 09 -->
+                <th>Менеджер</th> <!-- 10 -->
+                <th>Спецификация</th> <!-- 11 -->
             </tr>
             @for (Int32 i = 0; i < Model.Data.RowsCount; i++)
             {
                 prevRow = currRow;
                 currRow = Model.Data[i];
-                <tr class="table-body-row" data-uid="@currRow.uid">
-                    <td style="display: none">@currRow.uid</td>
-                    <td style="display: none">@currRow.id</td>
-                    @if (currRow.обработано == "True")
-                    {
-                        <td><input type="checkbox" name="обработано" data-modified="0" checked="checked" /></td>
-                    }
-                    else
-                    {
-                        <td><input type="checkbox" name="обработано" data-modified="0" /></td>
-                    }
-                    <td style="display: none">@currRow.товар</td>
-                    <td>@currRow.товар_описание</td>
-                    <td>@currRow.товар_менеджер</td>
-                    <td>@currRow.товар_спецификация_id</td>
-                    <td style="display: none">@currRow.поставщик</td>
-                    <td>
-                        @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "поставщик", NameField = "поставщик_наименование" })
-                    </td>
-                    <td style="display: none">@currRow.состояние_заказа</td>
-                    <td>
-                        @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "состояние_заказа", NameField = "состояние_заказа_наименование" })
-                    </td>
-                    <td>@currRow.примечание</td>
+                if (prevRow == null || prevRow.заказ != currRow.заказ)
+                {
+                    <tr style="background-color: #ffff88">
+                        @if (currRow.заказ_обработано == "True")
+                        {
+                            <td style="border-right: none;"><input type="checkbox" name="обработано" data-modified="0" checked="checked" /></td> <!-- 01 -->
+                        }
+                        else
+                        {
+                            <td style="border-right: none;"><input type="checkbox" name="обработано" data-modified="0" /></td> <!-- 01 -->
+                        }
+                        <td>@currRow.заказ_номер</td> <!-- 02 -->
+                        <td>
+                            @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_поставщик", NameField = "заказ_поставщик_наименование" })
+                        </td> <!-- 03 -->
+                        <td>@currRow.заказ_номер_их</td> <!-- 04 -->
+                        <td>
+                            @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_состояние", NameField = "заказ_состояние_наименование" })
+                        </td> <!-- 05 -->
+                        <td>@currRow.заказ_примечание</td> <!-- 06 -->
+                        <td colspan="5"></td> <!-- 07-11 -->
+                    </tr>
+                }
+                <tr class="table-body-row" data-uid="@currRow.заказ">
+                    <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
+                    <td style="border-top: none;"></td> <!-- 02 -->
+                    <td colspan="4">@currRow.товар_описание</td> <!-- 03-06 -->
+                    <td>xxx,xx</td> <!-- 07 -->
+                    <td>xxx</td> <!-- 08 -->
+                    <td>xx.xx</td> <!-- 09 -->
+                    <td>@currRow.товар_спецификация_менеджер</td> <!-- 10 -->
+                    <td>@currRow.товар_спецификация_номер</td> <!-- 11 -->
                 </tr>
-
-                <!--
-                        if (currRow.разрешено == "True")
-                        {
-                            <td><input type="checkbox" name="разрешено" checked="checked" data-modified="0" /></td>
-                        }
-                        else
-                        {
-                            <td><input type="checkbox" name="разрешено" data-modified="0" /></td>
-                        }
-                        <td>currRow.дата</td>
-                        <td>currRow.менеджер</td>
-                        <td>currRow.аукцион</td>
-                        <td>currRow.спецификация</td>
-                        <td>currRow.товар</td>
-                        <td style="text-align: right">currRow.количество</td>
-                    }
-                    else
-                    {
-                        if (currRow.обработано == "True")
-                        {
-                            <td style="border-top: none;"></td>
-                        }
-                        else
-                        {
-                            <td style="border-top: none;"></td>
-                        }
-                        if (currRow.разрешено == "True")
-                        {
-                            <td style="border-top: none;"></td>
-                        }
-                        else
-                        {
-                            <td style="border-top: none;"></td>
-                        }
-                        <td style="border-top: none;"></td>
-                        <td style="border-top: none;"></td>
-                        <td style="border-top: none;"></td>
-                        <td style="border-top: none;"></td>
-                        <td>currRow.товар</td>
-                        <td style="text-align: right">currRow.количество</td>
-                    }
-                -->
             }
             <tr style="border: 1px solid black"></tr>
         </table>
@@ -177,13 +148,13 @@
                 let e = $(td);
                 let table = e.closest('table');
                 selectedInput = table.find('input');
-                if (f == 'поставщик') {
+                if (f == 'заказ_поставщик') {
                     sp.css('left', e.position().left - 200);
                     sp.css('top', e.position().top + 20);
                     sp.mouseleave(function () { sp.off(); sp.hide(); });
                     sp.show();
                 }
-                if (f == 'состояние_заказа') {
+                if (f == 'заказ_состояние') {
                     s.css('left', e.position().left - 200);
                     s.css('top', e.position().top + 20);
                     s.mouseleave(function () { s.off(); s.hide(); });

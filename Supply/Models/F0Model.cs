@@ -46,18 +46,20 @@ namespace FNet.Supply.Models
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
             {
-                public String uid;
-                public String id;
-                public String обработано;
+                public String заказ;
+                public String заказ_номер;
+                public String заказ_обработано;
+                public String заказ_поставщик;
+                public String заказ_поставщик_наименование;
+                public String заказ_состояние;
+                public String заказ_состояние_наименование;
+                public String заказ_примечание;
+                public String заказ_номер_их;
                 public String товар;
                 public String товар_описание;
-                public String товар_менеджер;
-                public String товар_спецификация_id;
-                public String поставщик;
-                public String поставщик_наименование;
-                public String состояние_заказа;
-                public String состояние_заказа_наименование;
-                public String примечание;
+                public String товар_спецификация;
+                public String товар_спецификация_номер;
+                public String товар_спецификация_менеджер;
                 public String this[String fieldName]
                 {
                     get
@@ -105,18 +107,20 @@ namespace FNet.Supply.Models
                         DataRow dr = dt.Rows[index];
                         items = new ItemArray
                         {
-                            uid = ConvertToString(dr["uid"]),
-                            id = ConvertToString(dr["id"]),
-                            обработано = ConvertToString(dr["обработано"]),
+                            заказ = ConvertToString(dr["заказ"]),
+                            заказ_номер = ConvertToString(dr["заказ_номер"]),
+                            заказ_обработано = ConvertToString(dr["заказ_обработано"]),
+                            заказ_поставщик = ConvertToString(dr["заказ_поставщик"]),
+                            заказ_поставщик_наименование = ConvertToString(dr["заказ_поставщик_наименование"]),
+                            заказ_состояние = ConvertToString(dr["заказ_состояние"]),
+                            заказ_состояние_наименование = ConvertToString(dr["заказ_состояние_наименование"]),
+                            заказ_примечание = ConvertToString(dr["заказ_примечание"]),
+                            заказ_номер_их = ConvertToString(dr["заказ_номер_их"]),
                             товар = ConvertToString(dr["товар"]),
                             товар_описание = ConvertToString(dr["товар_описание"]),
-                            товар_менеджер = ConvertToString(dr["товар_менеджер"]),
-                            товар_спецификация_id = ConvertToString(dr["товар_спецификация_id"]),
-                            поставщик = ConvertToString(dr["поставщик"]),
-                            поставщик_наименование = ConvertToString(dr["поставщик_наименование"]),
-                            состояние_заказа = ConvertToString(dr["состояние_заказа"]),
-                            состояние_заказа_наименование = ConvertToString(dr["состояние_заказа_наименование"]),
-                            примечание = ConvertToString(dr["примечание"])
+                            товар_спецификация = ConvertToString(dr["товар_спецификация"]),
+                            товар_спецификация_номер = ConvertToString(dr["товар_спецификация_номер"]),
+                            товар_спецификация_менеджер = ConvertToString(dr["товар_спецификация_менеджер"])
                         };
                     }
                     return items;
