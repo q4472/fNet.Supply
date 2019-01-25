@@ -63,6 +63,12 @@
         let sectionFilteredData = mainDiv.find('div.section-filtered_data');
         return {
             save: function() {
+                let rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Supply.F0.Save',
+                    Parameters: []
+                };
+                console.log(rqp);
                 alert('SupplyF0Index.save()');
             },
             applyFilter: function (pars) {
