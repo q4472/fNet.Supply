@@ -17,18 +17,6 @@
         border-right: 1px solid black;
         padding: 2px;
     }
-
-    #supply_views_f0_table div.состояния_заказа table {
-        width: 100%;
-    }
-
-    #supply_views_f0_table div.состояния_заказа tr:hover {
-        background-color: #bbffbb;
-    }
-
-    #supply_views_f0_table div.состояния_заказа td {
-        padding: 2px;
-    }
 </style>
 <div id="supply_views_f0_table" style="width: 100%;">
     @if (Model != null && Model.Data != null)
@@ -95,18 +83,6 @@
             }
             <tr style="border: 1px solid black"></tr>
         </table>
-        <div class="состояния_заказа"
-             style="display: none; border: 1px solid black; width: 300px; position: absolute; left: 0; top: 0; background-color: #ffffff;">
-            <table><tr><td style="text-align: right;" onclick="$(this).closest('div').off().hide();">X</td></tr></table>
-            <table>
-                @foreach (System.Data.DataRow row in Model.СостоянияЗаказа.Rows)
-                {
-                    <tr data-id="@row["uid"]" onclick="SupplyViewsF0Index.ddSelect(this);">
-                        <td>@row["наименование"]</td>
-                    </tr>
-                }
-            </table>
-        </div>
     }
 </div>
 <script type="text/javascript">

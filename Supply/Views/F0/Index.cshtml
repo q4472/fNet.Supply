@@ -63,7 +63,7 @@
         <br /><br />
         <div style="width: 100%; text-align: center; border-top: 2px solid green">
             <br /><br />
-            <input type="button" value="Сохранить"  style="font-size: 11pt;" onclick="SupplyViewsF0Index.save();" />
+            <input type="button" value="Сохранить" style="font-size: 11pt;" onclick="SupplyViewsF0Index.save();" />
             <br /><br />
             <input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Index.setSupplier();" />
         </div>
@@ -77,10 +77,13 @@
         </div>
     </div>
     @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
+    @RenderPage("~/Views/F0/СписокСостоянийЗаказа.cshtml", Model)
 </div>
 <script type="text/javascript">
     var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
+        let sp = $('#supply_views_f0_список_поставщиков');
+        let ss = $('#supply_views_f0_список_состояний_заказа');
         let filteredData = mainDiv.find('div.section-filtered_data');
         let detail = mainDiv.find('div.section-detail');
         let order = detail.find('div.order');
@@ -91,18 +94,16 @@
                 let table = e.closest('table');
                 selectedInput = table.find('input');
                 if (f == 'заказ_поставщик') {
-                    let sp = $('#supply_views_f0_список_поставщиков');
                     sp.css('left', e.position().left);
                     sp.css('top', e.position().top + 48);
                     sp.mouseleave(function () { sp.off(); sp.hide(); });
                     sp.show();
                 }
                 if (f == 'заказ_состояние') {
-                    let s = mainDiv.find('div.состояния_заказа');
-                    s.css('left', e.position().left - 200);
-                    s.css('top', e.position().top + 20);
-                    s.mouseleave(function () { s.off(); s.hide(); });
-                    s.show();
+                    ss.css('left', e.position().left);
+                    ss.css('top', e.position().top + 48);
+                    ss.mouseleave(function () { ss.off(); ss.hide(); });
+                    ss.show();
                 }
             },
             ddSelect: function (tr) {
@@ -115,10 +116,8 @@
                     selectedInput.val(name);
                     selectedInput = null;
                 }
-                let sp = $('#supply_views_f0_список_поставщиков');
                 sp.off().hide();
-                let s = mainDiv.find('div.состояния_заказа');
-                s.off().hide();
+                ss.off().hide();
             },
             save: function () {
                 let rqp = {
