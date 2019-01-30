@@ -1,0 +1,33 @@
+﻿@using FNet.Supply.Models
+@model F0Model
+<style type="text/css">
+    #supply_views_f0_список_поставщиков table {
+        width: 100%;
+    }
+
+    #supply_views_f0_список_поставщиков tr:hover {
+        background-color: #bbffbb;
+    }
+
+    #supply_views_f0_список_поставщиков td {
+        padding: 2px;
+    }
+</style>
+<div id="supply_views_f0_список_поставщиков"
+     style="display: none; border: 1px solid black; width: 300px; position: absolute; left: 0; top: 0; background-color: #ffffff;">
+    <table><tr><td style="text-align: right;" onclick="$(this).closest('div').off().hide();">X</td></tr></table>
+    <table>
+        @foreach (System.Data.DataRow row in Model.Поставщики.Rows)
+        {
+            <tr data-id="@row["uid"]" onclick="SupplyViewsF0Index.ddSelect(this);">
+                <td>@row["наименование"]</td>
+            </tr>
+        }
+    </table>
+</div>
+<script type="text/javascript">
+    var SupplyViewsF0СписокПоставщиков = (function () {
+        //alert('q');
+    })();
+</script>
+

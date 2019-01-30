@@ -249,6 +249,7 @@
     <Content Include="Views\F0\Filter.cshtml" />
     <Content Include="Views\F0\Table.cshtml" />
     <Content Include="Views\F0\TableFieldSelect.cshtml" />
+    <Content Include="Views\F0\СписокПоставщиков.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,18 +18,6 @@
         padding: 2px;
     }
 
-    #supply_views_f0_table div.список_поставщиков table {
-        width: 100%;
-    }
-
-    #supply_views_f0_table div.список_поставщиков tr:hover {
-        background-color: #bbffbb;
-    }
-
-    #supply_views_f0_table div.список_поставщиков td {
-        padding: 2px;
-    }
-
     #supply_views_f0_table div.состояния_заказа table {
         width: 100%;
     }
@@ -59,7 +47,7 @@
             </tr>
             <tr>
                 <th></th> <!-- 01 -->
-                <th></th> <!-- 02 -->
+                <th>V</th> <!-- 02 -->
                 <th colspan="4">Товар</th> <!-- 03-06 -->
                 <th>Цена (т)</th> <!-- 07 -->
                 <th>Кол-во (т)</th> <!-- 08 -->
@@ -73,7 +61,7 @@
                 currRow = Model.Data[i];
                 if (prevRow == null || prevRow.заказ != currRow.заказ)
                 {
-                    <tr style="background-color: #ffff88">
+                    <tr style="background-color: #ffff88" data-goods_uid="@currRow.товар">
                         @if (currRow.заказ_обработано == "True")
                         {
                             <td style="border-right: none;"><input type="checkbox" name="обработано" data-modified="0" checked="checked" /></td> <!-- 01 -->
@@ -82,11 +70,11 @@
                         {
                             <td style="border-right: none;"><input type="checkbox" name="обработано" data-modified="0" /></td> <!-- 01 -->
                         }
-                        <td>@currRow.заказ_номер</td> <!-- 02 -->
+                        <td style="text-align: right;">@currRow.заказ_номер</td> <!-- 02 -->
                         <td>
                             @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_поставщик", NameField = "заказ_поставщик_наименование" })
                         </td> <!-- 03 -->
-                        <td>@currRow.заказ_номер_их</td> <!-- 04 -->
+                        <td onclick="SupplyViewsF0Index.showOrderDetail(this);">@currRow.заказ_номер_их</td> <!-- 04 -->
                         <td>
                             @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_состояние", NameField = "заказ_состояние_наименование" })
                         </td> <!-- 05 -->
@@ -94,9 +82,9 @@
                         <td colspan="5"></td> <!-- 07-11 -->
                     </tr>
                 }
-                <tr class="table-body-row" data-uid="@currRow.заказ">
+                <tr data-goods_uid="@currRow.товар">
                     <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
-                    <td style="border-top: none;"></td> <!-- 02 -->
+                    <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
                     <td colspan="4">@currRow.товар_описание</td> <!-- 03-06 -->
                     <td>xxx,xx</td> <!-- 07 -->
                     <td>xxx</td> <!-- 08 -->
@@ -107,25 +95,13 @@
             }
             <tr style="border: 1px solid black"></tr>
         </table>
-        <div class="список_поставщиков"
-             style="display: none; border: 1px solid black; width: 300px; position: absolute; left: 0; top: 0; background-color: #ffffff;">
-            <table><tr><td style="text-align: right;" onclick="$(this).closest('div').off().hide();">X</td></tr></table>
-            <table>
-                @foreach (System.Data.DataRow row in Model.Поставщики.Rows)
-                {
-                    <tr data-id="@row["uid"]" onclick="SupplyViewsF0Table.ddSelect(this);">
-                        <td>@row["наименование"]</td>
-                    </tr>
-                }
-            </table>
-        </div>
         <div class="состояния_заказа"
              style="display: none; border: 1px solid black; width: 300px; position: absolute; left: 0; top: 0; background-color: #ffffff;">
             <table><tr><td style="text-align: right;" onclick="$(this).closest('div').off().hide();">X</td></tr></table>
             <table>
                 @foreach (System.Data.DataRow row in Model.СостоянияЗаказа.Rows)
                 {
-                    <tr data-id="@row["uid"]" onclick="SupplyViewsF0Table.ddSelect(this);">
+                    <tr data-id="@row["uid"]" onclick="SupplyViewsF0Index.ddSelect(this);">
                         <td>@row["наименование"]</td>
                     </tr>
                 }
@@ -136,40 +112,10 @@
 <script type="text/javascript">
     var SupplyViewsF0Table = (function () {
         let mainDiv = $('#supply_views_f0_table');
-        let selectedInput = null;
-        let sp = mainDiv.find('div.список_поставщиков');
-        let s = mainDiv.find('div.состояния_заказа');
+        mainDiv.find('input[type="checkbox"]').click(function () {
+            $(this).attr('data-modified', '1');
+        });
         return {
-            selectButtonClick: function (td, f) { // в файле TableFieldSelect.cshtml
-                let e = $(td);
-                let table = e.closest('table');
-                selectedInput = table.find('input');
-                if (f == 'заказ_поставщик') {
-                    sp.css('left', e.position().left - 200);
-                    sp.css('top', e.position().top + 20);
-                    sp.mouseleave(function () { sp.off(); sp.hide(); });
-                    sp.show();
-                }
-                if (f == 'заказ_состояние') {
-                    s.css('left', e.position().left - 200);
-                    s.css('top', e.position().top + 20);
-                    s.mouseleave(function () { s.off(); s.hide(); });
-                    s.show();
-                }
-            },
-            ddSelect: function (tr) {
-                let row = $(tr);
-                if (selectedInput) {
-                    let id = row.attr('data-id');
-                    let name = row.find('td').text();
-                    selectedInput.attr('data-modified', '1');
-                    selectedInput.attr('data-id', id);
-                    selectedInput.val(name);
-                    selectedInput = null;
-                }
-                sp.off().hide();
-                s.off().hide();
-            }
         };
     })();
 </script>

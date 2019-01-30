@@ -33,14 +33,27 @@
             overflow: auto;
             padding: 2px;
         }
+
         #supply_views_f0_index div.section-filtered_data {
             border-left: 2px solid green;
+            border-bottom: 2px solid green;
             position: absolute;
             left: 240px;
             top: 26px;
             right: 0;
-            bottom: 0;
+            bottom: 320px;
             overflow: auto;
+        }
+
+        #supply_views_f0_index div.section-detail {
+            border-left: 2px solid green;
+            position: absolute;
+            left: 240px;
+            right: 0;
+            bottom: 0;
+            height: 320px;
+            background-color: #aaffaa;
+            overflow: hidden;
         }
 </style>
 <div id="supply_views_f0_index">
@@ -50,27 +63,90 @@
         <br /><br />
         <div style="width: 100%; text-align: center; border-top: 2px solid green">
             <br /><br />
-            <input type="button" value="Сохранить" onclick="SupplyF0Index.save();" style="font-size: 11pt;" />
+            <input type="button" value="Сохранить"  style="font-size: 11pt;" onclick="SupplyViewsF0Index.save();" />
+            <br /><br />
+            <input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Index.setSupplier();" />
         </div>
     </div>
     <div class="section-filtered_data">
         @RenderPage("~/Views/F0/Table.cshtml", Model)
     </div>
+    <div class="section-detail">
+        <div class="order" style="display: none;">
+            qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
+        </div>
+    </div>
+    @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
 </div>
 <script type="text/javascript">
-    var SupplyF0Index = (function () {
+    var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
-        let sectionFilteredData = mainDiv.find('div.section-filtered_data');
+        let filteredData = mainDiv.find('div.section-filtered_data');
+        let detail = mainDiv.find('div.section-detail');
+        let order = detail.find('div.order');
+        let selectedInput = null;
         return {
-            save: function() {
+            selectButtonClick: function (td, f) { // в файле TableFieldSelect.cshtml
+                let e = $(td);
+                let table = e.closest('table');
+                selectedInput = table.find('input');
+                if (f == 'заказ_поставщик') {
+                    let sp = $('#supply_views_f0_список_поставщиков');
+                    sp.css('left', e.position().left);
+                    sp.css('top', e.position().top + 48);
+                    sp.mouseleave(function () { sp.off(); sp.hide(); });
+                    sp.show();
+                }
+                if (f == 'заказ_состояние') {
+                    let s = mainDiv.find('div.состояния_заказа');
+                    s.css('left', e.position().left - 200);
+                    s.css('top', e.position().top + 20);
+                    s.mouseleave(function () { s.off(); s.hide(); });
+                    s.show();
+                }
+            },
+            ddSelect: function (tr) {
+                let row = $(tr);
+                if (selectedInput) {
+                    let id = row.attr('data-id');
+                    let name = row.find('td').text();
+                    selectedInput.attr('data-modified', '1');
+                    selectedInput.attr('data-id', id);
+                    selectedInput.val(name);
+                    selectedInput = null;
+                }
+                let sp = $('#supply_views_f0_список_поставщиков');
+                sp.off().hide();
+                let s = mainDiv.find('div.состояния_заказа');
+                s.off().hide();
+            },
+            save: function () {
                 let rqp = {
                     SessionId: Nskd.Server.SessionId,
                     Command: 'Supply.F0.Save',
                     Parameters: []
                 };
                 console.log(rqp);
-                alert('SupplyF0Index.save()');
+                alert('SupplyViewsF0Index.save()');
             },
+            setSupplier: function () {
+                let rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Supply.F0.SetSupplier',
+                    Parameters: []
+                };
+                let selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
+                if (!selectedRows.length) {
+                    alert('Нет выбранных строк.');
+                    return;
+                }
+                selectedRows.each(function () {
+                    rqp.Parameters.push($(this).attr('data-goods_uid'));
+                });
+                console.log(rqp);
+                //alert('SupplyViewsF0Index.setSupplier()');
+            },
+            // applyFilter is call from Filter.cshtml
             applyFilter: function (pars) {
                 //console.log(pars);
                 let rqp = {
@@ -78,14 +154,22 @@
                     Command: 'Supply.F0.ApplyFilter',
                     Parameters: pars
                 };
-                sectionFilteredData.html('');
+                filteredData.html('');
                 Nskd.Http.post({
                     url: '/supply/f0/applyfilter',
                     rqp: rqp,
                     done: function (data) {
-                        sectionFilteredData.html(data);
+                        filteredData.html(data);
                     }
                 });
+            },
+            // showOrderDetail is call from Table.cshtml
+            showOrderDetail: function (td) {
+                let tr = $(td).parent();
+                order.text(tr.attr('data-goods_uid'));
+                order.show();
+                //alert('q');
+                //order.html('').hide();
             }
         };
     })();
