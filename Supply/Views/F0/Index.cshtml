@@ -87,12 +87,13 @@
 <script type="text/javascript">
     var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
-        let ddsp = $('#supply_views_f0_список_поставщиков');
-        let ddss = $('#supply_views_f0_список_состояний_заказа');
+        let ddsp = mainDiv.find('.supply_views_f0_список_поставщиков');
+        let ddss = mainDiv.find('.supply_views_f0_список_состояний_заказа');
         let filteredData = mainDiv.find('div.section-filtered_data');
         let detail = mainDiv.find('div.section-detail');
         let order = detail.find('div.order');
         let selectedInput = null;
+        let selectedRows = null;
         let rqp = {
             SessionId: Nskd.Server.SessionId,
             Command: 'Supply.F0.Save',
@@ -133,18 +134,24 @@
                 console.log(rqp);
                 alert('SupplyViewsF0Index.save()');
             },
-            setSupplier: function () {
-                let selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
+            setSupplierStart: function () {
+                selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
                 if (!selectedRows.length) {
+                    selectedRows = null;
                     alert('Нет выбранных строк.');
                     return;
                 }
                 SupplyViewsF0Command.showModal();
+                /*
                 selectedRows.each(function () {
                     rqp.Parameters.push({ Name: 'SetSupplier', Value: $(this).attr('data-goods_uid') + 'xxx' });
                 });
                 console.log(rqp);
+                */
                 //alert('SupplyViewsF0Index.setSupplier()');
+            },
+            setSupplierFinish: function (uid, name) {
+                alert('SupplyViewsF0Index.setSupplierFinish()' + uid + name);
             },
             // applyFilter is call from Filter.cshtml
             applyFilter: function (pars) {

@@ -1,7 +1,7 @@
 ﻿@using FNet.Supply.Models
 @model F0Model
 <style type="text/css">
-    #supply_views_f0_список_состояний_заказа {
+    .supply_views_f0_список_состояний_заказа {
         display: none;
         border: 1px solid black;
         width: 300px;
@@ -11,19 +11,19 @@
         background-color: #ffffff;
     }
 
-    #supply_views_f0_список_состояний_заказа table {
+    .supply_views_f0_список_состояний_заказа table {
         width: 100%;
     }
 
-    #supply_views_f0_список_состояний_заказа tr:hover {
+    .supply_views_f0_список_состояний_заказа tr:hover {
         background-color: #bbffbb;
     }
 
-    #supply_views_f0_список_состояний_заказа td {
+    .supply_views_f0_список_состояний_заказа td {
         padding: 2px;
     }
 </style>
-<div id="supply_views_f0_список_состояний_заказа">
+<div class="supply_views_f0_список_состояний_заказа">
     <table><tr><td style="text-align: right;" onclick="$(this).closest('div').off().hide();">X</td></tr></table>
     <table>
         @foreach (System.Data.DataRow row in Model.СостоянияЗаказа.Rows)

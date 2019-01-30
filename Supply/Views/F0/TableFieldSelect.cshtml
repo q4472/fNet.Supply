@@ -6,16 +6,16 @@
 <table style="border: none;">
     <tr style="border: none;">
         <td style="border: none;">
-            <input type="text" name="@PageData["IdField"]"
-                   data-modified="0"
-                   data-id="@itemArray[PageData["IdField"]]"
-                   value="@itemArray[PageData["NameField"]]"
-                   style="border: none; background-color: transparent;"
-                   onkeyup="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')" 
-                   onchange="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')" />
-        </td>
-        <td style="border: none;" onclick="SupplyViewsF0Index.selectButtonClick(this, '@PageData["IdField"]');">
-            <span>︙</span>
+            <div>
+                <input type="text" name="@PageData["IdField"]"
+                       data-modified="0"
+                       data-id="@itemArray[PageData["IdField"]]"
+                       value="@itemArray[PageData["NameField"]]"
+                       style="border: none; background-color: transparent;"
+                       onkeyup="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')"
+                       onchange="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')" />
+                <span onclick="SupplyViewsF0Index.selectButtonClick(this, '@PageData["IdField"]');">︙</span>
+            </div>
         </td>
     </tr>
 </table>
