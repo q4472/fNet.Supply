@@ -25,13 +25,22 @@
         #supply_views_f0_index div.section-filter {
             position: absolute;
             left: 0;
+            width: 236px;
             top: 26px;
-            width: 240px;
-            right: 0;
-            bottom: 0;
-            float: left;
-            overflow: auto;
+            height: 300px;
             padding: 2px;
+            overflow: auto;
+            border-bottom: 2px solid green;
+        }
+
+        #supply_views_f0_index div.section-command {
+            position: absolute;
+            left: 0;
+            width: 236px;
+            top: 332px;
+            bottom: 0;
+            padding: 2px;
+            overflow: auto;
         }
 
         #supply_views_f0_index div.section-filtered_data {
@@ -60,13 +69,9 @@
     <div class="section-header"><span>Снабжение (закупки товаров)</span></div>
     <div class="section-filter">
         @RenderPage("~/Views/F0/Filter.cshtml", Model)
-        <br /><br />
-        <div style="width: 100%; text-align: center; border-top: 2px solid green">
-            <br /><br />
-            <input type="button" value="Сохранить" style="font-size: 11pt;" onclick="SupplyViewsF0Index.save();" />
-            <br /><br />
-            <input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Index.setSupplier();" />
-        </div>
+    </div>
+    <div class="section-command">
+        @RenderPage("~/Views/F0/Command.cshtml")
     </div>
     <div class="section-filtered_data">
         @RenderPage("~/Views/F0/Table.cshtml", Model)
@@ -82,31 +87,36 @@
 <script type="text/javascript">
     var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
-        let sp = $('#supply_views_f0_список_поставщиков');
-        let ss = $('#supply_views_f0_список_состояний_заказа');
+        let ddsp = $('#supply_views_f0_список_поставщиков');
+        let ddss = $('#supply_views_f0_список_состояний_заказа');
         let filteredData = mainDiv.find('div.section-filtered_data');
         let detail = mainDiv.find('div.section-detail');
         let order = detail.find('div.order');
         let selectedInput = null;
+        let rqp = {
+            SessionId: Nskd.Server.SessionId,
+            Command: 'Supply.F0.Save',
+            Parameters: []
+        };
         return {
             selectButtonClick: function (td, f) { // в файле TableFieldSelect.cshtml
                 let e = $(td);
                 let table = e.closest('table');
                 selectedInput = table.find('input');
                 if (f == 'заказ_поставщик') {
-                    sp.css('left', e.position().left);
-                    sp.css('top', e.position().top + 48);
-                    sp.mouseleave(function () { sp.off(); sp.hide(); });
-                    sp.show();
+                    ddsp.css('left', e.position().left);
+                    ddsp.css('top', e.position().top + 48);
+                    ddsp.mouseleave(function () { ddsp.off(); ddsp.hide(); });
+                    ddsp.show();
                 }
                 if (f == 'заказ_состояние') {
-                    ss.css('left', e.position().left);
-                    ss.css('top', e.position().top + 48);
-                    ss.mouseleave(function () { ss.off(); ss.hide(); });
-                    ss.show();
+                    ddss.css('left', e.position().left);
+                    ddss.css('top', e.position().top + 48);
+                    ddss.mouseleave(function () { ddss.off(); ddss.hide(); });
+                    ddss.show();
                 }
             },
-            ddSelect: function (tr) {
+            ddSelect: function (tr) { // в файлах списков
                 let row = $(tr);
                 if (selectedInput) {
                     let id = row.attr('data-id');
@@ -116,31 +126,22 @@
                     selectedInput.val(name);
                     selectedInput = null;
                 }
-                sp.off().hide();
-                ss.off().hide();
+                ddsp.off().hide();
+                ddss.off().hide();
             },
             save: function () {
-                let rqp = {
-                    SessionId: Nskd.Server.SessionId,
-                    Command: 'Supply.F0.Save',
-                    Parameters: []
-                };
                 console.log(rqp);
                 alert('SupplyViewsF0Index.save()');
             },
             setSupplier: function () {
-                let rqp = {
-                    SessionId: Nskd.Server.SessionId,
-                    Command: 'Supply.F0.SetSupplier',
-                    Parameters: []
-                };
                 let selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
                 if (!selectedRows.length) {
                     alert('Нет выбранных строк.');
                     return;
                 }
+                SupplyViewsF0Command.showModal();
                 selectedRows.each(function () {
-                    rqp.Parameters.push($(this).attr('data-goods_uid'));
+                    rqp.Parameters.push({ Name: 'SetSupplier', Value: $(this).attr('data-goods_uid') + 'xxx' });
                 });
                 console.log(rqp);
                 //alert('SupplyViewsF0Index.setSupplier()');

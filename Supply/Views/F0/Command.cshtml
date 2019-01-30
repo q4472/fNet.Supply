@@ -1,0 +1,263 @@
+﻿<style type="text/css">
+    #supply_views_f0_command table tr td {
+        padding: 2px;
+    }
+    /* The Modal (background) */
+    #supply_views_f0_command div.modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+        /* Modal Content/Box */
+        #supply_views_f0_command div.modal div.content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 10px;
+            border: 1px solid #888;
+            width: 480px;
+        }
+
+            /* The Close Button */
+            #supply_views_f0_command div.modal div.content div.header span {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+                #supply_views_f0_command div.modal div.content div.header span:hover,
+                #supply_views_f0_command div.modal div.content div.header span:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+
+            /* Modal Header */
+            #supply_views_f0_command div.modal div.content div.header h2 {
+                font-weight: bold;
+                text-align: center;
+            }
+
+            #supply_views_f0_command div.modal div.content table tr td {
+                padding: 2px;
+            }
+</style>
+<div id="supply_views_f0_command">
+    <table>
+        <tr><td style="text-align: center; font-weight: bold; font-size: 11pt;">Команды</td></tr>
+        <tr><td><input type="button" value="Сохранить" style="font-size: 11pt;" onclick="SupplyViewsF0Index.save();" /></td></tr>
+        <tr><td><input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Index.setSupplier();" /></td></tr>
+    </table>
+    <!-- Модальное окно -->
+    <div class="modal">
+        <div class="content">
+            <div class="header">
+                <span onclick="$(this).parent().parent().parent().hide();">&times;</span>
+                <h2>&nbsp;</h2>
+            </div>
+            <table style="border: 4px solid black;">
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <input type="text" name="заказ_поставщик"
+                               data-modified="0"
+                               data-id=""
+                               value=""
+                               style="border: none; background-color: transparent;"
+                               onkeyup="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')"
+                               onchange="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')" />
+                    </td>
+                    <td style="border: none;" onclick="SupplyViewsF0Index.selectButtonClick(this, 'заказ_поставщик');">
+                        <span>︙</span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div style="text-align: center">
+                <input type="button" value="Назначить" onclick="SupplyViewsF0Command.setSupplierButtonClick();" />
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var SupplyViewsF0Command = (function () {
+
+        var mainDiv = $('#supply_views_f0_command');
+
+        var saveButtonClickHandlers = [];
+        var setSupplierHandlers = [];
+
+        function onSaveButtonClick() {
+            for (var hi = 0; hi < saveButtonClickHandlers.length; hi++) {
+                saveButtonClickHandlers[hi]();
+            }
+        }
+        function onSetSupplier(uid, name) {
+            for (var hi = 0; hi < setSupplierHandlers.length; hi++) {
+                setSupplierHandlers[hi](uid, name);
+            }
+        }
+
+        function getAuctionNumber(s) {
+            // ищет первые 19 или 11 цифр подряд
+            // возвращает строку с найденными цифрами или null
+            var n = null;
+            if (typeof s === 'string') {
+                var r44 = /\d{19}/.exec(s);
+                var r223 = /\d{11}/.exec(s);
+                if (r44) { n = r44[0]; }
+                else if (r223) { n = r223[0] };
+            }
+            return n;
+        }
+        function loadAuctionInf(n) {
+            var rqp = {
+                SessionId: Nskd.Server.SessionId,
+                Command: 'Prep.F0.LoadAuctionInf',
+                Parameters: [{ Name: 'auctionNumber', Value: n }]
+            };
+            Nskd.Http.post({
+                url: 'Prep/F0/LoadAuctionInf',
+                rqp: rqp,
+                done: function (data) {
+                    //alert(data);
+                    // после завершения импорта переходим на первую страницу
+                    $.post('/Prep/F0', 'sessionId=' + Nskd.Server.SessionId, function (data) {
+                        $('#_layout_content').html(data);
+                    });
+                }
+            });
+        }
+
+        // Модальное окно
+        var modalDiv = mainDiv.find('div.modal');
+
+        return {
+            addSaveButtonClickHandler: function (handler) {
+                if (typeof handler === 'function') {
+                    saveButtonClickHandlers.push(handler);
+                }
+            },
+            addSetSupplierHandler: function (handler) {
+                if (typeof handler === 'function') {
+                    setSupplierHandlers.push(handler);
+                }
+            },
+            setControlButtonsDisabled: function (save, add, del) {
+                if (save != null) $('#p_prep_f0_save').prop('disabled', save);
+                if (add != null) $('#p_prep_f0_add').prop('disabled', add);
+                if (del != null) $('#p_prep_f0_del').prop('disabled', del);
+            },
+            saveButtonClick: function () {
+                SupplyViewsF0Command.setControlButtonsDisabled(true, false, false);
+                onSaveButtonClick();
+            },
+            setSupplierButtonClick: function () {
+                alert('setSupplierButtonClick');
+                onSetSupplier('test uid', 'test name');
+            },
+            loadByAuctionNumber: function (element) {
+                $(element).prop('disabled', true);
+                var v = modalDiv.find('input.auction-number').val();
+                var n = getAuctionNumber(v);
+                if (n == null) {
+                    alert('Входная строка должна содержать 19 или 11 цифр подряд в любом месте.');
+                } else {
+                    modalDiv.hide();
+                    var rqp = {
+                        SessionId: Nskd.Server.SessionId,
+                        Command: 'Prep.F0.ExistsAuctionInf',
+                        Parameters: [{ Name: 'auctionNumber', Value: n }]
+                    };
+                    Nskd.Http.post({
+                        url: 'Prep/F0/LoadAuctionInf',
+                        rqp: rqp,
+                        done: function (data) {
+                            if (data == 'True') {
+                                if (confirm('Аукцион с таким номером уже загружен.\nОбновить данные?')) {
+                                    loadAuctionInf(n);
+                                }
+                            } else {
+                                loadAuctionInf(n);
+                            }
+                        }
+                    });
+                }
+            },
+            loadSpecButtonClick: function () {
+                var specId = mainDiv.find('input[value="Загрузить таблицу спецификации"]').attr('data-spec-id');
+                var rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Prep.F0.GoToPrepF2IndexPage',
+                    Parameters: [{ Name: 'specId', Value: specId }]
+                };
+                Nskd.Http.post({
+                    url: 'Prep/F2',
+                    rqp: rqp,
+                    done: function (data) {
+                        $('#_layout_content').empty().html(data);
+                    }
+                });
+            },
+            enableLoadSpecButton: function (specId) {
+                mainDiv.find('input[value="Загрузить таблицу спецификации"]')
+                    .attr('data-spec-id', specId)
+                    .prop('disabled', false);
+            },
+            disableLoadSpecButton: function () {
+                mainDiv.find('input[value="Загрузить таблицу спецификации"]')
+                    .attr('data-spec-id', '')
+                    .prop('disabled', true);
+            },
+            enableGoToSpecButton: function (specId) {
+                mainDiv.find('input[value="Перейти к таблице спецификации"]')
+                    .attr('data-spec-id', specId)
+                    .prop('disabled', false);
+            },
+            disableGoToSpecButton: function () {
+                mainDiv.find('input[value="Перейти к таблице спецификации"]')
+                    .attr('data-spec-id', '')
+                    .prop('disabled', true);
+            },
+            enablePassButton: function (specId) {
+                mainDiv.find('input[value="Передать в тендерный"]')
+                    .attr('data-spec-id', specId)
+                    .prop('disabled', false);
+            },
+            disablePassButton: function () {
+                mainDiv.find('input[value="Передать в тендерный"]')
+                    .attr('data-spec-id', '')
+                    .prop('disabled', true);
+            },
+            enableCalcSpecButton: function (specId) {
+                mainDiv.find('input[value="Расчитать цены продажи"]')
+                    .attr('data-spec-id', specId)
+                    .prop('disabled', false);
+            },
+            disableCalcSpecButton: function () {
+                mainDiv.find('input[value="Расчитать цены продажи"]')
+                    .attr('data-spec-id', '')
+                    .prop('disabled', true);
+            },
+            setControlButtonsDisabled: function (save, add, del) {
+                if (save != null) mainDiv.find('input[value="Сохранить"]').prop('disabled', save);
+                if (add != null) mainDiv.find('input[value="Добавить"]').prop('disabled', add);
+                if (del != null) mainDiv.find('input[value="Удалить"]').prop('disabled', del);
+            },
+            showModal: function () {
+                modalDiv.find('input.auction-number').val('');
+                modalDiv.show();
+            },
+            importFromPart1: function () {
+                alert('SupplyViewsF0Command.importFromPart1() - это из спецификации');
+            }
+        };
+    })();
+</script>
