@@ -50,5 +50,19 @@ namespace FNet.Supply.Controllers
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
+        public Object GetOrderDetail()
+        {
+            Object v = "FNet.Supply.Controllers.F0Controller.GetOrderDetail()";
+            RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
+            v = PartialView("~/Views/F0/АтрибутыЗаказа.cshtml", F0Model.GetOrderDetail(rqp));
+            return v;
+        }
+        public Object GetPriceDetail()
+        {
+            Object v = "FNet.Supply.Controllers.F0Controller.GetPriceDetail()";
+            RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
+            v = PartialView("~/Views/F0/АтрибутыЦены.cshtml", F0Model.GetPriceDetail(rqp));
+            return v;
+        }
     }
 }

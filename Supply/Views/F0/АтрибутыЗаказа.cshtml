@@ -1,0 +1,23 @@
+﻿@using System.Data
+@model DataTable
+<div id="supply_views_f0_атрибуты_заказа">
+    @if (Model == null || Model.Rows.Count == 0)
+    {
+        <span>Нет данных.</span>
+    }
+    else
+    {
+        DataRow r = Model.Rows[0];
+        <table>
+            @for (int ci = 0; ci < Model.Columns.Count; ci++)
+            {
+                DataColumn c = Model.Columns[ci];
+                <tr>
+                    <td>@c.ColumnName</td>
+                    <td><input type="text" value="@r[c]" /></td>
+                </tr>
+            }
+        </table>
+    }
+</div>
+

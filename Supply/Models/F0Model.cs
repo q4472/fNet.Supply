@@ -192,5 +192,46 @@ namespace FNet.Supply.Models
             }
             return dt;
         }
+
+        public static DataTable GetOrderDetail(RequestPackage rqp)
+        {
+            DataTable dt = null;
+            if (rqp != null && rqp.SessionId != null)
+            {
+                Guid.TryParse(rqp["order_uid"] as String, out Guid orderUid);
+                rqp.Command = "Supply.dbo.заказ_у_поставщика__получить_атрибуты_заказа";
+                rqp.Parameters = new RequestParameter[]
+                {
+                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
+                        new RequestParameter() { Name = "order_uid", Value = orderUid }
+                };
+                ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
+                if (rsp != null)
+                {
+                    dt = rsp.GetFirstTable();
+                }
+            }
+            return dt;
+        }
+        public static DataTable GetPriceDetail(RequestPackage rqp)
+        {
+            DataTable dt = null;
+            if (rqp != null && rqp.SessionId != null)
+            {
+                Guid.TryParse(rqp["goods_uid"] as String, out Guid goodsUid);
+                rqp.Command = "Supply.dbo.заказ_у_поставщика__получить_атрибуты_цены";
+                rqp.Parameters = new RequestParameter[]
+                {
+                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
+                        new RequestParameter() { Name = "goods_uid", Value = goodsUid }
+                };
+                ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
+                if (rsp != null)
+                {
+                    dt = rsp.GetFirstTable();
+                }
+            }
+            return dt;
+        }
     }
 }

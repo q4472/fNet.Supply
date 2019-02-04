@@ -49,7 +49,7 @@
                 currRow = Model.Data[i];
                 if (prevRow == null || prevRow.заказ != currRow.заказ)
                 {
-                    <tr style="background-color: #ffff88" data-goods_uid="@currRow.товар">
+                    <tr style="background-color: #ffff88" data-goods_uid="@currRow.товар" data-order_uid="@currRow.заказ">
                         @if (currRow.заказ_обработано == "True")
                         {
                             <td style="border-right: none;"><input type="checkbox" name="обработано" data-modified="0" checked="checked" /></td> <!-- 01 -->
@@ -74,9 +74,9 @@
                     <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
                     <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
                     <td colspan="4">@currRow.товар_описание</td> <!-- 03-06 -->
-                    <td>xxx,xx</td> <!-- 07 -->
-                    <td>xxx</td> <!-- 08 -->
-                    <td>xx.xx</td> <!-- 09 -->
+                    <td onclick="SupplyViewsF0Index.showPriceDetail(this);">xxx,xx</td> <!-- 07 -->
+                    <td onclick="SupplyViewsF0Index.showPriceDetail(this);">xxx</td> <!-- 08 -->
+                    <td onclick="SupplyViewsF0Index.showPriceDetail(this);">xx.xx</td> <!-- 09 -->
                     <td>@currRow.товар_спецификация_менеджер</td> <!-- 10 -->
                     <td>@currRow.товар_спецификация_номер</td> <!-- 11 -->
                 </tr>

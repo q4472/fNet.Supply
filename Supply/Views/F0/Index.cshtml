@@ -61,7 +61,7 @@
             right: 0;
             bottom: 0;
             height: 320px;
-            background-color: #aaffaa;
+            background-color: #bbffbb;
             overflow: hidden;
         }
 </style>
@@ -77,21 +77,22 @@
         @RenderPage("~/Views/F0/Table.cshtml", Model)
     </div>
     <div class="section-detail">
-        <div class="order" style="display: none;">
-            qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-        </div>
+        <!-- RenderPage("~/Views/F0/АтрибутыЗаказа.cshtml") -->
     </div>
-    @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
-    @RenderPage("~/Views/F0/СписокСостоянийЗаказа.cshtml", Model)
+    <div class="section-dropdowns">
+        @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
+        @RenderPage("~/Views/F0/СписокСостоянийЗаказа.cshtml", Model)
+    </div>
 </div>
 <script type="text/javascript">
     var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
-        let ddsp = mainDiv.find('.supply_views_f0_список_поставщиков');
-        let ddss = mainDiv.find('.supply_views_f0_список_состояний_заказа');
         let filteredData = mainDiv.find('div.section-filtered_data');
         let detail = mainDiv.find('div.section-detail');
-        let order = detail.find('div.order');
+        //let order = detail.find('div.order');
+        let dds = mainDiv.find('div.section-dropdowns');
+        let ddsp = dds.find('.supply_views_f0_список_поставщиков');
+        let ddss = dds.find('.supply_views_f0_список_состояний_заказа');
         let selectedInput = null;
         let selectedRows = null;
         let rqp = {
@@ -142,16 +143,18 @@
                     return;
                 }
                 SupplyViewsF0Command.showModal();
-                /*
-                selectedRows.each(function () {
-                    rqp.Parameters.push({ Name: 'SetSupplier', Value: $(this).attr('data-goods_uid') + 'xxx' });
-                });
-                console.log(rqp);
-                */
                 //alert('SupplyViewsF0Index.setSupplier()');
             },
             setSupplierFinish: function (uid, name) {
-                alert('SupplyViewsF0Index.setSupplierFinish()' + uid + name);
+                selectedRows.each(function () {
+                    let value = '{' +
+                        ' goods_uid: \'' + $(this).attr('data-goods_uid') + '\',' +
+                        ' supplier_uid: \'' + uid + '\',' +
+                        ' supplier_name: \'' + name + '\'' +
+                        ' }';
+                    rqp.Parameters.push({ Name: 'SetSupplier', Value: value });
+                });
+                console.log(rqp);
             },
             // applyFilter is call from Filter.cshtml
             applyFilter: function (pars) {
@@ -162,6 +165,7 @@
                     Parameters: pars
                 };
                 filteredData.html('');
+                detail.html('');
                 Nskd.Http.post({
                     url: '/supply/f0/applyfilter',
                     rqp: rqp,
@@ -173,10 +177,39 @@
             // showOrderDetail is call from Table.cshtml
             showOrderDetail: function (td) {
                 let tr = $(td).parent();
-                order.text(tr.attr('data-goods_uid'));
-                order.show();
-                //alert('q');
-                //order.html('').hide();
+                let order_uid = tr.attr('data-order_uid');
+                let rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Supply.F0.GetOrderDetail',
+                    Parameters: [{ Name: 'order_uid', Value: order_uid }]
+                };
+                //console.log(rqp);
+                detail.html('');
+                Nskd.Http.post({
+                    url: '/supply/f0/getorderdetail',
+                    rqp: rqp,
+                    done: function (data) {
+                        detail.html(data);
+                    }
+                });
+            },
+            showPriceDetail: function (td) {
+                let tr = $(td).parent();
+                let goods_uid = tr.attr('data-goods_uid');
+                let rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Supply.F0.GetPriceDetail',
+                    Parameters: [{ Name: 'goods_uid', Value: goods_uid }]
+                };
+                //console.log(rqp);
+                detail.html('');
+                Nskd.Http.post({
+                    url: '/supply/f0/getpricedetail',
+                    rqp: rqp,
+                    done: function (data) {
+                        detail.html(data);
+                    }
+                });
             }
         };
     })();

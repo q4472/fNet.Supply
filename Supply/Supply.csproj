@@ -252,6 +252,8 @@
     <Content Include="Views\F0\СписокПоставщиков.cshtml" />
     <Content Include="Views\F0\СписокСостоянийЗаказа.cshtml" />
     <Content Include="Views\F0\Command.cshtml" />
+    <Content Include="Views\F0\АтрибутыЗаказа.cshtml" />
+    <Content Include="Views\F0\АтрибутыЦены.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
