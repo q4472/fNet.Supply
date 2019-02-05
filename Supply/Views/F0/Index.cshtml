@@ -195,11 +195,11 @@
             },
             showPriceDetail: function (td) {
                 let tr = $(td).parent();
-                let goods_uid = tr.attr('data-goods_uid');
+                let uid = tr.attr('data-uid');
                 let rqp = {
                     SessionId: Nskd.Server.SessionId,
                     Command: 'Supply.F0.GetPriceDetail',
-                    Parameters: [{ Name: 'goods_uid', Value: goods_uid }]
+                    Parameters: [{ Name: 'uid', Value: uid }]
                 };
                 //console.log(rqp);
                 detail.html('');

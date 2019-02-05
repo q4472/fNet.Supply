@@ -46,6 +46,7 @@ namespace FNet.Supply.Models
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
             {
+                public String заказ_у_поставщика_таблица__uid;
                 public String заказ;
                 public String заказ_номер;
                 public String заказ_обработано;
@@ -107,6 +108,7 @@ namespace FNet.Supply.Models
                         DataRow dr = dt.Rows[index];
                         items = new ItemArray
                         {
+                            заказ_у_поставщика_таблица__uid = ConvertToString(dr["заказ_у_поставщика_таблица__uid"]),
                             заказ = ConvertToString(dr["заказ"]),
                             заказ_номер = ConvertToString(dr["заказ_номер"]),
                             заказ_обработано = ConvertToString(dr["заказ_обработано"]),
@@ -218,12 +220,12 @@ namespace FNet.Supply.Models
             DataTable dt = null;
             if (rqp != null && rqp.SessionId != null)
             {
-                Guid.TryParse(rqp["goods_uid"] as String, out Guid goodsUid);
+                Guid.TryParse(rqp["uid"] as String, out Guid uid);
                 rqp.Command = "Supply.dbo.заказ_у_поставщика__получить_атрибуты_цены";
                 rqp.Parameters = new RequestParameter[]
                 {
                         new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
-                        new RequestParameter() { Name = "goods_uid", Value = goodsUid }
+                        new RequestParameter() { Name = "заказ_у_поставщика_таблица__uid", Value = uid }
                 };
                 ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
                 if (rsp != null)
