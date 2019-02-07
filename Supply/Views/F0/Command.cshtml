@@ -120,7 +120,9 @@
                 input.attr('data-id', '');
                 input.val('');
                 modalDiv.hide();
-                SupplyViewsF0Index.setSupplierFinish(uid, name);
+                if (uid && SupplyViewsF0Index) {
+                    SupplyViewsF0Index.setSupplierFinish(uid, name);
+                }
             }
         };
     })();

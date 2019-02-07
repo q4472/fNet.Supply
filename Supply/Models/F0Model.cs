@@ -1,6 +1,8 @@
 ﻿using Nskd;
 using System;
+using System.Collections;
 using System.Data;
+using System.Text;
 
 namespace FNet.Supply.Models
 {
@@ -46,7 +48,7 @@ namespace FNet.Supply.Models
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
             {
-                public String заказ_у_поставщика_таблица__uid;
+                public String заказы_у_поставщиков_таблица__uid;
                 public String заказ;
                 public String заказ_номер;
                 public String заказ_обработано;
@@ -108,7 +110,7 @@ namespace FNet.Supply.Models
                         DataRow dr = dt.Rows[index];
                         items = new ItemArray
                         {
-                            заказ_у_поставщика_таблица__uid = ConvertToString(dr["заказ_у_поставщика_таблица__uid"]),
+                            заказы_у_поставщиков_таблица__uid = ConvertToString(dr["заказы_у_поставщиков_таблица__uid"]),
                             заказ = ConvertToString(dr["заказ"]),
                             заказ_номер = ConvertToString(dr["заказ_номер"]),
                             заказ_обработано = ConvertToString(dr["заказ_обработано"]),
@@ -225,7 +227,7 @@ namespace FNet.Supply.Models
                 rqp.Parameters = new RequestParameter[]
                 {
                         new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
-                        new RequestParameter() { Name = "заказ_у_поставщика_таблица__uid", Value = uid }
+                        new RequestParameter() { Name = "заказы_у_поставщиков_таблица__uid", Value = uid }
                 };
                 ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
                 if (rsp != null)
@@ -234,6 +236,45 @@ namespace FNet.Supply.Models
                 }
             }
             return dt;
+        }
+        public static void SetSupplier(RequestPackage rqp)
+        {
+            Hashtable setSupplierValue = (Hashtable)rqp["SetSupplier"];
+            Guid supplierUid = new Guid();
+            String supplierName = null;
+            StringBuilder uids = new StringBuilder();
+            foreach (DictionaryEntry nvp in setSupplierValue)
+            {
+                if (nvp.Key as String == "supplier_uid")
+                {
+                    Guid.TryParse(nvp.Value as String, out supplierUid);
+                }
+                if (nvp.Key as String == "supplier_name")
+                {
+                    supplierName = nvp.Value as String;
+                }
+                if (nvp.Key as String == "uids")
+                {
+                    Object[] t = nvp.Value as Object[];
+                    foreach (Object o in t)
+                    {
+                        uids.AppendFormat($"<a b=\"{o}\"/>");
+                    }
+                }
+            }
+            RequestPackage rqp1 = new RequestPackage()
+            {
+                SessionId = rqp.SessionId,
+                Command = "Supply.dbo.заказы_у_поставщиков__установить_поставщика"
+            };
+            rqp1.Parameters = new RequestParameter[]
+            {
+                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
+                        new RequestParameter() { Name = "supplier_uid", Value = supplierUid },
+                        new RequestParameter() { Name = "supplier_name", Value = supplierName },
+                        new RequestParameter() { Name = "uids", Value = uids.ToString() }
+            };
+            ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
         }
     }
 }

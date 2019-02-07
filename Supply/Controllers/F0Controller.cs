@@ -64,5 +64,14 @@ namespace FNet.Supply.Controllers
             v = PartialView("~/Views/F0/АтрибутыЦены.cshtml", F0Model.GetPriceDetail(rqp));
             return v;
         }
+        public Object SetSupplier()
+        {
+            Object v = "FNet.Supply.Controllers.F0Controller.SetSupplier()";
+            RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
+            F0Model.SetSupplier(rqp);
+            F0Model m = new F0Model(rqp);
+            v = PartialView("~/Views/F0/Table.cshtml", m);
+            return v;
+        }
     }
 }

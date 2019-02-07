@@ -145,16 +145,31 @@
                 SupplyViewsF0Command.showModal();
                 //alert('SupplyViewsF0Index.setSupplier()');
             },
-            setSupplierFinish: function (uid, name) {
+            setSupplierFinish: function (supplier_uid, supplier_name) {
+                let value = {
+                    supplier_uid: supplier_uid,
+                    supplier_name: supplier_name,
+                    uids: [],
+                };
                 selectedRows.each(function () {
-                    let value = '{' +
-                        ' goods_uid: \'' + $(this).attr('data-goods_uid') + '\',' +
-                        ' supplier_uid: \'' + uid + '\',' +
-                        ' supplier_name: \'' + name + '\'' +
-                        ' }';
-                    rqp.Parameters.push({ Name: 'SetSupplier', Value: value });
+                    value.uids.push($(this).attr('data-uid'));
                 });
+                //console.log(value);
+                rqp.Command = 'Supply.F0.SetSupplier';
+                if (SupplyF0Filter) {
+                    rqp.Parameters = SupplyF0Filter.getPars();
+                }
+                rqp.Parameters.push({ Name: 'SetSupplier', Value: value }); //Nskd.Json.toString(value)
                 console.log(rqp);
+                filteredData.html('');
+                detail.html('');
+                Nskd.Http.post({
+                    url: '/supply/f0/setsupplier',
+                    rqp: rqp,
+                    done: function (data) {
+                        filteredData.html(data);
+                    }
+                });
             },
             // applyFilter is call from Filter.cshtml
             applyFilter: function (pars) {
