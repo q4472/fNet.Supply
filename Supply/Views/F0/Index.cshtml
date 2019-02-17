@@ -96,24 +96,22 @@
         let selectedInput = null;
         let selectedRows = null;
         let rqp = {
-            SessionId: Nskd.Server.SessionId,
-            Command: 'Supply.F0.Save',
-            Parameters: []
+            SessionId: Nskd.Server.SessionId
         };
         return {
-            selectButtonClick: function (td, f) { // в файле TableFieldSelect.cshtml
-                let e = $(td);
-                let table = e.closest('table');
-                selectedInput = table.find('input');
-                if (f == 'заказ_поставщик') {
-                    ddsp.css('left', e.position().left);
-                    ddsp.css('top', e.position().top + 48);
+            selectButtonClick: function (span) { // в файле TableFieldSelect.cshtml
+                let s = $(span);
+                let d = s.closest('div');
+                selectedInput = d.find('input');
+                if (selectedInput.attr('name') == 'заказ_поставщик') {
+                    ddsp.css('left', s.position().left);
+                    ddsp.css('top', s.position().top + 48);
                     ddsp.mouseleave(function () { ddsp.off(); ddsp.hide(); });
                     ddsp.show();
                 }
-                if (f == 'заказ_состояние') {
-                    ddss.css('left', e.position().left);
-                    ddss.css('top', e.position().top + 48);
+                if (selectedInput.attr('name') == 'заказ_состояние') {
+                    ddss.css('left', s.position().left);
+                    ddss.css('top', s.position().top + 48);
                     ddss.mouseleave(function () { ddss.off(); ddss.hide(); });
                     ddss.show();
                 }
@@ -132,6 +130,30 @@
                 ddss.off().hide();
             },
             save: function () {
+                let inputs = filteredData.find('input[data-modified="1"]');
+                console.log(inputs);
+                rqp.Command = 'Supply.F0.SetOrderAttr';
+                rqp.Parameters = [];
+                inputs.each(function (index, element) {
+                    let e = $(element);
+                    let tr = e.closest('tr');
+                    if (e.attr('name') == 'заказ_поставщик') {
+                        let v = {
+                            order_uid: tr.attr('data-order_uid'),
+                            supplier_uid: e.attr('data-id'),
+                            supplier_name: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetSupplierForOrder', Value: v });
+                    }
+                    if (e.attr('name') == 'заказ_состояние') {
+                        let v = {
+                            order_uid: tr.attr('data-order_uid'),
+                            state_uid: e.attr('data-id'),
+                            state_name: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetStateForOrder', Value: v });
+                    }
+                });
                 console.log(rqp);
                 alert('SupplyViewsF0Index.save()');
             },
@@ -147,9 +169,9 @@
             },
             setSupplierFinish: function (supplier_uid, supplier_name) {
                 let value = {
-                    supplier_uid: supplier_uid,
-                    supplier_name: supplier_name,
                     uids: [],
+                    supplier_uid: supplier_uid,
+                    supplier_name: supplier_name
                 };
                 selectedRows.each(function () {
                     value.uids.push($(this).attr('data-uid'));
@@ -158,9 +180,11 @@
                 rqp.Command = 'Supply.F0.SetSupplier';
                 if (SupplyF0Filter) {
                     rqp.Parameters = SupplyF0Filter.getPars();
+                } else {
+                    rqp.Parameters = [];
                 }
-                rqp.Parameters.push({ Name: 'SetSupplier', Value: value }); //Nskd.Json.toString(value)
-                console.log(rqp);
+                rqp.Parameters.push({ Name: 'SetSupplier', Value: value });
+                //console.log(rqp);
                 filteredData.html('');
                 detail.html('');
                 Nskd.Http.post({
@@ -174,11 +198,8 @@
             // applyFilter is call from Filter.cshtml
             applyFilter: function (pars) {
                 //console.log(pars);
-                let rqp = {
-                    SessionId: Nskd.Server.SessionId,
-                    Command: 'Supply.F0.ApplyFilter',
-                    Parameters: pars
-                };
+                rqp.Command = 'Supply.F0.ApplyFilter';
+                rqp.Parameters = pars;
                 filteredData.html('');
                 detail.html('');
                 Nskd.Http.post({
@@ -193,11 +214,8 @@
             showOrderDetail: function (td) {
                 let tr = $(td).parent();
                 let order_uid = tr.attr('data-order_uid');
-                let rqp = {
-                    SessionId: Nskd.Server.SessionId,
-                    Command: 'Supply.F0.GetOrderDetail',
-                    Parameters: [{ Name: 'order_uid', Value: order_uid }]
-                };
+                rqp.Command = 'Supply.F0.GetOrderDetail';
+                rqp.Parameters = [{ Name: 'order_uid', Value: order_uid }];
                 //console.log(rqp);
                 detail.html('');
                 Nskd.Http.post({
@@ -211,11 +229,8 @@
             showPriceDetail: function (td) {
                 let tr = $(td).parent();
                 let uid = tr.attr('data-uid');
-                let rqp = {
-                    SessionId: Nskd.Server.SessionId,
-                    Command: 'Supply.F0.GetPriceDetail',
-                    Parameters: [{ Name: 'uid', Value: uid }]
-                };
+                rqp.Command = 'Supply.F0.GetPriceDetail';
+                rqp.Parameters = [{ Name: 'uid', Value: uid }];
                 //console.log(rqp);
                 detail.html('');
                 Nskd.Http.post({

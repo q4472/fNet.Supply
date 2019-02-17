@@ -60,9 +60,11 @@ namespace FNet.Supply.Models
                 public String заказ_номер_их;
                 public String товар;
                 public String товар_описание;
+                public String товар_примечание;
                 public String товар_спецификация;
                 public String товар_спецификация_номер;
                 public String товар_спецификация_менеджер;
+
                 public String this[String fieldName]
                 {
                     get
@@ -122,6 +124,7 @@ namespace FNet.Supply.Models
                             заказ_номер_их = ConvertToString(dr["заказ_номер_их"]),
                             товар = ConvertToString(dr["товар"]),
                             товар_описание = ConvertToString(dr["товар_описание"]),
+                            товар_примечание = ConvertToString(dr["товар_примечание"]),
                             товар_спецификация = ConvertToString(dr["товар_спецификация"]),
                             товар_спецификация_номер = ConvertToString(dr["товар_спецификация_номер"]),
                             товар_спецификация_менеджер = ConvertToString(dr["товар_спецификация_менеджер"])

@@ -31,7 +31,7 @@
                 <th>№ их</th> <!-- 04 -->
                 <th>Состояние заказа</th> <!-- 05 -->
                 <th>Примечание</th> <!-- 06 -->
-                <th colspan="5"></th> <!-- 07-11 -->
+                <th colspan="6"></th> <!-- 07-12 -->
             </tr>
             <tr>
                 <th></th> <!-- 01 -->
@@ -42,6 +42,7 @@
                 <th>Срок (т)</th> <!-- 09 -->
                 <th>Менеджер</th> <!-- 10 -->
                 <th>Спецификация</th> <!-- 11 -->
+                <th>Примечание</th> <!-- 12 -->
             </tr>
             @for (Int32 i = 0; i < Model.Data.RowsCount; i++)
             {
@@ -67,7 +68,7 @@
                             @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_состояние", NameField = "заказ_состояние_наименование" })
                         </td> <!-- 05 -->
                         <td>@currRow.заказ_примечание</td> <!-- 06 -->
-                        <td colspan="5"></td> <!-- 07-11 -->
+                        <td colspan="6"></td> <!-- 07-12 -->
                     </tr>
                 }
                 <tr data-uid="@currRow.заказы_у_поставщиков_таблица__uid" data-goods_uid="@currRow.товар">
@@ -79,6 +80,7 @@
                     <td onclick="SupplyViewsF0Index.showPriceDetail(this);">xx.xx</td> <!-- 09 -->
                     <td>@currRow.товар_спецификация_менеджер</td> <!-- 10 -->
                     <td>@currRow.товар_спецификация_номер</td> <!-- 11 -->
+                    <td>@currRow.товар_примечание</td> <!-- 12 -->
                 </tr>
             }
             <tr style="border: 1px solid black"></tr>
