@@ -129,33 +129,46 @@
                 ddsp.off().hide();
                 ddss.off().hide();
             },
-            save: function () {
+            save: function (element) {
+                let saveButton = $(element);
+                saveButton.prop('disabled', true);
+                setInterval(function () { saveButton.prop('disabled', false); }, 1000);
                 let inputs = filteredData.find('input[data-modified="1"]');
-                console.log(inputs);
-                rqp.Command = 'Supply.F0.SetOrderAttr';
-                rqp.Parameters = [];
-                inputs.each(function (index, element) {
-                    let e = $(element);
-                    let tr = e.closest('tr');
-                    if (e.attr('name') == 'заказ_поставщик') {
-                        let v = {
-                            order_uid: tr.attr('data-order_uid'),
-                            supplier_uid: e.attr('data-id'),
-                            supplier_name: e.val()
-                        };
-                        rqp.Parameters.push({ Name: 'SetSupplierForOrder', Value: v });
-                    }
-                    if (e.attr('name') == 'заказ_состояние') {
-                        let v = {
-                            order_uid: tr.attr('data-order_uid'),
-                            state_uid: e.attr('data-id'),
-                            state_name: e.val()
-                        };
-                        rqp.Parameters.push({ Name: 'SetStateForOrder', Value: v });
-                    }
-                });
-                console.log(rqp);
-                alert('SupplyViewsF0Index.save()');
+                //console.log(inputs);
+                if (inputs.length > 0) {
+                    rqp.Command = 'Supply.F0.SetOrderAttr';
+                    rqp.Parameters = [];
+                    inputs.each(function (index, element) {
+                        let e = $(element);
+                        let tr = e.closest('tr');
+                        if (e.attr('name') == 'заказ_поставщик') {
+                            let v = {
+                                order_uid: tr.attr('data-order_uid'),
+                                supplier_uid: e.attr('data-id'),
+                                supplier_name: e.val()
+                            };
+                            rqp.Parameters.push({ Name: 'SetSupplierForOrder', Value: v });
+                        }
+                        if (e.attr('name') == 'заказ_состояние') {
+                            let v = {
+                                order_uid: tr.attr('data-order_uid'),
+                                state_uid: e.attr('data-id'),
+                                state_name: e.val()
+                            };
+                            rqp.Parameters.push({ Name: 'SetStateForOrder', Value: v });
+                        }
+                    });
+                    console.log(rqp);
+                    filteredData.html('');
+                    detail.html('');
+                    Nskd.Http.post({
+                        url: '/supply/f0',
+                        rqp: rqp,
+                        done: function (data) {
+                            filteredData.html(data);
+                        }
+                    });
+                }
             },
             setSupplierStart: function () {
                 selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');

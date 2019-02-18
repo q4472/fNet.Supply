@@ -279,5 +279,34 @@ namespace FNet.Supply.Models
             };
             ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
         }
+        public static void SetOrderAttr(RequestPackage rqp)
+        {
+            if (rqp != null && rqp.Parameters.Length > 0)
+            {
+                foreach (RequestParameter p in rqp.Parameters)
+                {
+                    if (p.Name == "SetSupplierForOrder")
+                    {
+                        Hashtable v = p.Value as Hashtable;
+                        Guid.TryParse(v["order_uid"] as String, out Guid orderUid);
+                        Guid.TryParse(v["supplier_uid"] as String, out Guid supplierUid);
+                        String supplierName = v["supplier_name"] as String;
+                        RequestPackage rqp1 = new RequestPackage()
+                        {
+                            SessionId = rqp.SessionId,
+                            Command = "Supply.dbo.заказы_у_поставщиков_шапка__установить_поставщика"
+                        };
+                        rqp1.Parameters = new RequestParameter[]
+                        {
+                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
+                        new RequestParameter() { Name = "order_uid", Value = orderUid },
+                        new RequestParameter() { Name = "supplier_uid", Value = supplierUid },
+                        new RequestParameter() { Name = "supplier_name", Value = supplierName }
+                        };
+                        ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
+                    }
+                }
+            }
+        }
     }
 }

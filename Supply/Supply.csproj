@@ -48,6 +48,10 @@
     <Reference Include="Http">
       <HintPath>..\..\..\ClassLibrary\Nskd\Http\bin\Debug\Http.dll</HintPath>
     </Reference>
+    <Reference Include="Json, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ClassLibrary\Nskd\Json\bin\Debug\Json.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />

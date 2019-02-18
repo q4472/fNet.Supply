@@ -1,45 +1,28 @@
 ﻿using FNet.Supply.Models;
 using Nskd;
 using System;
-using System.IO;
 using System.Web.Mvc;
 
 namespace FNet.Supply.Controllers
 {
     public class F0Controller : Controller
     {
+        private Object v;
+        private RequestPackage rqp;
         public Object Index()
         {
-            Object v = null;
-            RequestPackage rqp = null;
-            StreamReader reader = new StreamReader(Request.InputStream, Request.ContentEncoding);
-            String body = reader.ReadToEnd();
-            if (!String.IsNullOrWhiteSpace(body))
+            v = "FNet.Supply.Controllers.F0Controller.Index()\n";
+            rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
+            switch (rqp.Command)
             {
-                if (body[0] == '{')
-                {
-                    rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
-                }
-                else if (body[0] == 's' && body.Length == 46)
-                {
-                    if (Guid.TryParse(body.Substring(10, 36), out Guid sessionId))
-                    {
-                        rqp = new RequestPackage
-                        {
-                            SessionId = sessionId
-                        };
-                    }
-                }
+                case "Supply.F0.SetOrderAttr":
+                    v = SetOrderAttr();
+                    break;
+                default:
+                    F0Model m = new F0Model(rqp);
+                    v = PartialView("~/Views/F0/Index.cshtml", m);
+                    break;
             }
-            if (rqp == null)
-            {
-                rqp = new RequestPackage
-                {
-                    SessionId = new Guid()
-                };
-            }
-            F0Model m = new F0Model(rqp);
-            v = PartialView("~/Views/F0/Index.cshtml", m);
             return v;
         }
         public Object ApplyFilter()
@@ -69,6 +52,14 @@ namespace FNet.Supply.Controllers
             Object v = "FNet.Supply.Controllers.F0Controller.SetSupplier()";
             RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
             F0Model.SetSupplier(rqp);
+            F0Model m = new F0Model(rqp);
+            v = PartialView("~/Views/F0/Table.cshtml", m);
+            return v;
+        }
+        private Object SetOrderAttr()
+        {
+            v += "SetOrderAttr(" + Nskd.Json.ToString(rqp) + ")\n";
+            F0Model.SetOrderAttr(rqp);
             F0Model m = new F0Model(rqp);
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
