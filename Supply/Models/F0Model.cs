@@ -285,7 +285,7 @@ namespace FNet.Supply.Models
             {
                 foreach (RequestParameter p in rqp.Parameters)
                 {
-                    if (p.Name == "SetSupplierForOrder")
+                    if (p.Name == "SetOrderSupplier")
                     {
                         Hashtable v = p.Value as Hashtable;
                         Guid.TryParse(v["order_uid"] as String, out Guid orderUid);
@@ -302,6 +302,26 @@ namespace FNet.Supply.Models
                         new RequestParameter() { Name = "order_uid", Value = orderUid },
                         new RequestParameter() { Name = "supplier_uid", Value = supplierUid },
                         new RequestParameter() { Name = "supplier_name", Value = supplierName }
+                        };
+                        ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
+                    }
+                    if (p.Name == "SetOrderState")
+                    {
+                        Hashtable v = p.Value as Hashtable;
+                        Guid.TryParse(v["order_uid"] as String, out Guid orderUid);
+                        Guid.TryParse(v["state_uid"] as String, out Guid stateUid);
+                        String stateName = v["state_name"] as String;
+                        RequestPackage rqp1 = new RequestPackage()
+                        {
+                            SessionId = rqp.SessionId,
+                            Command = "Supply.dbo.заказы_у_поставщиков_шапка__установить_статус"
+                        };
+                        rqp1.Parameters = new RequestParameter[]
+                        {
+                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
+                        new RequestParameter() { Name = "order_uid", Value = orderUid },
+                        new RequestParameter() { Name = "state_uid", Value = stateUid },
+                        new RequestParameter() { Name = "state_name", Value = stateName }
                         };
                         ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
                     }

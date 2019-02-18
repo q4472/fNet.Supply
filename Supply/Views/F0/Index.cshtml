@@ -147,7 +147,7 @@
                                 supplier_uid: e.attr('data-id'),
                                 supplier_name: e.val()
                             };
-                            rqp.Parameters.push({ Name: 'SetSupplierForOrder', Value: v });
+                            rqp.Parameters.push({ Name: 'SetOrderSupplier', Value: v });
                         }
                         if (e.attr('name') == 'заказ_состояние') {
                             let v = {
@@ -155,7 +155,7 @@
                                 state_uid: e.attr('data-id'),
                                 state_name: e.val()
                             };
-                            rqp.Parameters.push({ Name: 'SetStateForOrder', Value: v });
+                            rqp.Parameters.push({ Name: 'SetOrderState', Value: v });
                         }
                     });
                     console.log(rqp);
