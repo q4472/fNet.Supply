@@ -3,6 +3,7 @@
 <style>
     #supply_views_f0_атрибуты_заказа td {
         padding: 2px;
+        vertical-align: top;
     }
 </style>
 <div id="supply_views_f0_атрибуты_заказа">
@@ -13,12 +14,14 @@
     else
     {
         <table>
-            <tr><td>uid</td><td>@Model["uid"]</td></tr>
-            <tr><td>id</td><td>@Model["id"]</td></tr>
-            <tr><td>обработано</td><td>@(((String)Model["обработано"] == "True") ? "Да" : "Нет")</td></tr>
-            <tr><td>поставщик</td><td>@Model["поставщик"]</td></tr>
-            <tr><td>состояние</td><td>@Model["состояние"]</td></tr>
-            <tr><td>примечание</td><td>@Model["примечание"]</td></tr>
+            <tr><td>uid:</td><td>@Model["uid"]</td></tr>
+            <tr><td>id:</td><td>@Model["id"]</td></tr>
+            <tr><td>обработано:</td><td>@(((String)Model["обработано"] == "True") ? "Да" : "Нет")</td></tr>
+            <tr><td>поставщик:</td><td>@Model["поставщик"]</td></tr>
+            <tr><td>поставщик_наименование:</td><td>@Model["поставщик_наименование"]</td></tr>
+            <tr><td>состояние:</td><td>@Model["состояние"]</td></tr>
+            <tr><td>состояние_наименование:</td><td>@Model["состояние_наименование"]</td></tr>
+            <tr><td>примечание:</td><td><textarea rows="5" style="width: 300px;">@Model["примечание"]</textarea></td></tr>
         </table>
     }
 </div>

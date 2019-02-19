@@ -225,7 +225,10 @@
             },
             // showOrderDetail is call from Table.cshtml
             showOrderDetail: function (td) {
-                let tr = $(td).parent();
+                let tr = $(td).closest('tr');
+                let table = tr.closest('table');
+                table.find('tr').removeClass('selected');
+                tr.addClass('selected');
                 let order_uid = tr.attr('data-order_uid');
                 rqp.Command = 'Supply.F0.GetOrderDetail';
                 rqp.Parameters = [{ Name: 'order_uid', Value: order_uid }];
@@ -240,7 +243,10 @@
                 });
             },
             showPriceDetail: function (td) {
-                let tr = $(td).parent();
+                let tr = $(td).closest('tr');
+                let table = tr.closest('table');
+                table.find('tr').removeClass('selected');
+                tr.addClass('selected');
                 let uid = tr.attr('data-uid');
                 rqp.Command = 'Supply.F0.GetPriceDetail';
                 rqp.Parameters = [{ Name: 'uid', Value: uid }];

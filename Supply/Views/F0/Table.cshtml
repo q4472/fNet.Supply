@@ -5,6 +5,18 @@
         border-left: 1px solid black;
     }
 
+        #supply_views_f0_table table.journal tr.order_info {
+            background-color: #ffff88;
+        }
+
+        #supply_views_f0_table table.journal tr.selected {
+            background-color: #aaffaa;
+        }
+
+        #supply_views_f0_table table.journal tr:hover {
+            background-color: #aaffaa;
+        }
+
     #supply_views_f0_table table.journal th {
         border-top: 1px solid black;
         border-right: 1px solid black;
@@ -30,8 +42,7 @@
                 <th>Поставщик</th> <!-- 03 -->
                 <th>№ их</th> <!-- 04 -->
                 <th>Состояние заказа</th> <!-- 05 -->
-                <th>Примечание</th> <!-- 06 -->
-                <th colspan="6"></th> <!-- 07-12 -->
+                <th colspan="7">Примечание</th> <!-- 06-12 -->
             </tr>
             <tr>
                 <th></th> <!-- 01 -->
@@ -50,7 +61,7 @@
                 currRow = Model.Data[i];
                 if (prevRow == null || prevRow.заказ != currRow.заказ)
                 {
-                    <tr style="background-color: #ffff88" data-goods_uid="@currRow.товар" data-order_uid="@currRow.заказ">
+                    <tr class="order_info" data-goods_uid="@currRow.товар" data-order_uid="@currRow.заказ">
                         @if (currRow.заказ_обработано == "True")
                         {
                             <td style="border-right: none;"><input type="checkbox" name="обработано" data-modified="0" checked="checked" /></td> <!-- 01 -->
@@ -67,11 +78,10 @@
                         <td>
                             @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_состояние", NameField = "заказ_состояние_наименование" })
                         </td> <!-- 05 -->
-                        <td>@currRow.заказ_примечание</td> <!-- 06 -->
-                        <td colspan="6"></td> <!-- 07-12 -->
+                        <td colspan="7">@currRow.заказ_примечание</td> <!-- 06-12 -->
                     </tr>
                 }
-                <tr data-uid="@currRow.заказы_у_поставщиков_таблица__uid" data-goods_uid="@currRow.товар">
+                <tr class="goods_info" data-uid="@currRow.заказы_у_поставщиков_таблица__uid" data-goods_uid="@currRow.товар">
                     <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
                     <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
                     <td colspan="4">@currRow.товар_описание</td> <!-- 03-06 -->

@@ -185,7 +185,9 @@ namespace FNet.Supply.Models
                 public String id;
                 public String обработано;
                 public String поставщик;
+                public String поставщик_наименование;
                 public String состояние;
+                public String состояние_наименование;
                 public String примечание;
                 public String номер; // их
 
@@ -217,7 +219,9 @@ namespace FNet.Supply.Models
                             id = ConvertToString(dr["id"]),
                             обработано = ConvertToString(dr["обработано"]),
                             поставщик = ConvertToString(dr["поставщик"]),
+                            поставщик_наименование = ConvertToString(dr["поставщик_наименование"]),
                             состояние = ConvertToString(dr["состояние"]),
+                            состояние_наименование = ConvertToString(dr["состояние_наименование"]),
                             примечание = ConvertToString(dr["примечание"]),
                             номер = ConvertToString(dr["номер"])
                         };
