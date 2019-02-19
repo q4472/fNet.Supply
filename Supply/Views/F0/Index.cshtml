@@ -158,7 +158,7 @@
                             rqp.Parameters.push({ Name: 'SetOrderState', Value: v });
                         }
                     });
-                    console.log(rqp);
+                    //console.log(rqp);
                     filteredData.html('');
                     detail.html('');
                     Nskd.Http.post({
@@ -201,7 +201,7 @@
                 filteredData.html('');
                 detail.html('');
                 Nskd.Http.post({
-                    url: '/supply/f0/setsupplier',
+                    url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
                         filteredData.html(data);
@@ -232,7 +232,7 @@
                 //console.log(rqp);
                 detail.html('');
                 Nskd.Http.post({
-                    url: '/supply/f0/getorderdetail',
+                    url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
                         detail.html(data);

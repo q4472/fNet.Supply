@@ -44,7 +44,6 @@ namespace FNet.Supply.Models
         public class FilteredData
         {
             private DataTable dt;
-
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
             {
@@ -79,7 +78,6 @@ namespace FNet.Supply.Models
                     }
                 }
             }
-
             public FilteredData(F0Model m)
             {
                 if (m.Rqp != null && m.Rqp.SessionId != null)
@@ -161,6 +159,100 @@ namespace FNet.Supply.Models
                 return s;
             }
         }
+        public class ЗаказыУПоставщиковШапка
+        {
+            private DataTable dt;
+            public ЗаказыУПоставщиковШапка(Guid sessionId, Guid order_uid)
+            {
+                    RequestPackage rqp = new RequestPackage();
+                    rqp.SessionId = sessionId;
+                    rqp.Command = "Supply.dbo.заказы_у_поставщиков_шапка__получить";
+                    rqp.Parameters = new RequestParameter[]
+                    {
+                        new RequestParameter() { Name = "session_id", Value = sessionId },
+                        new RequestParameter() { Name = "order_uid", Value = order_uid }
+                    };
+                    ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
+                    if (rsp != null)
+                    {
+                        dt = rsp.GetFirstTable();
+                    }
+            }
+            public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
+            public class ItemArray
+            {
+                public String uid;
+                public String id;
+                public String обработано;
+                public String поставщик;
+                public String состояние;
+                public String примечание;
+                public String номер; // их
+
+                public String this[String fieldName]
+                {
+                    get
+                    {
+                        String s = null;
+                        var field = typeof(ItemArray).GetField(fieldName);
+                        if (field != null)
+                        {
+                            s = (String)field.GetValue(this);
+                        }
+                        return s;
+                    }
+                }
+            }
+            public ItemArray this[Int32 index]
+            {
+                get
+                {
+                    ItemArray items = null;
+                    if (dt != null && index >= 0 && index < dt.Rows.Count)
+                    {
+                        DataRow dr = dt.Rows[index];
+                        items = new ItemArray
+                        {
+                            uid = ConvertToString(dr["uid"]),
+                            id = ConvertToString(dr["id"]),
+                            обработано = ConvertToString(dr["обработано"]),
+                            поставщик = ConvertToString(dr["поставщик"]),
+                            состояние = ConvertToString(dr["состояние"]),
+                            примечание = ConvertToString(dr["примечание"]),
+                            номер = ConvertToString(dr["номер"])
+                        };
+                    }
+                    return items;
+                }
+            }
+            private String ConvertToString(Object v)
+            {
+                String s = String.Empty;
+                if (v != null && v != DBNull.Value)
+                {
+                    String tfn = v.GetType().FullName;
+                    switch (tfn)
+                    {
+                        case "System.Guid":
+                            s = ((Guid)v).ToString();
+                            break;
+                        case "System.Int32":
+                            s = ((Int32)v).ToString();
+                            break;
+                        case "System.Boolean":
+                            s = ((Boolean)v).ToString();
+                            break;
+                        case "System.String":
+                            s = (String)v;
+                            break;
+                        default:
+                            s = tfn;
+                            break;
+                    }
+                }
+                return s;
+            }
+        }
         public DataTable ПолучитьСписокПоставщиков(F0Model m)
         {
             DataTable dt = null;
@@ -200,25 +292,19 @@ namespace FNet.Supply.Models
             return dt;
         }
 
-        public static DataTable GetOrderDetail(RequestPackage rqp)
+        public static ЗаказыУПоставщиковШапка.ItemArray GetOrderDetail(RequestPackage rqp)
         {
-            DataTable dt = null;
+            ЗаказыУПоставщиковШапка.ItemArray items = null;
             if (rqp != null && rqp.SessionId != null)
             {
                 Guid.TryParse(rqp["order_uid"] as String, out Guid orderUid);
-                rqp.Command = "Supply.dbo.заказ_у_поставщика__получить_атрибуты_заказа";
-                rqp.Parameters = new RequestParameter[]
+                ЗаказыУПоставщиковШапка zh = new ЗаказыУПоставщиковШапка(rqp.SessionId, orderUid);
+                if (zh.RowsCount > 0)
                 {
-                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
-                        new RequestParameter() { Name = "order_uid", Value = orderUid }
-                };
-                ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
-                if (rsp != null)
-                {
-                    dt = rsp.GetFirstTable();
+                    items = zh[0];
                 }
             }
-            return dt;
+            return items;
         }
         public static DataTable GetPriceDetail(RequestPackage rqp)
         {

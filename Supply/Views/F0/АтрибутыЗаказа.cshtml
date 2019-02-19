@@ -1,22 +1,24 @@
-﻿@using System.Data
-@model DataTable
+﻿@using FNet.Supply.Models
+@model F0Model.ЗаказыУПоставщиковШапка.ItemArray
+<style>
+    #supply_views_f0_атрибуты_заказа td {
+        padding: 2px;
+    }
+</style>
 <div id="supply_views_f0_атрибуты_заказа">
-    @if (Model == null || Model.Rows.Count == 0)
+    @if (Model == null)
     {
         <span>Нет данных.</span>
     }
     else
     {
-        DataRow r = Model.Rows[0];
         <table>
-            @for (int ci = 0; ci < Model.Columns.Count; ci++)
-            {
-                DataColumn c = Model.Columns[ci];
-                <tr>
-                    <td>@c.ColumnName</td>
-                    <td><input type="text" value="@r[c]" /></td>
-                </tr>
-            }
+            <tr><td>uid</td><td>@Model["uid"]</td></tr>
+            <tr><td>id</td><td>@Model["id"]</td></tr>
+            <tr><td>обработано</td><td>@(((String)Model["обработано"] == "True") ? "Да" : "Нет")</td></tr>
+            <tr><td>поставщик</td><td>@Model["поставщик"]</td></tr>
+            <tr><td>состояние</td><td>@Model["состояние"]</td></tr>
+            <tr><td>примечание</td><td>@Model["примечание"]</td></tr>
         </table>
     }
 </div>
