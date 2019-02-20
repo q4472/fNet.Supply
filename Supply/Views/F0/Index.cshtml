@@ -142,7 +142,7 @@
                     let tr = e.closest('tr');
                     if (e.attr('name') == 'заказ_поставщик') {
                         let v = {
-                            order_uid: tr.attr('data-order_uid'),
+                            order_uid: tr.attr('data-order_head_uid'),
                             supplier_uid: e.attr('data-id'),
                             supplier_name: e.val()
                         };
@@ -150,7 +150,7 @@
                     }
                     if (e.attr('name') == 'заказ_состояние') {
                         let v = {
-                            order_uid: tr.attr('data-order_uid'),
+                            order_uid: tr.attr('data-order_head_uid'),
                             state_uid: e.attr('data-id'),
                             state_name: e.val()
                         };
@@ -163,14 +163,14 @@
                     let table = e.closest('table');
                     if (e.attr('name') == 'номер') {
                         let v = {
-                            order_uid: table.attr('data-order_uid'),
+                            order_uid: table.attr('data-order_head_uid'),
                             номер: e.val()
                         };
                         rqp.Parameters.push({ Name: 'SetOrderNum', Value: v });
                     }
                     if (e.attr('name') == 'дата_поставки') {
                         let v = {
-                            order_uid: table.attr('data-order_uid'),
+                            order_uid: table.attr('data-order_head_uid'),
                             дата_поставки: e.val()
                         };
                         rqp.Parameters.push({ Name: 'SetOrderSDate', Value: v });
@@ -182,7 +182,7 @@
                     let e = $(element);
                     let table = e.closest('table');
                     let v = {
-                        order_uid: table.attr('data-order_uid'),
+                        order_uid: table.attr('data-order_head_uid'),
                         примечание: e.val()
                     };
                     rqp.Parameters.push({ Name: 'SetOrderComment', Value: v });
@@ -217,7 +217,7 @@
                     supplier_name: supplier_name
                 };
                 selectedRows.each(function () {
-                    value.uids.push($(this).attr('data-uid'));
+                    value.uids.push($(this).attr('data-order_table_uid'));
                 });
                 //console.log(value);
                 rqp.Command = 'Supply.F0.SetSupplier';
@@ -259,7 +259,7 @@
                 let table = tr.closest('table');
                 table.find('tr').removeClass('selected');
                 tr.addClass('selected');
-                let order_uid = tr.attr('data-order_uid');
+                let order_uid = tr.attr('data-order_head_uid');
                 rqp.Command = 'Supply.F0.GetOrderDetail';
                 rqp.Parameters = [{ Name: 'order_uid', Value: order_uid }];
                 //console.log(rqp);
@@ -277,13 +277,13 @@
                 let table = tr.closest('table');
                 table.find('tr').removeClass('selected');
                 tr.addClass('selected');
-                let uid = tr.attr('data-uid');
+                let order_table_uid = tr.attr('data-order_table_uid');
                 rqp.Command = 'Supply.F0.GetPriceDetail';
-                rqp.Parameters = [{ Name: 'uid', Value: uid }];
+                rqp.Parameters = [{ Name: 'order_table_uid', Value: order_table_uid }];
                 //console.log(rqp);
                 detail.html('');
                 Nskd.Http.post({
-                    url: '/supply/f0/getpricedetail',
+                    url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
                         detail.html(data);

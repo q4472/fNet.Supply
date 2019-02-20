@@ -1,5 +1,5 @@
-﻿@using System.Data
-@model DataTable
+﻿@using FNet.Supply.Models
+@model F0Model.ЗаказыУПоставщиковТаблицаЦены.ItemArray
 <style type="text/css">
     #supply_views_f0_атрибуты_цены th {
         font-weight: bold;
@@ -15,14 +15,13 @@
     }
 </style>
 <div id="supply_views_f0_атрибуты_цены">
-    @if (Model == null || Model.Rows.Count == 0)
+    @if (Model == null)
     {
         <span>Нет данных.</span>
     }
     else
     {
-        DataRow r = Model.Rows[0];
-        <div><span>@r["заказы_у_поставщиков_таблица__uid"]</span></div>
+        <div><span>@Model["uid"]</span></div>
         <table>
             <tr>
                 <th></th>
@@ -32,27 +31,27 @@
             </tr>
             <tr>
                 <td>Требование</td>
-                <td><input type="text" value="@r["цена1"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["количество1"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["срок1"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["цена1"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["количество1"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["срок_годности1"]" style="width: 60px; text-align: right;" /></td>
             </tr>
             <tr>
                 <td>Контракт</td>
-                <td><input type="text" value="@r["цена2"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["количество2"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["срок2"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["цена2"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["количество2"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["срок_годности2"]" style="width: 60px; text-align: right;" /></td>
             </tr>
             <tr>
                 <td>Договор</td>
-                <td><input type="text" value="@r["цена3"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["количество3"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["срок3"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["цена3"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["количество3"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["срок_годности3"]" style="width: 60px; text-align: right;" /></td>
             </tr>
             <tr>
                 <td>Факт</td>
-                <td><input type="text" value="@r["цена4"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["количество4"]" style="width: 60px; text-align: right;" /></td>
-                <td><input type="text" value="@r["срок4"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["цена4"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["количество4"]" style="width: 60px; text-align: right;" /></td>
+                <td><input type="text" value="@Model["срок_годности4"]" style="width: 60px; text-align: right;" /></td>
             </tr>
         </table>
     }

@@ -11,11 +11,6 @@ namespace FNet
 
             routes.MapRoute(
                 name: null,
-                url: "supply/f0/getpricedetail/{*pathInfo}",
-                defaults: new { controller = "F0", action = "GetPriceDetail" });
-
-            routes.MapRoute(
-                name: null,
                 url: "supply/f0/applyfilter/{*pathInfo}",
                 defaults: new { controller = "F0", action = "ApplyFilter" });
 

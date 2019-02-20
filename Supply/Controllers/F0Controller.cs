@@ -9,6 +9,7 @@ namespace FNet.Supply.Controllers
     {
         private Object v;
         private RequestPackage rqp;
+
         public Object Index()
         {
             v = "FNet.Supply.Controllers.F0Controller.Index()\n";
@@ -23,6 +24,9 @@ namespace FNet.Supply.Controllers
                     break;
                 case "Supply.F0.OrderHeadUpdate":
                     v = OrderHeadUpdate();
+                    break;
+                case "Supply.F0.GetPriceDetail":
+                    v = GetPriceDetail();
                     break;
                 default:
                     F0Model m = new F0Model(rqp);
@@ -39,14 +43,14 @@ namespace FNet.Supply.Controllers
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
-        public Object GetPriceDetail()
+
+        private Object GetPriceDetail()
         {
-            Object v = "FNet.Supply.Controllers.F0Controller.GetPriceDetail()";
-            RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
-            v = PartialView("~/Views/F0/АтрибутыЦены.cshtml", F0Model.GetPriceDetail(rqp));
+            v += $"GetPriceDetail({Nskd.Json.ToString(rqp)})\n";
+            var items = F0Model.GetPriceDetail(rqp);
+            v = PartialView("~/Views/F0/АтрибутыЦены.cshtml", items);
             return v;
         }
-
         private Object SetSupplier()
         {
             v += $"SetSupplier({Nskd.Json.ToString(rqp)})";
