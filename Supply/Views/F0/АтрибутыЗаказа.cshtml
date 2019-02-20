@@ -14,7 +14,7 @@
     else
     {
         <table data-order_uid="@Model.uid">
-            <tr><td>uid:</td><td>@Model.uid</td></tr>
+            <!--<tr><td>uid:</td><td>@Model.uid</td></tr>-->
             <tr><td>id:</td><td>@Model.id</td></tr>
             <tr><td>обработано:</td><td>@(((String)Model.обработано == "True") ? "Да" : "Нет")</td></tr>
             <!--<tr><td>поставщик:</td><td>@Model.поставщик</td></tr>-->
@@ -23,10 +23,21 @@
             <tr><td>состояние_наименование:</td><td>@Model.состояние_наименование</td></tr>
             <tr>
                 <td>номер:</td>
-                <td><input type="text" name="номер" data-modified="0"
+                <td>
+                    <input type="text" name="номер" data-modified="0"
                            value="@Model.номер"
                            onchange="this.setAttribute('data-modified', '1')"
                            style="width: 500px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>дата_поставки:</td><!-- прогноз даты поставки к нам на склад по данным поставщика -->
+                <td>
+                    <input type="text" name="дата_поставки" data-modified="0"
+                           class="date-selector"
+                           value="@Model.дата_поставки"
+                           onchange="this.setAttribute('data-modified', '1')" />
+                    <span>прогноз даты поставки к нам на склад по данным поставщика</span>
                 </td>
             </tr>
             <tr>
@@ -40,4 +51,15 @@
         </table>
     }
 </div>
+<script type="text/javascript">
+    var SupplyViewsF0_атрибуты_заказа = (function () {
+        let main = $('div#supply_views_f0_атрибуты_заказа');
+        let dateSelectors = main.find('input.date-selector');
+        dateSelectors.datepicker({
+            dateFormat: 'dd.mm.y',
+            firstDay: 1,
+            defaultDate: 0
+        });
+    })();
+</script>
 

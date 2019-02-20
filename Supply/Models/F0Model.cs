@@ -190,6 +190,7 @@ namespace FNet.Supply.Models
                 public String состояние_наименование;
                 public String примечание;
                 public String номер; // их
+                public String дата_поставки; // прогноз даты поставки к нам на склад по данным поставщика
 
                 public String this[String fieldName]
                 {
@@ -223,7 +224,8 @@ namespace FNet.Supply.Models
                             состояние = ConvertToString(dr["состояние"]),
                             состояние_наименование = ConvertToString(dr["состояние_наименование"]),
                             примечание = ConvertToString(dr["примечание"]),
-                            номер = ConvertToString(dr["номер"])
+                            номер = ConvertToString(dr["номер"]),
+                            дата_поставки = ConvertToString(dr["дата_поставки"])
                         };
                     }
                     return items;
@@ -249,8 +251,11 @@ namespace FNet.Supply.Models
                         case "System.String":
                             s = (String)v;
                             break;
+                        case "System.DateTime":
+                            s = ((DateTime)v).ToString("dd.MM.yy");
+                            break;
                         default:
-                            s = tfn;
+                            s = "FNet.Supply.Models.F0Model.ЗаказыУПоставщиковШапка.ConvertToString() result: " + tfn;
                             break;
                     }
                 }
@@ -428,6 +433,20 @@ namespace FNet.Supply.Models
                                     new RequestParameter() { Name = "field", Value = "номер" },
                                     new RequestParameter() { Name = "номер", Value = номер }
                                 };
+                                break;
+                            case "SetOrderSDate":
+                                String дата_поставки = v["дата_поставки"] as String;
+                                if (дата_поставки != null && дата_поставки.Length == 8)
+                                {
+                                    дата_поставки = $"20{дата_поставки.Substring(6, 2)}-{дата_поставки.Substring(3, 2)}-{дата_поставки.Substring(0, 2)}";
+                                    rqp1.Parameters = new RequestParameter[]
+                                    {
+                                        new RequestParameter() { Name = "session_id", Value = sessionId },
+                                        new RequestParameter() { Name = "order_uid", Value = orderUid },
+                                        new RequestParameter() { Name = "field", Value = "дата_поставки" },
+                                        new RequestParameter() { Name = "дата_поставки", Value = дата_поставки }
+                                    };
+                                }
                                 break;
                             default:
                                 break;

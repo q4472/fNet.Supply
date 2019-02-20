@@ -168,6 +168,13 @@
                         };
                         rqp.Parameters.push({ Name: 'SetOrderNum', Value: v });
                     }
+                    if (e.attr('name') == 'дата_поставки') {
+                        let v = {
+                            order_uid: table.attr('data-order_uid'),
+                            дата_поставки: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetOrderSDate', Value: v });
+                    }
                 });
                 let textareas = detail.find('textarea[data-modified="1"]');
                 //console.log(textareas);
