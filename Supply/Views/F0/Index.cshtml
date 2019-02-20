@@ -133,32 +133,55 @@
                 let saveButton = $(element);
                 saveButton.prop('disabled', true);
                 setInterval(function () { saveButton.prop('disabled', false); }, 1000);
-                let inputs = filteredData.find('input[data-modified="1"]');
+                rqp.Command = 'Supply.F0.OrderHeadUpdate';
+                rqp.Parameters = [];
+                let tInputs = filteredData.find('input[data-modified="1"]');
                 //console.log(inputs);
-                if (inputs.length > 0) {
-                    rqp.Command = 'Supply.F0.SetOrderAttr';
-                    rqp.Parameters = [];
-                    inputs.each(function (index, element) {
-                        let e = $(element);
-                        let tr = e.closest('tr');
-                        if (e.attr('name') == 'заказ_поставщик') {
-                            let v = {
-                                order_uid: tr.attr('data-order_uid'),
-                                supplier_uid: e.attr('data-id'),
-                                supplier_name: e.val()
-                            };
-                            rqp.Parameters.push({ Name: 'SetOrderSupplier', Value: v });
-                        }
-                        if (e.attr('name') == 'заказ_состояние') {
-                            let v = {
-                                order_uid: tr.attr('data-order_uid'),
-                                state_uid: e.attr('data-id'),
-                                state_name: e.val()
-                            };
-                            rqp.Parameters.push({ Name: 'SetOrderState', Value: v });
-                        }
-                    });
-                    //console.log(rqp);
+                tInputs.each(function (index, element) {
+                    let e = $(element);
+                    let tr = e.closest('tr');
+                    if (e.attr('name') == 'заказ_поставщик') {
+                        let v = {
+                            order_uid: tr.attr('data-order_uid'),
+                            supplier_uid: e.attr('data-id'),
+                            supplier_name: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetOrderSupplier', Value: v });
+                    }
+                    if (e.attr('name') == 'заказ_состояние') {
+                        let v = {
+                            order_uid: tr.attr('data-order_uid'),
+                            state_uid: e.attr('data-id'),
+                            state_name: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetOrderState', Value: v });
+                    }
+                });
+                let dInputs = detail.find('input[data-modified="1"]');
+                dInputs.each(function (index, element) {
+                    let e = $(element);
+                    let table = e.closest('table');
+                    if (e.attr('name') == 'номер') {
+                        let v = {
+                            order_uid: table.attr('data-order_uid'),
+                            номер: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetOrderNum', Value: v });
+                    }
+                });
+                let textareas = detail.find('textarea[data-modified="1"]');
+                //console.log(textareas);
+                textareas.each(function (index, element) {
+                    let e = $(element);
+                    let table = e.closest('table');
+                    let v = {
+                        order_uid: table.attr('data-order_uid'),
+                        примечание: e.val()
+                    };
+                    rqp.Parameters.push({ Name: 'SetOrderComment', Value: v });
+                });
+                //console.log(rqp); return;
+                if (rqp.Parameters.length > 0) {
                     filteredData.html('');
                     detail.html('');
                     Nskd.Http.post({

@@ -21,8 +21,8 @@ namespace FNet.Supply.Controllers
                 case "Supply.F0.GetOrderDetail":
                     v = GetOrderDetail();
                     break;
-                case "Supply.F0.SetOrderAttr":
-                    v = SetOrderAttr();
+                case "Supply.F0.OrderHeadUpdate":
+                    v = OrderHeadUpdate();
                     break;
                 default:
                     F0Model m = new F0Model(rqp);
@@ -62,10 +62,10 @@ namespace FNet.Supply.Controllers
             v = PartialView("~/Views/F0/АтрибутыЗаказа.cshtml", items);
             return v;
         }
-        private Object SetOrderAttr()
+        private Object OrderHeadUpdate()
         {
-            v += $"SetOrderAttr({Nskd.Json.ToString(rqp)})\n";
-            F0Model.SetOrderAttr(rqp);
+            v += $"OrderHeadUpdate({Nskd.Json.ToString(rqp)})\n";
+            F0Model.OrderHeadUpdate(rqp);
             F0Model m = new F0Model(rqp);
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;

@@ -164,19 +164,19 @@ namespace FNet.Supply.Models
             private DataTable dt;
             public ЗаказыУПоставщиковШапка(Guid sessionId, Guid order_uid)
             {
-                    RequestPackage rqp = new RequestPackage();
-                    rqp.SessionId = sessionId;
-                    rqp.Command = "Supply.dbo.заказы_у_поставщиков_шапка__получить";
-                    rqp.Parameters = new RequestParameter[]
-                    {
+                RequestPackage rqp = new RequestPackage();
+                rqp.SessionId = sessionId;
+                rqp.Command = "Supply.dbo.заказы_у_поставщиков_шапка__получить";
+                rqp.Parameters = new RequestParameter[]
+                {
                         new RequestParameter() { Name = "session_id", Value = sessionId },
                         new RequestParameter() { Name = "order_uid", Value = order_uid }
-                    };
-                    ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
-                    if (rsp != null)
-                    {
-                        dt = rsp.GetFirstTable();
-                    }
+                };
+                ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
+                if (rsp != null)
+                {
+                    dt = rsp.GetFirstTable();
+                }
             }
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
@@ -369,51 +369,73 @@ namespace FNet.Supply.Models
             };
             ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
         }
-        public static void SetOrderAttr(RequestPackage rqp)
+        public static void OrderHeadUpdate(RequestPackage rqp)
         {
             if (rqp != null && rqp.Parameters.Length > 0)
             {
+                Guid sessionId = rqp.SessionId;
                 foreach (RequestParameter p in rqp.Parameters)
                 {
-                    if (p.Name == "SetOrderSupplier")
+                    if (p.Value is Hashtable v && v.ContainsKey("order_uid") && Guid.TryParse(v["order_uid"] as String, out Guid orderUid))
                     {
-                        Hashtable v = p.Value as Hashtable;
-                        Guid.TryParse(v["order_uid"] as String, out Guid orderUid);
-                        Guid.TryParse(v["supplier_uid"] as String, out Guid supplierUid);
-                        String supplierName = v["supplier_name"] as String;
                         RequestPackage rqp1 = new RequestPackage()
                         {
-                            SessionId = rqp.SessionId,
-                            Command = "Supply.dbo.заказы_у_поставщиков_шапка__установить_поставщика"
+                            SessionId = sessionId,
+                            Command = "Supply.dbo.заказы_у_поставщиков_шапка__обновить_поле"
                         };
-                        rqp1.Parameters = new RequestParameter[]
+                        switch (p.Name)
                         {
-                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
-                        new RequestParameter() { Name = "order_uid", Value = orderUid },
-                        new RequestParameter() { Name = "supplier_uid", Value = supplierUid },
-                        new RequestParameter() { Name = "supplier_name", Value = supplierName }
-                        };
-                        ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
-                    }
-                    if (p.Name == "SetOrderState")
-                    {
-                        Hashtable v = p.Value as Hashtable;
-                        Guid.TryParse(v["order_uid"] as String, out Guid orderUid);
-                        Guid.TryParse(v["state_uid"] as String, out Guid stateUid);
-                        String stateName = v["state_name"] as String;
-                        RequestPackage rqp1 = new RequestPackage()
+                            case "SetOrderSupplier":
+                                Guid.TryParse(v["supplier_uid"] as String, out Guid supplierUid);
+                                String supplierName = v["supplier_name"] as String;
+                                rqp1.Parameters = new RequestParameter[]
+                                {
+                                    new RequestParameter() { Name = "session_id", Value = sessionId },
+                                    new RequestParameter() { Name = "order_uid", Value = orderUid },
+                                    new RequestParameter() { Name = "field", Value = "поставщик" },
+                                    new RequestParameter() { Name = "supplier_uid", Value = supplierUid },
+                                    new RequestParameter() { Name = "supplier_name", Value = supplierName }
+                                };
+                                break;
+                            case "SetOrderState":
+                                Guid.TryParse(v["state_uid"] as String, out Guid stateUid);
+                                String stateName = v["state_name"] as String;
+                                rqp1.Parameters = new RequestParameter[]
+                                {
+                                    new RequestParameter() { Name = "session_id", Value = sessionId },
+                                    new RequestParameter() { Name = "order_uid", Value = orderUid },
+                                    new RequestParameter() { Name = "field", Value = "состояние" },
+                                    new RequestParameter() { Name = "state_uid", Value = stateUid },
+                                    new RequestParameter() { Name = "state_name", Value = stateName }
+                                };
+                                break;
+                            case "SetOrderComment":
+                                String примечание = v["примечание"] as String;
+                                rqp1.Parameters = new RequestParameter[]
+                                {
+                                    new RequestParameter() { Name = "session_id", Value = sessionId },
+                                    new RequestParameter() { Name = "order_uid", Value = orderUid },
+                                    new RequestParameter() { Name = "field", Value = "примечание" },
+                                    new RequestParameter() { Name = "примечание", Value = примечание }
+                                };
+                                break;
+                            case "SetOrderNum":
+                                String номер = v["номер"] as String;
+                                rqp1.Parameters = new RequestParameter[]
+                                {
+                                    new RequestParameter() { Name = "session_id", Value = sessionId },
+                                    new RequestParameter() { Name = "order_uid", Value = orderUid },
+                                    new RequestParameter() { Name = "field", Value = "номер" },
+                                    new RequestParameter() { Name = "номер", Value = номер }
+                                };
+                                break;
+                            default:
+                                break;
+                        }
+                        if (rqp1.Parameters != null && rqp1.Parameters.Length > 0)
                         {
-                            SessionId = rqp.SessionId,
-                            Command = "Supply.dbo.заказы_у_поставщиков_шапка__установить_статус"
-                        };
-                        rqp1.Parameters = new RequestParameter[]
-                        {
-                        new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
-                        new RequestParameter() { Name = "order_uid", Value = orderUid },
-                        new RequestParameter() { Name = "state_uid", Value = stateUid },
-                        new RequestParameter() { Name = "state_name", Value = stateName }
-                        };
-                        ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
+                            ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
+                        }
                     }
                 }
             }

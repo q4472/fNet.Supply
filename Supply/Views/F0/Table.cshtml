@@ -10,11 +10,11 @@
         }
 
         #supply_views_f0_table table.journal tr.selected {
-            background-color: #aaffaa;
+            background-color: #bbffbb;
         }
 
         #supply_views_f0_table table.journal tr:hover {
-            background-color: #aaffaa;
+            background-color: #ddffdd;
         }
 
     #supply_views_f0_table table.journal th {
@@ -78,7 +78,7 @@
                         <td>
                             @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_состояние", NameField = "заказ_состояние_наименование" })
                         </td> <!-- 05 -->
-                        <td colspan="7">@currRow.заказ_примечание</td> <!-- 06-12 -->
+                        <td colspan="7" onclick="SupplyViewsF0Index.showOrderDetail(this);">@currRow.заказ_примечание</td> <!-- 06-12 -->
                     </tr>
                 }
                 <tr class="goods_info" data-uid="@currRow.заказы_у_поставщиков_таблица__uid" data-goods_uid="@currRow.товар">
