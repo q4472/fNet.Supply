@@ -13,42 +13,50 @@
     }
     else
     {
-        <table data-order_head_uid="@Model.uid">
-            <!--<tr><td>uid:</td><td>@Model.uid</td></tr>-->
-            <tr><td>id:</td><td>@Model.id</td></tr>
-            <tr><td>обработано:</td><td>@(((String)Model.обработано == "True") ? "Да" : "Нет")</td></tr>
-            <!--<tr><td>поставщик:</td><td>@Model.поставщик</td></tr>-->
-            <tr><td>поставщик_наименование:</td><td>@Model.поставщик_наименование</td></tr>
-            <!--<tr><td>состояние:</td><td>@Model.состояние</td></tr>-->
-            <tr><td>состояние_наименование:</td><td>@Model.состояние_наименование</td></tr>
-            <tr>
-                <td>номер:</td>
-                <td>
-                    <input type="text" name="номер" data-modified="0"
-                           value="@Model.номер"
-                           onchange="this.setAttribute('data-modified', '1')"
-                           style="width: 500px;" />
-                </td>
-            </tr>
-            <tr>
-                <td>дата_поставки:</td><!-- прогноз даты поставки к нам на склад по данным поставщика -->
-                <td>
-                    <input type="text" name="дата_поставки" data-modified="0"
-                           class="date-selector"
-                           value="@Model.дата_поставки"
-                           onchange="this.setAttribute('data-modified', '1')" />
-                    <span>прогноз даты поставки к нам на склад по данным поставщика</span>
-                </td>
-            </tr>
-            <tr>
-                <td>примечание:</td>
-                <td>
-                    <textarea name="примечание" data-modified="0"
-                              onchange="this.setAttribute('data-modified', '1')"
-                              rows="7" style="width: 500px;">@Model.примечание</textarea>
-                </td>
-            </tr>
-        </table>
+        <div style="float: left; border-right: 1px solid black;">
+            <table data-order_head_uid="@Model.uid">
+                <!--<tr><td>uid:</td><td>@Model.uid</td></tr>-->
+                <tr><td>id:</td><td>@Model.id</td></tr>
+                <tr><td>обработано:</td><td>@(((String)Model.обработано == "True") ? "Да" : "Нет")</td></tr>
+                <!--<tr><td>поставщик:</td><td>@Model.поставщик</td></tr>-->
+                <tr><td>поставщик_наименование:</td><td>@Model.поставщик_наименование</td></tr>
+                <!--<tr><td>состояние:</td><td>@Model.состояние</td></tr>-->
+                <tr><td>состояние_наименование:</td><td>@Model.состояние_наименование</td></tr>
+                <tr>
+                    <td>номер:</td>
+                    <td>
+                        <input type="text" name="номер" data-modified="0"
+                               value="@Model.номер"
+                               onchange="this.setAttribute('data-modified', '1')"
+                               style="width: 500px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>дата_поставки:</td><!-- прогноз даты поставки к нам на склад по данным поставщика -->
+                    <td>
+                        <input type="text" name="дата_поставки" data-modified="0"
+                               class="date-selector"
+                               value="@Model.дата_поставки"
+                               onchange="this.setAttribute('data-modified', '1')" />
+                        <span>прогноз даты поставки к нам на склад по данным поставщика</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>примечание:</td>
+                    <td>
+                        <textarea name="примечание" data-modified="0"
+                                  onchange="this.setAttribute('data-modified', '1')"
+                                  rows="7" style="width: 500px;">@Model.примечание</textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr><td colspan="2">Отправить сообщение менеджерам<br />продаж об изменении</td></tr>
+                <tr><td style="text-align: right;">даты поставки:</td><td><input type="checkbox" /></td></tr>
+            </table>
+        </div>
     }
 </div>
 <script type="text/javascript">
