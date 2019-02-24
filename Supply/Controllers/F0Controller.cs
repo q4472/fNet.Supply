@@ -19,14 +19,17 @@ namespace FNet.Supply.Controllers
                 case "Supply.F0.SetSupplier":
                     v = SetSupplier();
                     break;
-                case "Supply.F0.GetOrderDetail":
-                    v = GetOrderDetail();
+                case "Supply.F0.GetHeadDetail":
+                    v = GetHeadDetail();
                     break;
                 case "Supply.F0.OrderHeadUpdate":
                     v = OrderHeadUpdate();
                     break;
-                case "Supply.F0.GetPriceDetail":
-                    v = GetPriceDetail();
+                case "Supply.F0.GetTableDetail":
+                    v = GetTableDetail();
+                    break;
+                case "Supply.F0.OrderTableUpdate":
+                    v = OrderTableUpdate();
                     break;
                 default:
                     F0Model m = new F0Model(rqp);
@@ -44,11 +47,18 @@ namespace FNet.Supply.Controllers
             return v;
         }
 
-        private Object GetPriceDetail()
+        private Object GetTableDetail()
         {
-            v += $"GetPriceDetail({Nskd.Json.ToString(rqp)})\n";
-            var items = F0Model.GetPriceDetail(rqp);
-            v = PartialView("~/Views/F0/АтрибутыЦены.cshtml", items);
+            v += $"GetTableDetail({Nskd.Json.ToString(rqp)})\n";
+            var items = F0Model.GetTableDetail(rqp);
+            v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
+            return v;
+        }
+        private Object OrderTableUpdate()
+        {
+            v += $"OrderTableUpdate({Nskd.Json.ToString(rqp)})\n";
+            //var items = F0Model.OrderTableUpdate(rqp);
+            //v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
             return v;
         }
         private Object SetSupplier()
@@ -59,11 +69,11 @@ namespace FNet.Supply.Controllers
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
-        private Object GetOrderDetail()
+        private Object GetHeadDetail()
         {
-            v += $"GetOrderDetail({Nskd.Json.ToString(rqp)})\n";
-            var items = F0Model.GetOrderDetail(rqp);
-            v = PartialView("~/Views/F0/АтрибутыЗаказа.cshtml", items);
+            v += $"GetHeadDetail({Nskd.Json.ToString(rqp)})\n";
+            var items = F0Model.GetHeadDetail(rqp);
+            v = PartialView("~/Views/F0/АтрибутыШапки.cshtml", items);
             return v;
         }
         private Object OrderHeadUpdate()

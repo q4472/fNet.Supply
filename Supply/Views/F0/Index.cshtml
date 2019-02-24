@@ -253,14 +253,14 @@
                     }
                 });
             },
-            // showOrderDetail is call from Table.cshtml
-            showOrderDetail: function (td) {
+            // showHeadDetail is call from Table.cshtml
+            showHeadDetail: function (td) {
                 let tr = $(td).closest('tr');
                 let table = tr.closest('table');
                 table.find('tr').removeClass('selected');
                 tr.addClass('selected');
                 let order_uid = tr.attr('data-order_head_uid');
-                rqp.Command = 'Supply.F0.GetOrderDetail';
+                rqp.Command = 'Supply.F0.GetHeadDetail';
                 rqp.Parameters = [{ Name: 'order_uid', Value: order_uid }];
                 //console.log(rqp);
                 detail.html('');
@@ -272,13 +272,13 @@
                     }
                 });
             },
-            showPriceDetail: function (td) {
+            showTableDetail: function (td) {
                 let tr = $(td).closest('tr');
                 let table = tr.closest('table');
                 table.find('tr').removeClass('selected');
                 tr.addClass('selected');
                 let order_table_uid = tr.attr('data-order_table_uid');
-                rqp.Command = 'Supply.F0.GetPriceDetail';
+                rqp.Command = 'Supply.F0.GetTableDetail';
                 rqp.Parameters = [{ Name: 'order_table_uid', Value: order_table_uid }];
                 //console.log(rqp);
                 detail.html('');

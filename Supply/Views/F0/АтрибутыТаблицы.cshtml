@@ -1,0 +1,140 @@
+﻿@using FNet.Supply.Models
+@model F0Model.ЗаказыУПоставщиковТаблица.ItemArray
+<style type="text/css">
+    #supply_views_f0_атрибуты_цены th {
+        font-weight: bold;
+        padding: 2px;
+        vertical-align: top;
+    }
+
+    #supply_views_f0_атрибуты_цены td {
+        padding: 2px;
+        vertical-align: top;
+    }
+
+        #supply_views_f0_атрибуты_цены td:first-child {
+            font-weight: bold;
+        }
+
+    #supply_views_f0_атрибуты_цены input[type="text"] {
+        width: 60px;
+        text-align: right;
+    }
+</style>
+<div id="supply_views_f0_атрибуты_цены">
+    @if (Model == null)
+    {
+        <span>Нет данных.</span>
+    }
+    else
+    {
+        <input type="hidden" class="order-table-uid" value="@Model["uid"]" />
+        <div style="float: left; border-right: 1px solid black;">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Срок годности</th>
+                </tr>
+                <tr>
+                    <td>Требование</td>
+                    <td><input type="text" readonly="readonly" value="@Model["цена1"]" style="background-color: #dddddd;" /></td>
+                    <td><input type="text" readonly="readonly" value="@Model["количество1"]" style="background-color: #dddddd;" /></td>
+                    <td><input type="text" readonly="readonly" value="@Model["срок_годности1"]" style="background-color: #dddddd;" /></td>
+                </tr>
+                <tr>
+                    <td>Контракт</td>
+                    <td><input type="text" name="цена2" value="@Model["цена2"]" /></td>
+                    <td><input type="text" name="количество2" value="@Model["количество2"]" /></td>
+                    <td><input type="text" name="срок_годности2" value="@Model["срок_годности2"]" /></td>
+                </tr>
+                <tr>
+                    <td>Договор</td>
+                    <td><input type="text" name="цена3" value="@Model["цена3"]" /></td>
+                    <td><input type="text" name="количество3" value="@Model["количество3"]" /></td>
+                    <td><input type="text" name="срок_годности3" value="@Model["срок_годности3"]" /></td>
+                </tr>
+                <tr>
+                    <td>Факт</td>
+                    <td><input type="text" name="цена4" value="@Model["цена4"]" /></td>
+                    <td><input type="text" name="количество4" value="@Model["количество4"]" /></td>
+                    <td><input type="text" name="срок_годности4" value="@Model["срок_годности4"]" /></td>
+                </tr>
+                <tr>
+                    <td>Примечание</td>
+                    <td colspan="3"><textarea name="примечание" rows="7" style="width: 300px;">@Model["примечание"]</textarea></td>
+                </tr>
+            </table>
+        </div>
+        <div style="float: left; border-right: 1px solid black;">
+            <table>
+                <tr><td colspan="2">Отправить сообщение менеджерам<br />продаж об изменении</td></tr>
+                <tr><td style="text-align: right;">цены:</td><td><input type="checkbox" name="сообщить_о_цене" /></td></tr>
+                <tr><td style="text-align: right;">количества:</td><td><input type="checkbox" name="сообщить_о_количестве" /></td></tr>
+                <tr><td style="text-align: right;">срока годности:</td><td><input type="checkbox" name="сообщить_о_сроке_годности" /></td></tr>
+            </table>
+        </div>
+        <div>
+            <input type="button" class="button-save" value="Сохранить" style="margin: 2px;" disabled="disabled" />
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    var SupplyViewsF0АтрибутыЦены = (function () {
+        let main = $('#supply_views_f0_атрибуты_цены');
+        let buttonSave = main.find('input.button-save');
+        buttonSave.click(function () {
+            let e = $(this);
+            e.prop('disabled', true);
+            save();
+        });
+        let inputs = main.find('input[name]');
+        {
+            inputs.attr('data-modified', '0');
+            inputs.change(onDataChange);
+            inputs.keyup(onDataChange);
+        }
+        let textareas = main.find('textarea[name]');
+        {
+            textareas.attr('data-modified', '0');
+            textareas.change(onDataChange);
+            textareas.keyup(onDataChange);
+        }
+        function onDataChange() {
+            $(this).attr('data-modified', '1');
+            buttonSave.prop('disabled', false);
+        }
+        function save() {
+            let rqp = {
+                SessionId: Nskd.Server.SessionId,
+                Command: 'Supply.F0.OrderTableUpdate',
+                Parameters: []
+            };
+            inputs.each(function (index, element) {
+                let e = $(element);
+                if (e.attr('data-modified') == '1') {
+                    rqp.Parameters.push({ Name: e.attr('name'), Value: e.val() });
+                }
+            });
+            textareas.each(function (index, element) {
+                let e = $(element);
+                if (e.attr('data-modified') == '1') {
+                    rqp.Parameters.push({ Name: e.attr('name'), Value: e.val() });
+                }
+            });
+            if (rqp.Parameters.length > 0) {
+                rqp.Parameters.push({ Name: 'uid', Value: main.find('input.order-table-uid').val() });
+                main.html('');
+                Nskd.Http.post({
+                    url: '/supply/f0',
+                    rqp: rqp,
+                    done: function (data) {
+                        main.parent().html(data);
+                    }
+                });
+            }
+        }
+        return {};
+    })();
+</script>

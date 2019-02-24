@@ -221,15 +221,23 @@ namespace FNet.Supply.Models
                 }
             }
         }
-        public class ЗаказыУПоставщиковТаблицаЦены
+        public class ЗаказыУПоставщиковТаблица
         {
-            private DataTable dt;
-            public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
+            private DataTable заказыУПоставщиковТаблица;
+            private DataTable заказыУПоставщиковТаблицаЦены;
+            public Int32 RowsCount { get => (заказыУПоставщиковТаблица == null) ? 0 : заказыУПоставщиковТаблица.Rows.Count; }
             public class ItemArray
             {
                 public String uid;
                 public String id;
                 public String parent_uid;
+                public String обработано;
+                public String товар;
+                public String примечание;
+
+                //public String uid;
+                //public String id;
+                //public String parent_uid;
                 public String цена1;
                 public String цена2;
                 public String цена3;
@@ -242,6 +250,7 @@ namespace FNet.Supply.Models
                 public String срок_годности2;
                 public String срок_годности3;
                 public String срок_годности4;
+
 
                 public String this[String fieldName]
                 {
@@ -261,28 +270,35 @@ namespace FNet.Supply.Models
             {
                 get
                 {
-                    ItemArray items = null;
-                    if (dt != null && index >= 0 && index < dt.Rows.Count)
+                    ItemArray items = new ItemArray();
+                    if (заказыУПоставщиковТаблица != null && index >= 0 && index < заказыУПоставщиковТаблица.Rows.Count)
                     {
-                        DataRow dr = dt.Rows[index];
-                        items = new ItemArray
-                        {
-                            uid = ConvertToString(dr["uid"]),
-                            id = ConvertToString(dr["id"]),
-                            parent_uid = ConvertToString(dr["parent_uid"]),
-                            цена1 = ConvertToString(dr["цена1"]),
-                            цена2 = ConvertToString(dr["цена2"]),
-                            цена3 = ConvertToString(dr["цена3"]),
-                            цена4 = ConvertToString(dr["цена4"]),
-                            количество1 = ConvertToString(dr["количество1"]),
-                            количество2 = ConvertToString(dr["количество2"]),
-                            количество3 = ConvertToString(dr["количество3"]),
-                            количество4 = ConvertToString(dr["количество4"]),
-                            срок_годности1 = ConvertToString(dr["срок_годности1"]),
-                            срок_годности2 = ConvertToString(dr["срок_годности2"]),
-                            срок_годности3 = ConvertToString(dr["срок_годности3"]),
-                            срок_годности4 = ConvertToString(dr["срок_годности4"])
-                        };
+                        DataRow dr = заказыУПоставщиковТаблица.Rows[index];
+                        items.uid = ConvertToString(dr["uid"]);
+                        items.id = ConvertToString(dr["id"]);
+                        items.parent_uid = ConvertToString(dr["parent_uid"]);
+                        items.обработано = ConvertToString(dr["обработано"]);
+                        items.товар = ConvertToString(dr["товар"]);
+                        items.примечание = ConvertToString(dr["примечание"]);
+                    }
+                    if (заказыУПоставщиковТаблицаЦены != null && index >= 0 && index < заказыУПоставщиковТаблицаЦены.Rows.Count)
+                    {
+                        DataRow dr = заказыУПоставщиковТаблицаЦены.Rows[index];
+                        //items.uid = ConvertToString(dr["uid"]),
+                        //items.id = ConvertToString(dr["id"]),
+                        //items.parent_uid = ConvertToString(dr["parent_uid"]),
+                        items.цена1 = ConvertToString(dr["цена1"]);
+                        items.цена2 = ConvertToString(dr["цена2"]);
+                        items.цена3 = ConvertToString(dr["цена3"]);
+                        items.цена4 = ConvertToString(dr["цена4"]);
+                        items.количество1 = ConvertToString(dr["количество1"]);
+                        items.количество2 = ConvertToString(dr["количество2"]);
+                        items.количество3 = ConvertToString(dr["количество3"]);
+                        items.количество4 = ConvertToString(dr["количество4"]);
+                        items.срок_годности1 = ConvertToString(dr["срок_годности1"]);
+                        items.срок_годности2 = ConvertToString(dr["срок_годности2"]);
+                        items.срок_годности3 = ConvertToString(dr["срок_годности3"]);
+                        items.срок_годности4 = ConvertToString(dr["срок_годности4"]);
                         if (items.цена1.Length > 4) { items.цена1 = items.цена1.Substring(0, items.цена1.Length - 1); }
                         if (items.цена2.Length > 4) { items.цена2 = items.цена2.Substring(0, items.цена2.Length - 1); }
                         if (items.цена3.Length > 4) { items.цена3 = items.цена3.Substring(0, items.цена3.Length - 1); }
@@ -299,20 +315,27 @@ namespace FNet.Supply.Models
                     return items;
                 }
             }
-            public ЗаказыУПоставщиковТаблицаЦены(Guid sessionId, Guid orderTableUid)
+            public ЗаказыУПоставщиковТаблица(Guid sessionId, Guid uid)
             {
                 RequestPackage rqp = new RequestPackage();
                 rqp.SessionId = sessionId;
-                rqp.Command = "Supply.dbo.заказ_у_поставщика__получить_атрибуты_цены";
+                rqp.Command = "Supply.dbo.заказы_у_поставщиков_таблица__получить";
                 rqp.Parameters = new RequestParameter[]
                 {
                         new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
-                        new RequestParameter() { Name = "заказы_у_поставщиков_таблица__uid", Value = orderTableUid }
+                        new RequestParameter() { Name = "uid", Value = uid }
                 };
                 ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
-                if (rsp != null)
+                if (rsp != null && rsp.Data != null && rsp.Data.Tables != null)
                 {
-                    dt = rsp.GetFirstTable();
+                    if (rsp.Data.Tables.Count > 0)
+                    {
+                        заказыУПоставщиковТаблица = rsp.Data.Tables[0];
+                        if (rsp.Data.Tables.Count > 1)
+                        {
+                            заказыУПоставщиковТаблицаЦены = rsp.Data.Tables[1];
+                        }
+                    }
                 }
             }
         }
@@ -389,7 +412,7 @@ namespace FNet.Supply.Models
             return dt;
         }
 
-        public static ЗаказыУПоставщиковШапка.ItemArray GetOrderDetail(RequestPackage rqp)
+        public static ЗаказыУПоставщиковШапка.ItemArray GetHeadDetail(RequestPackage rqp)
         {
             ЗаказыУПоставщиковШапка.ItemArray items = null;
             if (rqp != null && rqp.SessionId != null)
@@ -403,16 +426,16 @@ namespace FNet.Supply.Models
             }
             return items;
         }
-        public static ЗаказыУПоставщиковТаблицаЦены.ItemArray GetPriceDetail(RequestPackage rqp)
+        public static ЗаказыУПоставщиковТаблица.ItemArray GetTableDetail(RequestPackage rqp)
         {
-            ЗаказыУПоставщиковТаблицаЦены.ItemArray items = null;
+            ЗаказыУПоставщиковТаблица.ItemArray items = null;
             if (rqp != null && rqp.SessionId != null)
             {
                 Guid.TryParse(rqp["order_table_uid"] as String, out Guid uid);
-                ЗаказыУПоставщиковТаблицаЦены ztc = new ЗаказыУПоставщиковТаблицаЦены(rqp.SessionId, uid);
-                if (ztc.RowsCount > 0)
+                ЗаказыУПоставщиковТаблица zt = new ЗаказыУПоставщиковТаблица(rqp.SessionId, uid);
+                if (zt.RowsCount > 0)
                 {
-                    items = ztc[0];
+                    items = zt[0];
                 }
             }
             return items;
