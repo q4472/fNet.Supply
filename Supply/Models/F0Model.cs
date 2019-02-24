@@ -481,7 +481,7 @@ namespace FNet.Supply.Models
         }
         public static void OrderHeadUpdate(RequestPackage rqp)
         {
-            if (rqp != null && rqp.Parameters.Length > 0)
+            if (rqp != null && rqp.Parameters != null && rqp.Parameters.Length > 0)
             {
                 Guid sessionId = rqp.SessionId;
                 foreach (RequestParameter p in rqp.Parameters)
@@ -562,6 +562,14 @@ namespace FNet.Supply.Models
                         }
                     }
                 }
+            }
+        }
+        public static void OrderTableUpdate(RequestPackage rqp)
+        {
+            if (rqp != null && rqp.Parameters != null && rqp.Parameters.Length > 0)
+            {
+                rqp.Command = "Supply.dbo.заказы_у_поставщиков_таблица__обновить";
+                ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
             }
         }
     }

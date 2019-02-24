@@ -57,7 +57,7 @@ namespace FNet.Supply.Controllers
         private Object OrderTableUpdate()
         {
             v += $"OrderTableUpdate({Nskd.Json.ToString(rqp)})\n";
-            //var items = F0Model.OrderTableUpdate(rqp);
+            F0Model.OrderTableUpdate(rqp);
             //v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
             return v;
         }

@@ -111,20 +111,26 @@
                 Command: 'Supply.F0.OrderTableUpdate',
                 Parameters: []
             };
+            let fields = '';
             inputs.each(function (index, element) {
                 let e = $(element);
                 if (e.attr('data-modified') == '1') {
-                    rqp.Parameters.push({ Name: e.attr('name'), Value: e.val() });
+                    let name = e.attr('name');
+                    rqp.Parameters.push({ Name: name, Value: e.val() });
+                    fields += '<a>' + name + '</a>';
                 }
             });
             textareas.each(function (index, element) {
                 let e = $(element);
                 if (e.attr('data-modified') == '1') {
-                    rqp.Parameters.push({ Name: e.attr('name'), Value: e.val() });
+                    let name = e.attr('name');
+                    rqp.Parameters.push({ Name: name, Value: e.val() });
+                    fields += '<a>' + name + '</a>';
                 }
             });
             if (rqp.Parameters.length > 0) {
                 rqp.Parameters.push({ Name: 'uid', Value: main.find('input.order-table-uid').val() });
+                rqp.Parameters.push({ Name: 'fields', Value: fields });
                 main.html('');
                 Nskd.Http.post({
                     url: '/supply/f0',
