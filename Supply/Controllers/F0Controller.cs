@@ -10,43 +10,13 @@ namespace FNet.Supply.Controllers
         private Object v;
         private RequestPackage rqp;
 
-        public Object Index()
-        {
-            v = "FNet.Supply.Controllers.F0Controller.Index()\n";
-            rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
-            switch (rqp.Command)
-            {
-                case "Supply.F0.SetSupplier":
-                    v = SetSupplier();
-                    break;
-                case "Supply.F0.GetHeadDetail":
-                    v = GetHeadDetail();
-                    break;
-                case "Supply.F0.OrderHeadUpdate":
-                    v = OrderHeadUpdate();
-                    break;
-                case "Supply.F0.GetTableDetail":
-                    v = GetTableDetail();
-                    break;
-                case "Supply.F0.OrderTableUpdate":
-                    v = OrderTableUpdate();
-                    break;
-                default:
-                    F0Model m = new F0Model(rqp);
-                    v = PartialView("~/Views/F0/Index.cshtml", m);
-                    break;
-            }
-            return v;
-        }
-        public Object ApplyFilter()
+        private Object ApplyFilter()
         {
             Object v = null;
-            RequestPackage rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
             F0Model m = new F0Model(rqp);
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
-
         private Object GetTableDetail()
         {
             v += $"GetTableDetail({Nskd.Json.ToString(rqp)})\n";
@@ -82,6 +52,38 @@ namespace FNet.Supply.Controllers
             F0Model.OrderHeadUpdate(rqp);
             F0Model m = new F0Model(rqp);
             v = PartialView("~/Views/F0/Table.cshtml", m);
+            return v;
+        }
+
+        public Object Index()
+        {
+            v = "FNet.Supply.Controllers.F0Controller.Index()\n";
+            rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
+            switch (rqp.Command)
+            {
+                case "Supply.F0.ApplyFilter":
+                    v = ApplyFilter();
+                    break;
+                case "Supply.F0.SetSupplier":
+                    v = SetSupplier();
+                    break;
+                case "Supply.F0.GetHeadDetail":
+                    v = GetHeadDetail();
+                    break;
+                case "Supply.F0.OrderHeadUpdate":
+                    v = OrderHeadUpdate();
+                    break;
+                case "Supply.F0.GetTableDetail":
+                    v = GetTableDetail();
+                    break;
+                case "Supply.F0.OrderTableUpdate":
+                    v = OrderTableUpdate();
+                    break;
+                default:
+                    F0Model m = new F0Model(rqp);
+                    v = PartialView("~/Views/F0/Index.cshtml", m);
+                    break;
+            }
             return v;
         }
     }
