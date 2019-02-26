@@ -45,21 +45,21 @@
                 </tr>
                 <tr>
                     <td>Контракт</td>
-                    <td><input type="text" name="цена2" value="@Model["цена2"]" /></td>
-                    <td><input type="text" name="количество2" value="@Model["количество2"]" /></td>
-                    <td><input type="text" name="срок_годности2" value="@Model["срок_годности2"]" /></td>
+                    <td><input type="text" name="цена2" value="@Model["цена2"]" onchange="Nskd.Validator.nNorm(this, 2);" /></td>
+                    <td><input type="text" name="количество2" value="@Model["количество2"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
+                    <td><input type="text" name="срок_годности2" value="@Model["срок_годности2"]" class="datepicker" /></td>
                 </tr>
                 <tr>
                     <td>Договор</td>
-                    <td><input type="text" name="цена3" value="@Model["цена3"]" /></td>
-                    <td><input type="text" name="количество3" value="@Model["количество3"]" /></td>
-                    <td><input type="text" name="срок_годности3" value="@Model["срок_годности3"]" /></td>
+                    <td><input type="text" name="цена3" value="@Model["цена3"]" onchange="Nskd.Validator.nNorm(this, 2);" /></td>
+                    <td><input type="text" name="количество3" value="@Model["количество3"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
+                    <td><input type="text" name="срок_годности3" value="@Model["срок_годности3"]" class="datepicker" /></td>
                 </tr>
                 <tr>
                     <td>Факт</td>
-                    <td><input type="text" name="цена4" value="@Model["цена4"]" /></td>
-                    <td><input type="text" name="количество4" value="@Model["количество4"]" /></td>
-                    <td><input type="text" name="срок_годности4" value="@Model["срок_годности4"]" /></td>
+                    <td><input type="text" name="цена4" value="@Model["цена4"]" onchange="Nskd.Validator.nNorm(this, 2);" /></td>
+                    <td><input type="text" name="количество4" value="@Model["количество4"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
+                    <td><input type="text" name="срок_годности4" value="@Model["срок_годности4"]" class="datepicker" /></td>
                 </tr>
                 <tr>
                     <td>Примечание</td>
@@ -83,6 +83,7 @@
 <script type="text/javascript">
     var SupplyViewsF0АтрибутыЦены = (function () {
         let main = $('#supply_views_f0_атрибуты_цены');
+        main.find('input.datepicker').datepicker({ dateFormat: "mm.y" });
         let buttonSave = main.find('input.button-save');
         buttonSave.click(function () {
             let e = $(this);

@@ -42,7 +42,7 @@
                 <th>Поставщик</th> <!-- 03 -->
                 <th>№ их</th> <!-- 04 -->
                 <th>Состояние заказа</th> <!-- 05 -->
-                <th colspan="7">Примечание</th> <!-- 06-12 -->
+                <th colspan="8">Примечание</th> <!-- 06-13 -->
             </tr>
             <tr>
                 <th></th> <!-- 01 -->
@@ -53,7 +53,8 @@
                 <th>Срок (т)</th> <!-- 09 -->
                 <th>Менеджер</th> <!-- 10 -->
                 <th>Спецификация</th> <!-- 11 -->
-                <th>Примечание</th> <!-- 12 -->
+                <th title="дата поставки к нам на склад по спецификации">Дата</th> <!-- 12 -->
+                <th>Примечание</th> <!-- 13 -->
             </tr>
             @for (Int32 i = 0; i < Model.Data.RowsCount; i++)
             {
@@ -78,7 +79,7 @@
                         <td>
                             @RenderPage("~/Views/F0/TableFieldSelect.cshtml", new { CurrRow = currRow, IdField = "заказ_состояние", NameField = "заказ_состояние_наименование" })
                         </td> <!-- 05 -->
-                        <td colspan="7" onclick="SupplyViewsF0Index.showHeadDetail(this);">@currRow.заказ_примечание</td> <!-- 06-12 -->
+                        <td colspan="8" onclick="SupplyViewsF0Index.showHeadDetail(this);">@currRow.заказ_примечание</td> <!-- 06-13 -->
                     </tr>
                 }
                 <tr class="goods_info" data-order_table_uid="@currRow.заказы_у_поставщиков_таблица__uid" data-goods_uid="@currRow.товар">
@@ -90,7 +91,8 @@
                     <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@currRow.товар_срок_годности1</td> <!-- 09 -->
                     <td>@currRow.товар_спецификация_менеджер</td> <!-- 10 -->
                     <td>@currRow.товар_спецификация_номер</td> <!-- 11 -->
-                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@currRow.товар_примечание</td> <!-- 12 -->
+                    <td style="text-align: right">@currRow.товар_дата_поставки</td> <!-- 12 -->
+                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@currRow.товар_примечание</td> <!-- 13 -->
                 </tr>
             }
             <tr style="border: 1px solid black"></tr>

@@ -64,6 +64,7 @@ namespace FNet.Supply.Models
                 public String товар;
                 public String товар_описание;
                 public String товар_примечание;
+                public String товар_дата_поставки;
                 public String товар_спецификация;
                 public String товар_спецификация_номер;
                 public String товар_спецификация_менеджер;
@@ -109,6 +110,7 @@ namespace FNet.Supply.Models
                             товар = ConvertToString(dr["товар"]),
                             товар_описание = ConvertToString(dr["товар_описание"]),
                             товар_примечание = ConvertToString(dr["товар_примечание"]),
+                            товар_дата_поставки = ConvertToString(dr["товар_дата_поставки"]),
                             товар_спецификация = ConvertToString(dr["товар_спецификация"]),
                             товар_спецификация_номер = ConvertToString(dr["товар_спецификация_номер"]),
                             товар_спецификация_менеджер = ConvertToString(dr["товар_спецификация_менеджер"]),
