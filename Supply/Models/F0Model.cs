@@ -8,7 +8,7 @@ namespace FNet.Supply.Models
 {
     public class F0Model
     {
-        public RequestPackage Rqp;
+        private RequestPackage rqp;
         public FilterData Filter;
         public FilteredData Data;
         public DataTable Поставщики;
@@ -16,7 +16,11 @@ namespace FNet.Supply.Models
 
         public F0Model(RequestPackage rqp)
         {
-            Rqp = rqp;
+            this.rqp = rqp;
+        }
+
+        public void ApplyFilter()
+        {
             Filter = new FilterData(this);
             Data = new FilteredData(this);
             Поставщики = ПолучитьСписокПоставщиков(this);
@@ -34,14 +38,14 @@ namespace FNet.Supply.Models
 
             public FilterData(F0Model m)
             {
-                if (m.Rqp != null)
+                if (m.rqp != null)
                 {
-                    все = (m.Rqp["все"] == null) ? "False" : ((Boolean)m.Rqp["все"]).ToString();
-                    дата_min = (m.Rqp["дата_min"] == null) ? "" : (String)m.Rqp["дата_min"];
-                    дата_max = (m.Rqp["дата_max"] == null) ? "" : (String)m.Rqp["дата_max"];
-                    менеджер = (m.Rqp["менеджер"] == null) ? "" : (String)m.Rqp["менеджер"];
-                    спецификация_номер = (m.Rqp["спецификация_номер"] == null) ? "" : (String)m.Rqp["спецификация_номер"];
-                    аукцион_номер = (m.Rqp["аукцион_номер"] == null) ? "" : (String)m.Rqp["аукцион_номер"];
+                    все = (m.rqp["все"] == null) ? "False" : ((Boolean)m.rqp["все"]).ToString();
+                    дата_min = (m.rqp["дата_min"] == null) ? "" : (String)m.rqp["дата_min"];
+                    дата_max = (m.rqp["дата_max"] == null) ? "" : (String)m.rqp["дата_max"];
+                    менеджер = (m.rqp["менеджер"] == null) ? "" : (String)m.rqp["менеджер"];
+                    спецификация_номер = (m.rqp["спецификация_номер"] == null) ? "" : (String)m.rqp["спецификация_номер"];
+                    аукцион_номер = (m.rqp["аукцион_номер"] == null) ? "" : (String)m.rqp["аукцион_номер"];
                 }
             }
         }
@@ -132,14 +136,14 @@ namespace FNet.Supply.Models
             }
             public FilteredData(F0Model m)
             {
-                if (m.Rqp != null && m.Rqp.SessionId != null)
+                if (m.rqp != null && m.rqp.SessionId != null)
                 {
                     RequestPackage rqp = new RequestPackage();
-                    rqp.SessionId = m.Rqp.SessionId;
+                    rqp.SessionId = m.rqp.SessionId;
                     rqp.Command = "Supply.dbo.заказы_у_поставщиков__получить";
                     rqp.Parameters = new RequestParameter[]
                     {
-                        new RequestParameter() { Name = "session_id", Value = m.Rqp.SessionId },
+                        new RequestParameter() { Name = "session_id", Value = m.rqp.SessionId },
                         new RequestParameter() { Name = "все", Value = m.Filter.все }
                     };
                     if (!String.IsNullOrWhiteSpace(m.Filter.дата_min)) rqp["дата_min"] = m.Filter.дата_min;
@@ -385,11 +389,11 @@ namespace FNet.Supply.Models
             DataTable dt = null;
             RequestPackage rqp = new RequestPackage
             {
-                SessionId = m.Rqp.SessionId,
+                SessionId = m.rqp.SessionId,
                 Command = "Supply.dbo.поставщики__получить",
                 Parameters = new RequestParameter[]
                 {
-                    new RequestParameter() { Name = "session_id", Value = m.Rqp.SessionId }
+                    new RequestParameter() { Name = "session_id", Value = m.rqp.SessionId }
                 }
             };
             ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
@@ -404,11 +408,11 @@ namespace FNet.Supply.Models
             DataTable dt = null;
             RequestPackage rqp = new RequestPackage
             {
-                SessionId = m.Rqp.SessionId,
+                SessionId = m.rqp.SessionId,
                 Command = "Supply.dbo.состояния_заказа__получить",
                 Parameters = new RequestParameter[]
                 {
-                    new RequestParameter() { Name = "session_id", Value = m.Rqp.SessionId }
+                    new RequestParameter() { Name = "session_id", Value = m.rqp.SessionId }
                 }
             };
             ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
@@ -419,7 +423,7 @@ namespace FNet.Supply.Models
             return dt;
         }
 
-        public static ЗаказыУПоставщиковШапка.ItemArray GetHeadDetail(RequestPackage rqp)
+        public ЗаказыУПоставщиковШапка.ItemArray GetHeadDetail()
         {
             ЗаказыУПоставщиковШапка.ItemArray items = null;
             if (rqp != null && rqp.SessionId != null)
@@ -433,7 +437,7 @@ namespace FNet.Supply.Models
             }
             return items;
         }
-        public static ЗаказыУПоставщиковТаблица.ItemArray GetTableDetail(RequestPackage rqp)
+        public ЗаказыУПоставщиковТаблица.ItemArray GetTableDetail()
         {
             ЗаказыУПоставщиковТаблица.ItemArray items = null;
             if (rqp != null && rqp.SessionId != null)
@@ -447,7 +451,7 @@ namespace FNet.Supply.Models
             }
             return items;
         }
-        public static void SetSupplier(RequestPackage rqp)
+        public void SetSupplier()
         {
             Hashtable setSupplierValue = (Hashtable)rqp["SetSupplier"];
             Guid supplierUid = new Guid();
@@ -486,7 +490,7 @@ namespace FNet.Supply.Models
             };
             ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
         }
-        public static void OrderHeadUpdate(RequestPackage rqp)
+        public void OrderHeadUpdate()
         {
             if (rqp != null && rqp.Parameters != null && rqp.Parameters.Length > 0)
             {
@@ -571,7 +575,7 @@ namespace FNet.Supply.Models
                 }
             }
         }
-        public static void OrderTableUpdate(RequestPackage rqp)
+        public void OrderTableUpdate()
         {
             if (rqp != null && rqp.Parameters != null && rqp.Parameters.Length > 0)
             {

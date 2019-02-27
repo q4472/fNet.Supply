@@ -12,45 +12,51 @@ namespace FNet.Supply.Controllers
 
         private Object ApplyFilter()
         {
-            Object v = null;
+            //v += $"ApplyFilter({Nskd.Json.ToString(rqp)})";
             F0Model m = new F0Model(rqp);
+            m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
         private Object GetTableDetail()
         {
-            v += $"GetTableDetail({Nskd.Json.ToString(rqp)})\n";
-            var items = F0Model.GetTableDetail(rqp);
+            //v += $"GetTableDetail({Nskd.Json.ToString(rqp)})\n";
+            F0Model m = new F0Model(rqp);
+            var items = m.GetTableDetail();
             v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
             return v;
         }
         private Object OrderTableUpdate()
         {
-            v += $"OrderTableUpdate({Nskd.Json.ToString(rqp)})\n";
-            F0Model.OrderTableUpdate(rqp);
+            //v += $"OrderTableUpdate({Nskd.Json.ToString(rqp)})\n";
+            F0Model m = new F0Model(rqp);
+            m.OrderTableUpdate();
             //v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
             return v;
         }
         private Object SetSupplier()
         {
-            v += $"SetSupplier({Nskd.Json.ToString(rqp)})";
-            F0Model.SetSupplier(rqp);
+            //v += $"SetSupplier({Nskd.Json.ToString(rqp)})";
             F0Model m = new F0Model(rqp);
+            m.SetSupplier();
+            m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
         private Object GetHeadDetail()
         {
-            v += $"GetHeadDetail({Nskd.Json.ToString(rqp)})\n";
-            var items = F0Model.GetHeadDetail(rqp);
+            //v += $"GetHeadDetail({Nskd.Json.ToString(rqp)})\n";
+            F0Model m = new F0Model(rqp);
+            var items = m.GetHeadDetail();
             v = PartialView("~/Views/F0/АтрибутыШапки.cshtml", items);
             return v;
         }
         private Object OrderHeadUpdate()
         {
             v += $"OrderHeadUpdate({Nskd.Json.ToString(rqp)})\n";
-            F0Model.OrderHeadUpdate(rqp);
             F0Model m = new F0Model(rqp);
+            m.OrderHeadUpdate();
+            m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
         }
@@ -59,31 +65,37 @@ namespace FNet.Supply.Controllers
         {
             v = "FNet.Supply.Controllers.F0Controller.Index()\n";
             rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
-            switch (rqp.Command)
+            if (rqp != null)
             {
-                case "Supply.F0.ApplyFilter":
-                    v = ApplyFilter();
-                    break;
-                case "Supply.F0.SetSupplier":
-                    v = SetSupplier();
-                    break;
-                case "Supply.F0.GetHeadDetail":
-                    v = GetHeadDetail();
-                    break;
-                case "Supply.F0.OrderHeadUpdate":
-                    v = OrderHeadUpdate();
-                    break;
-                case "Supply.F0.GetTableDetail":
-                    v = GetTableDetail();
-                    break;
-                case "Supply.F0.OrderTableUpdate":
-                    v = OrderTableUpdate();
-                    break;
-                default:
-                    F0Model m = new F0Model(rqp);
-                    v = PartialView("~/Views/F0/Index.cshtml", m);
-                    break;
+                switch (rqp.Command)
+                {
+                    case "Supply.F0.ApplyFilter":
+                        v = ApplyFilter();
+                        break;
+                    case "Supply.F0.SetSupplier":
+                        v = SetSupplier();
+                        break;
+                    case "Supply.F0.GetHeadDetail":
+                        v = GetHeadDetail();
+                        break;
+                    case "Supply.F0.OrderHeadUpdate":
+                        v = OrderHeadUpdate();
+                        break;
+                    case "Supply.F0.GetTableDetail":
+                        v = GetTableDetail();
+                        break;
+                    case "Supply.F0.OrderTableUpdate":
+                        v = OrderTableUpdate();
+                        break;
+                    default:
+                        //v += $"Неизвестная команда: '{rqp.Command}'.\n";
+                        F0Model m = new F0Model(rqp);
+                        m.ApplyFilter();
+                        v = PartialView("~/Views/F0/Index.cshtml", m);
+                        break;
+                }
             }
+            else { v += "Отсутствует RequestPackage."; }
             return v;
         }
     }
