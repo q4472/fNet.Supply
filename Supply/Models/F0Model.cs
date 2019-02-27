@@ -30,6 +30,7 @@ namespace FNet.Supply.Models
             public String дата_max = "";
             public String менеджер = "";
             public String спецификация_номер = "";
+            public String аукцион_номер = "";
 
             public FilterData(F0Model m)
             {
@@ -40,6 +41,7 @@ namespace FNet.Supply.Models
                     дата_max = (m.Rqp["дата_max"] == null) ? "" : (String)m.Rqp["дата_max"];
                     менеджер = (m.Rqp["менеджер"] == null) ? "" : (String)m.Rqp["менеджер"];
                     спецификация_номер = (m.Rqp["спецификация_номер"] == null) ? "" : (String)m.Rqp["спецификация_номер"];
+                    аукцион_номер = (m.Rqp["аукцион_номер"] == null) ? "" : (String)m.Rqp["аукцион_номер"];
                 }
             }
         }
@@ -71,6 +73,7 @@ namespace FNet.Supply.Models
                 public String товар_цена1;
                 public String товар_количество1;
                 public String товар_срок_годности1;
+                public String аукцион_номер;
 
                 public String this[String fieldName]
                 {
@@ -116,7 +119,8 @@ namespace FNet.Supply.Models
                             товар_спецификация_менеджер = ConvertToString(dr["товар_спецификация_менеджер"]),
                             товар_цена1 = ConvertToString(dr["товар_цена1"]),
                             товар_количество1 = ConvertToString(dr["товар_количество1"]),
-                            товар_срок_годности1 = ConvertToString(dr["товар_срок_годности1"])
+                            товар_срок_годности1 = ConvertToString(dr["товар_срок_годности1"]),
+                            аукцион_номер = ConvertToString(dr["аукцион_номер"])
                         };
                         if (items.товар_цена1.Length > 4) { items.товар_цена1 = items.товар_цена1.Substring(0, items.товар_цена1.Length - 1); }
                         if (items.товар_количество1.Length > 4) { items.товар_количество1 = items.товар_количество1.Substring(0, items.товар_количество1.Length - 4); }
@@ -142,6 +146,7 @@ namespace FNet.Supply.Models
                     if (!String.IsNullOrWhiteSpace(m.Filter.дата_max)) rqp["дата_max"] = m.Filter.дата_max;
                     if (!String.IsNullOrWhiteSpace(m.Filter.менеджер)) rqp["менеджер"] = m.Filter.менеджер;
                     if (!String.IsNullOrWhiteSpace(m.Filter.спецификация_номер)) rqp["спецификация_номер"] = m.Filter.спецификация_номер;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.аукцион_номер)) rqp["аукцион_номер"] = m.Filter.аукцион_номер;
                     ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
                     if (rsp != null)
                     {

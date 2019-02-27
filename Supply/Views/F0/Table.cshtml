@@ -52,7 +52,7 @@
                 <th>Кол-во (т)</th> <!-- 08 -->
                 <th>Срок (т)</th> <!-- 09 -->
                 <th>Менеджер</th> <!-- 10 -->
-                <th>Спецификация</th> <!-- 11 -->
+                <th>Аукцион</th> <!-- 11 -->
                 <th title="дата поставки к нам на склад по спецификации">Дата</th> <!-- 12 -->
                 <th>Примечание</th> <!-- 13 -->
             </tr>
@@ -90,7 +90,7 @@
                     <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@currRow.товар_количество1</td> <!-- 08 -->
                     <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@currRow.товар_срок_годности1</td> <!-- 09 -->
                     <td>@currRow.товар_спецификация_менеджер</td> <!-- 10 -->
-                    <td>@currRow.товар_спецификация_номер</td> <!-- 11 -->
+                    <td>@currRow.аукцион_номер</td> <!-- 11 -->
                     <td style="text-align: right">@currRow.товар_дата_поставки</td> <!-- 12 -->
                     <td onclick="SupplyViewsF0Index.showTableDetail(this);">@currRow.товар_примечание</td> <!-- 13 -->
                 </tr>
