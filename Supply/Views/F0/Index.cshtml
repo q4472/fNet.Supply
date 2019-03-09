@@ -156,6 +156,13 @@
                         };
                         rqp.Parameters.push({ Name: 'SetOrderState', Value: v });
                     }
+                    if (e.attr('name') == 'обработано') {
+                        let v = {
+                            order_uid: tr.attr('data-order_head_uid'),
+                            x: e.prop('checked')
+                        };
+                        rqp.Parameters.push({ Name: 'SetX', Value: v });
+                    }
                 });
                 let dInputs = detail.find('input[data-modified="1"]');
                 dInputs.each(function (index, element) {
@@ -177,7 +184,6 @@
                     }
                 });
                 let textareas = detail.find('textarea[data-modified="1"]');
-                //console.log(textareas);
                 textareas.each(function (index, element) {
                     let e = $(element);
                     let table = e.closest('table');

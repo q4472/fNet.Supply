@@ -564,6 +564,15 @@ namespace FNet.Supply.Models
                                     };
                                 }
                                 break;
+                            case "SetX":
+                                rqp1.Parameters = new RequestParameter[]
+                                {
+                                        new RequestParameter() { Name = "session_id", Value = sessionId },
+                                        new RequestParameter() { Name = "order_uid", Value = orderUid },
+                                        new RequestParameter() { Name = "field", Value = "обработано" },
+                                        new RequestParameter() { Name = "обработано", Value = v["x"] }
+                                };
+                                break;
                             default:
                                 break;
                         }

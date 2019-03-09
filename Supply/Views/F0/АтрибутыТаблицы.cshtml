@@ -73,6 +73,7 @@
                 <tr><td style="text-align: right;">цены:</td><td><input type="checkbox" name="сообщить_о_цене" /></td></tr>
                 <tr><td style="text-align: right;">количества:</td><td><input type="checkbox" name="сообщить_о_количестве" /></td></tr>
                 <tr><td style="text-align: right;">срока годности:</td><td><input type="checkbox" name="сообщить_о_сроке_годности" /></td></tr>
+                <tr><td style="text-align: right;">товара:</td><td><input type="checkbox" name="сообщить_о_товаре" /></td></tr>
             </table>
         </div>
         <div>
@@ -83,7 +84,11 @@
 <script type="text/javascript">
     var SupplyViewsF0АтрибутыЦены = (function () {
         let main = $('#supply_views_f0_атрибуты_цены');
-        main.find('input.datepicker').datepicker({ dateFormat: "mm.y" });
+        main.find('input.datepicker').datepicker({
+            dateFormat: "mm.y",
+            firstDay: 1,
+            changeYear: true
+        });
         let buttonSave = main.find('input.button-save');
         buttonSave.click(function () {
             let e = $(this);
