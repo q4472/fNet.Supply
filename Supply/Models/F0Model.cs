@@ -19,14 +19,6 @@ namespace FNet.Supply.Models
             this.rqp = rqp;
         }
 
-        public void ApplyFilter()
-        {
-            Filter = new FilterData(this);
-            Data = new FilteredData(this);
-            Поставщики = ПолучитьСписокПоставщиков(this);
-            СостоянияЗаказа = ПолучитьСписокСостоянийЗаказа(this);
-        }
-
         public class FilterData
         {
             public String все = "False"; // фильтр по полю "обработано". По умолчанию обработанные строки не показываем.
@@ -591,6 +583,27 @@ namespace FNet.Supply.Models
                 rqp.Command = "Supply.dbo.заказы_у_поставщиков_таблица__обновить";
                 ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
             }
+        }
+        public void ApplyFilter()
+        {
+            Filter = new FilterData(this);
+            Data = new FilteredData(this);
+            Поставщики = ПолучитьСписокПоставщиков(this);
+            СостоянияЗаказа = ПолучитьСписокСостоянийЗаказа(this);
+        }
+        public void SetAsFree()
+        {
+            RequestPackage rqp1 = new RequestPackage()
+            {
+                SessionId = rqp.SessionId,
+                Command = "[Supply].[dbo].[заказы_у_поставщиков_таблица__перенести_в_свободные]",
+                Parameters = new RequestParameter[]
+                {
+                    new RequestParameter(){ Name = "session_id", Value = rqp.SessionId },
+                    new RequestParameter(){ Name = "uids", Value = rqp["uids"] },
+                }
+            };
+            ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
         }
     }
 }

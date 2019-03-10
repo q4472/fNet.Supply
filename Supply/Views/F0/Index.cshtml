@@ -77,7 +77,6 @@
         @RenderPage("~/Views/F0/Table.cshtml", Model)
     </div>
     <div class="section-detail">
-        <!-- RenderPage("~/Views/F0/АтрибутыЗаказа.cshtml") -->
     </div>
     <div class="section-dropdowns">
         @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
@@ -208,7 +207,7 @@
             },
             setSupplierStart: function () {
                 selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
-                if (!selectedRows.length) {
+                if (selectedRows.length == 0) {
                     selectedRows = null;
                     alert('Нет выбранных строк.');
                     return;
@@ -227,28 +226,13 @@
                 });
                 //console.log(value);
                 rqp.Command = 'Supply.F0.SetSupplier';
-                if (SupplyF0Filter) {
-                    rqp.Parameters = SupplyF0Filter.getPars();
+                if (SupplyViewsF0Filter) {
+                    rqp.Parameters = SupplyViewsF0Filter.getFilterFormData();
                 } else {
                     rqp.Parameters = [];
                 }
                 rqp.Parameters.push({ Name: 'SetSupplier', Value: value });
                 //console.log(rqp);
-                filteredData.html('');
-                detail.html('');
-                Nskd.Http.post({
-                    url: '/supply/f0',
-                    rqp: rqp,
-                    done: function (data) {
-                        filteredData.html(data);
-                    }
-                });
-            },
-            // applyFilter is call from Filter.cshtml
-            applyFilter: function (pars) {
-                //console.log(pars);
-                rqp.Command = 'Supply.F0.ApplyFilter';
-                rqp.Parameters = pars;
                 filteredData.html('');
                 detail.html('');
                 Nskd.Http.post({
@@ -295,6 +279,23 @@
                         detail.html(data);
                     }
                 });
+            },
+            getSelectedRows: function () {
+                selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
+                return selectedRows;
+            },
+            filteredDataSectionHtml: function (html) {
+                filteredData.html(html);
+            },
+            detailSectionHtml: function (html) {
+                detail.html(html);
+            },
+            getFilterPars: function () {
+                let pars = [];
+                if (SupplyViewsF0Filter) {
+                    pars = SupplyViewsF0Filter.getFilterFormData();
+                }
+                return pars;
             }
         };
     })();

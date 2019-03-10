@@ -55,14 +55,19 @@
 <div id="supply_views_f0_command">
     <table>
         <tr><td style="text-align: center; font-weight: bold; font-size: 11pt;">Команды</td></tr>
+        <tr><td>&nbsp;</td></tr>
         <tr><td><input type="button" value="Сохранить" style="font-size: 11pt;" onclick="SupplyViewsF0Index.save(this);" /></td></tr>
+        <tr><td>&nbsp;</td></tr>
         <tr><td><input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Index.setSupplierStart();" /></td></tr>
+        <tr><td><input type="button" value="Перенести в свободные" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setAsFree(event, this);" /></td></tr>
+        <tr><td><input type="button" value="Вставить копию" style="font-size: 11pt;" onclick="" /></td></tr>
+        <tr><td><input type="button" value="Заменить товар" style="font-size: 11pt;" onclick="" /></td></tr>
     </table>
     <!-- Модальное окно -->
     <div class="modal">
         <div class="content">
             <div class="header">
-                <span onclick="$(this).parent().parent().parent().hide();">&times;</span>
+                <span onclick="$(this).closest('div.modal').hide();">&times;</span>
                 <h2>&nbsp;</h2>
             </div>
             <table style="border: none;">
@@ -123,6 +128,36 @@
                 if (uid && SupplyViewsF0Index) {
                     SupplyViewsF0Index.setSupplierFinish(uid, name);
                 }
+            },
+            setAsFree: function (event, button) {
+                event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
+                let b = $(button);
+                b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
+                let trs = SupplyViewsF0Index.getSelectedRows();
+                if (trs == null || trs.length == 0) {
+                    alert('Нет выбранных строк.');
+                    return;
+                }
+                let uids = '<uids>';
+                trs.each(function () {
+                    uids += '<uid>' + $(this).attr('data-order_table_uid') + '</uid>';
+                });
+                uids += '</uids>';
+                let rqp = {
+                    SessionId: Nskd.Server.SessionId,
+                    Command: 'Supply.F0.SetAsFree',
+                    Parameters: SupplyViewsF0Index.getFilterPars()
+                };
+                rqp.Parameters.push({ Name: 'uids', Value: uids });
+                SupplyViewsF0Index.filteredDataSectionHtml('');
+                SupplyViewsF0Index.detailSectionHtml('');
+                Nskd.Http.post({
+                    url: '/supply/f0',
+                    rqp: rqp,
+                    done: function (data) {
+                        SupplyViewsF0Index.filteredDataSectionHtml(data);
+                    }
+                });
             }
         };
     })();

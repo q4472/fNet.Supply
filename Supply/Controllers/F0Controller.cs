@@ -10,6 +10,15 @@ namespace FNet.Supply.Controllers
         private Object v;
         private RequestPackage rqp;
 
+        private Object SetAsFree()
+        {
+            //v += $"SetAsFree({Nskd.Json.ToString(rqp)})";
+            F0Model m = new F0Model(rqp);
+            m.SetAsFree();
+            m.ApplyFilter();
+            v = PartialView("~/Views/F0/Table.cshtml", m);
+            return v;
+        }
         private Object ApplyFilter()
         {
             //v += $"ApplyFilter({Nskd.Json.ToString(rqp)})";
@@ -69,6 +78,9 @@ namespace FNet.Supply.Controllers
             {
                 switch (rqp.Command)
                 {
+                    case "Supply.F0.SetAsFree":
+                        v = SetAsFree();
+                        break;
                     case "Supply.F0.ApplyFilter":
                         v = ApplyFilter();
                         break;
