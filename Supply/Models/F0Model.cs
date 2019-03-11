@@ -446,28 +446,9 @@ namespace FNet.Supply.Models
         public void SetSupplier()
         {
             Hashtable setSupplierValue = (Hashtable)rqp["SetSupplier"];
-            Guid supplierUid = new Guid();
-            String supplierName = null;
-            StringBuilder uids = new StringBuilder();
-            foreach (DictionaryEntry nvp in setSupplierValue)
-            {
-                if (nvp.Key as String == "supplier_uid")
-                {
-                    Guid.TryParse(nvp.Value as String, out supplierUid);
-                }
-                if (nvp.Key as String == "supplier_name")
-                {
-                    supplierName = nvp.Value as String;
-                }
-                if (nvp.Key as String == "uids")
-                {
-                    Object[] t = nvp.Value as Object[];
-                    foreach (Object o in t)
-                    {
-                        uids.AppendFormat($"<a b=\"{o}\"/>");
-                    }
-                }
-            }
+            Guid.TryParse(setSupplierValue["supplier_uid"] as String, out Guid supplierUid);
+            String supplierName = setSupplierValue["supplier_name"] as String;
+            String uids = setSupplierValue["uids"] as String;
             RequestPackage rqp1 = new RequestPackage()
             {
                 SessionId = rqp.SessionId,
@@ -478,7 +459,7 @@ namespace FNet.Supply.Models
                         new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
                         new RequestParameter() { Name = "supplier_uid", Value = supplierUid },
                         new RequestParameter() { Name = "supplier_name", Value = supplierName },
-                        new RequestParameter() { Name = "uids", Value = uids.ToString() }
+                        new RequestParameter() { Name = "uids", Value = uids }
             };
             ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
         }

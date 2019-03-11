@@ -58,10 +58,10 @@
         <tr><td>&nbsp;</td></tr>
         <tr><td><input type="button" value="Сохранить" style="font-size: 11pt;" onclick="SupplyViewsF0Index.save(this);" /></td></tr>
         <tr><td>&nbsp;</td></tr>
-        <tr><td><input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Index.setSupplierStart();" /></td></tr>
+        <tr><td><input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setSupplier(event, this);" /></td></tr>
         <tr><td><input type="button" value="Перенести в свободные" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setAsFree(event, this);" /></td></tr>
-        <tr><td><input type="button" value="Вставить копию" style="font-size: 11pt;" onclick="" /></td></tr>
-        <tr><td><input type="button" value="Заменить товар" style="font-size: 11pt;" onclick="" /></td></tr>
+        <tr><td><input type="button" value="Вставить копию" style="font-size: 11pt;" onclick="" disabled="disabled" /></td></tr>
+        <tr><td><input type="button" value="Заменить товар" style="font-size: 11pt;" onclick="" disabled="disabled" /></td></tr>
     </table>
     <!-- Модальное окно -->
     <div class="modal">
@@ -88,7 +88,7 @@
             </table>
             <br />
             <div style="text-align: center">
-                <input type="button" value="Ok" onclick="SupplyViewsF0Command.exit(this);" />
+                <input type="button" value="Ok" onclick="SupplyViewsF0Command.setSupplier_();" />
             </div>
             @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
         </div>
@@ -100,6 +100,7 @@
         let modalDiv = mainDiv.find('.modal');
         let input = modalDiv.find('input[type="text"]');
         let ddsp = modalDiv.find('.supply_views_f0_список_поставщиков');
+        let uids = null;
         let trs = ddsp.find('table:eq(1) tr');
         trs.each(function () { this.onclick = null; });
         trs.click(function () {
@@ -110,39 +111,18 @@
             input.val(name);
         });
         return {
-            showModal: function () {
-                modalDiv.show();
-            },
             selectButtonClick: function (e) {
                 ddsp.css('left', $(e).position().left - 160);
                 ddsp.css('top', $(e).position().top + 20);
                 ddsp.mouseleave(function () { ddsp.off(); ddsp.hide(); });
                 ddsp.show();
             },
-            exit: function () {
-                let uid = input.attr('data-id');
-                let name = input.val();
-                input.attr('data-id', '');
-                input.val('');
-                modalDiv.hide();
-                if (uid && SupplyViewsF0Index) {
-                    SupplyViewsF0Index.setSupplierFinish(uid, name);
-                }
-            },
             setAsFree: function (event, button) {
                 event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
                 let b = $(button);
                 b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
-                let trs = SupplyViewsF0Index.getSelectedRows();
-                if (trs == null || trs.length == 0) {
-                    alert('Нет выбранных строк.');
-                    return;
-                }
-                let uids = '<uids>';
-                trs.each(function () {
-                    uids += '<uid>' + $(this).attr('data-order_table_uid') + '</uid>';
-                });
-                uids += '</uids>';
+                let uids = SupplyViewsF0Index.getSelectedRowUids();
+                if (!uids) { alert('Нет выбранных строк.'); return; }
                 let rqp = {
                     SessionId: Nskd.Server.SessionId,
                     Command: 'Supply.F0.SetAsFree',
@@ -158,6 +138,24 @@
                         SupplyViewsF0Index.filteredDataSectionHtml(data);
                     }
                 });
+            },
+            setSupplier: function (event, button) {
+                event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
+                let b = $(button);
+                b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
+                uids = SupplyViewsF0Index.getSelectedRowUids();
+                if (!uids) { alert('Нет выбранных строк.'); return; }
+                modalDiv.show();
+            },
+            setSupplier_: function () {
+                let supplier_uid = input.attr('data-id');
+                let supplier_name = input.val();
+                input.attr('data-id', '');
+                input.val('');
+                modalDiv.hide();
+                if (supplier_uid && SupplyViewsF0Index) {
+                    SupplyViewsF0Index.setSupplierFinish(uids, supplier_uid, supplier_name);
+                }
             }
         };
     })();

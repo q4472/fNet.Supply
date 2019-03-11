@@ -93,7 +93,6 @@
         let ddsp = dds.find('.supply_views_f0_список_поставщиков');
         let ddss = dds.find('.supply_views_f0_список_состояний_заказа');
         let selectedInput = null;
-        let selectedRows = null;
         let rqp = {
             SessionId: Nskd.Server.SessionId
         };
@@ -205,26 +204,13 @@
                     });
                 }
             },
-            setSupplierStart: function () {
-                selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
-                if (selectedRows.length == 0) {
-                    selectedRows = null;
-                    alert('Нет выбранных строк.');
-                    return;
-                }
-                SupplyViewsF0Command.showModal();
-                //alert('SupplyViewsF0Index.setSupplier()');
-            },
-            setSupplierFinish: function (supplier_uid, supplier_name) {
+            setSupplierFinish: function (uids, supplier_uid, supplier_name) {
                 let value = {
-                    uids: [],
+                    uids: uids,
                     supplier_uid: supplier_uid,
                     supplier_name: supplier_name
                 };
-                selectedRows.each(function () {
-                    value.uids.push($(this).attr('data-order_table_uid'));
-                });
-                //console.log(value);
+                //console.log(value); return;
                 rqp.Command = 'Supply.F0.SetSupplier';
                 if (SupplyViewsF0Filter) {
                     rqp.Parameters = SupplyViewsF0Filter.getFilterFormData();
@@ -280,9 +266,17 @@
                     }
                 });
             },
-            getSelectedRows: function () {
-                selectedRows = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
-                return selectedRows;
+            getSelectedRowUids: function () {
+                let uids = null;
+                let trs = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
+                if (trs.length > 0) {
+                    uids = '<uids>';
+                    trs.each(function () {
+                        uids += '<uid>' + $(this).attr('data-order_table_uid') + '</uid>';
+                    });
+                    uids += '</uids>';
+                }
+                return uids;
             },
             filteredDataSectionHtml: function (html) {
                 filteredData.html(html);
