@@ -278,6 +278,19 @@
                 }
                 return uids;
             },
+            getSelectedRowQty: function () {
+                let v = null;
+                let trs = filteredData.find('input[type="checkbox"][name="выбрано"]:checked').closest('tr');
+                if (trs.length == 0) { alert('Нет выбранных строк.'); } else {
+                    if (trs.length > 1) { alert('Надо выбрать только одну строку.'); } else {
+                        v = {
+                            uid: trs.attr('data-order_table_uid'),
+                            qty: trs.find('td:eq(4)').text()
+                        };
+                    }
+                }
+                return v;
+            },
             filteredDataSectionHtml: function (html) {
                 filteredData.html(html);
             },

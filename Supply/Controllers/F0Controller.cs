@@ -10,6 +10,15 @@ namespace FNet.Supply.Controllers
         private Object v;
         private RequestPackage rqp;
 
+        private Object SplitRow()
+        {
+            //v += $"SetAsFree({Nskd.Json.ToString(rqp)})";
+            F0Model m = new F0Model(rqp);
+            m.SplitRow();
+            m.ApplyFilter();
+            v = PartialView("~/Views/F0/Table.cshtml", m);
+            return v;
+        }
         private Object SetAsFree()
         {
             //v += $"SetAsFree({Nskd.Json.ToString(rqp)})";
@@ -78,6 +87,9 @@ namespace FNet.Supply.Controllers
             {
                 switch (rqp.Command)
                 {
+                    case "Supply.F0.SplitRow":
+                        v = SplitRow();
+                        break;
                     case "Supply.F0.SetAsFree":
                         v = SetAsFree();
                         break;

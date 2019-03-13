@@ -234,7 +234,7 @@ namespace FNet.Supply.Models
                 public String uid;
                 public String id;
                 public String parent_uid;
-                public String обработано;
+                //public String обработано;
                 public String товар;
                 public String примечание;
 
@@ -280,7 +280,7 @@ namespace FNet.Supply.Models
                         items.uid = ConvertToString(dr["uid"]);
                         items.id = ConvertToString(dr["id"]);
                         items.parent_uid = ConvertToString(dr["parent_uid"]);
-                        items.обработано = ConvertToString(dr["обработано"]);
+                        //items.обработано = ConvertToString(dr["обработано"]);
                         items.товар = ConvertToString(dr["товар"]);
                         items.примечание = ConvertToString(dr["примечание"]);
                     }
@@ -582,6 +582,21 @@ namespace FNet.Supply.Models
                 {
                     new RequestParameter(){ Name = "session_id", Value = rqp.SessionId },
                     new RequestParameter(){ Name = "uids", Value = rqp["uids"] },
+                }
+            };
+            ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
+        }
+        public void SplitRow()
+        {
+            RequestPackage rqp1 = new RequestPackage()
+            {
+                SessionId = rqp.SessionId,
+                Command = "[Supply].[dbo].[заказы_у_поставщиков_таблица__разделить_строку]",
+                Parameters = new RequestParameter[]
+                {
+                    new RequestParameter(){ Name = "session_id", Value = rqp.SessionId },
+                    new RequestParameter(){ Name = "uid", Value = rqp["uid"] },
+                    new RequestParameter(){ Name = "qty", Value = rqp["qty"] },
                 }
             };
             ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");

@@ -60,7 +60,7 @@
         <tr><td>&nbsp;</td></tr>
         <tr><td><input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setSupplier(event, this);" /></td></tr>
         <tr><td><input type="button" value="Перенести в свободные" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setAsFree(event, this);" /></td></tr>
-        <tr><td><input type="button" value="Вставить копию" style="font-size: 11pt;" onclick="" disabled="disabled" /></td></tr>
+        <tr><td><input type="button" value="Разделить строку" style="font-size: 11pt;" onclick="SupplyViewsF0Command.splitRow(event, this)" /></td></tr>
         <tr><td><input type="button" value="Заменить товар" style="font-size: 11pt;" onclick="" disabled="disabled" /></td></tr>
     </table>
     <!-- Модальное окно -->
@@ -70,36 +70,47 @@
                 <span onclick="$(this).closest('div.modal').hide();">&times;</span>
                 <h2>&nbsp;</h2>
             </div>
-            <table style="border: none;">
-                <tr style="border: none;">
-                    <td>Поставщик:</td>
-                    <td style="border: 2px solid black;">
-                        <div>
-                            <input type="text" name="заказ_поставщик"
-                                   data-id=""
-                                   value=""
-                                   style="border: none; background-color: transparent;"
-                                   onkeyup="this.setAttribute('data-id', '')"
-                                   onchange="this.setAttribute('data-id', '')" />
-                            <span onclick="SupplyViewsF0Command.selectButtonClick(this);">︙</span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <div style="text-align: center">
-                <input type="button" value="Ok" onclick="SupplyViewsF0Command.setSupplier_();" />
+            <div class="body">
+                <div class="v1">
+                    <table style="border: none;">
+                        <tr style="border: none;">
+                            <td>Поставщик:</td>
+                            <td style="border: 2px solid black;">
+                                <div>
+                                    <input type="text" name="заказ_поставщик"
+                                           data-id=""
+                                           value=""
+                                           style="border: none; background-color: transparent;"
+                                           onkeyup="this.setAttribute('data-id', '')"
+                                           onchange="this.setAttribute('data-id', '')" />
+                                    <span onclick="SupplyViewsF0Command.selectButtonClick(this);">︙</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <div style="text-align: center">
+                        <input type="button" value="Ok" onclick="SupplyViewsF0Command.setSupplier_();" />
+                    </div>
+                    @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
+                </div>
+                <div class="v2">
+                    <div class="args" style="display: none"></div>
+                    <span>Количество в строке (по требованию): </span><span class="old-qty"></span><br />
+                    <span>Количество в новой строке: </span>
+                    <input type="text" /><br />
+                    <input type="button" value="Ok" onclick="SupplyViewsF0Command.splitRow_();" />
+                </div>
             </div>
-            @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
         </div>
     </div>
 </div>
 <script type="text/javascript">
     var SupplyViewsF0Command = (function () {
         let mainDiv = $('#supply_views_f0_command');
-        let modalDiv = mainDiv.find('.modal');
-        let input = modalDiv.find('input[type="text"]');
-        let ddsp = modalDiv.find('.supply_views_f0_список_поставщиков');
+        let modalDiv = mainDiv.find('div.modal');
+        let input = modalDiv.find('div.v1 input[type="text"]');
+        let ddsp = modalDiv.find('div.v1 div.supply_views_f0_список_поставщиков');
         let uids = null;
         let trs = ddsp.find('table:eq(1) tr');
         trs.each(function () { this.onclick = null; });
@@ -123,21 +134,23 @@
                 b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
                 let uids = SupplyViewsF0Index.getSelectedRowUids();
                 if (!uids) { alert('Нет выбранных строк.'); return; }
-                let rqp = {
-                    SessionId: Nskd.Server.SessionId,
-                    Command: 'Supply.F0.SetAsFree',
-                    Parameters: SupplyViewsF0Index.getFilterPars()
-                };
-                rqp.Parameters.push({ Name: 'uids', Value: uids });
-                SupplyViewsF0Index.filteredDataSectionHtml('');
-                SupplyViewsF0Index.detailSectionHtml('');
-                Nskd.Http.post({
-                    url: '/supply/f0',
-                    rqp: rqp,
-                    done: function (data) {
-                        SupplyViewsF0Index.filteredDataSectionHtml(data);
-                    }
-                });
+                if (confirm('Перенести выбранные строки в свободные?')) {
+                    let rqp = {
+                        SessionId: Nskd.Server.SessionId,
+                        Command: 'Supply.F0.SetAsFree',
+                        Parameters: SupplyViewsF0Index.getFilterPars()
+                    };
+                    rqp.Parameters.push({ Name: 'uids', Value: uids });
+                    SupplyViewsF0Index.filteredDataSectionHtml('');
+                    SupplyViewsF0Index.detailSectionHtml('');
+                    Nskd.Http.post({
+                        url: '/supply/f0',
+                        rqp: rqp,
+                        done: function (data) {
+                            SupplyViewsF0Index.filteredDataSectionHtml(data);
+                        }
+                    });
+                }
             },
             setSupplier: function (event, button) {
                 event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
@@ -145,6 +158,8 @@
                 b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
                 uids = SupplyViewsF0Index.getSelectedRowUids();
                 if (!uids) { alert('Нет выбранных строк.'); return; }
+                modalDiv.find('div.v1').show();
+                modalDiv.find('div.v2').hide();
                 modalDiv.show();
             },
             setSupplier_: function () {
@@ -155,6 +170,47 @@
                 modalDiv.hide();
                 if (supplier_uid && SupplyViewsF0Index) {
                     SupplyViewsF0Index.setSupplierFinish(uids, supplier_uid, supplier_name);
+                }
+            },
+            splitRow: function (event, button) {
+                event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
+                let b = $(button);
+                b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
+                let v = SupplyViewsF0Index.getSelectedRowQty();
+                if (v) {
+                    modalDiv.find('div.v2 div.args').text(Nskd.Json.toString(v));
+                    modalDiv.find('div.v2 span.old-qty').text(v.qty);
+                    modalDiv.find('div.v2 input[type="text"]').change(function () {
+                        Nskd.Validator.nNorm(this, 0);
+                        this.value = Nskd.Validator.numberNorm(this.value, 0, parseFloat(Nskd.Validator.numberNorm(v.qty)));
+                    });
+                    modalDiv.find('div.v1').hide();
+                    modalDiv.find('div.v2').show();
+                    modalDiv.show();
+                }
+            },
+            splitRow_: function () {
+                modalDiv.hide();
+                let iv = Nskd.Json.parse(modalDiv.find('div.v2 div.args').text());
+                let rv = modalDiv.find('div.v2 input[type="text"]').val();
+                if (rv) {
+                    let rqp = {
+                        SessionId: Nskd.Server.SessionId,
+                        Command: 'Supply.F0.SplitRow',
+                        Parameters: SupplyViewsF0Index.getFilterPars()
+                    };
+                    rqp.Parameters.push({ Name: 'uid', Value: iv.uid });
+                    rqp.Parameters.push({ Name: 'qty', Value: rv });
+                    SupplyViewsF0Index.filteredDataSectionHtml('');
+                    SupplyViewsF0Index.detailSectionHtml('');
+                    //console.log(rqp); return;
+                    Nskd.Http.post({
+                        url: '/supply/f0',
+                        rqp: rqp,
+                        done: function (data) {
+                            SupplyViewsF0Index.filteredDataSectionHtml(data);
+                        }
+                    });
                 }
             }
         };
