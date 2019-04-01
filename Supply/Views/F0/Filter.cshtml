@@ -14,14 +14,16 @@
     <br /><br />
     <table style="text-align: left;">
         <tr>
-            <td>Все:</td>
+            <td>Заказы</td>
+            <td><input type="checkbox" class="orders-mode" /></td>
+            <td class="all-orders" style="display: none;">Все:</td>
             @if (Model.Filter.все == "" || Model.Filter.все == "False")
             {
-                <td colspan="2"><input type="checkbox" name="все" /></td>
+                <td colspan="2" class="all-orders" style="display: none;"><input type="checkbox" name="все" /></td>
             }
             else
             {
-                <td colspan="2"><input type="checkbox" name="все" checked="checked" /></td>
+                <td colspan="2" class="all-orders" style="display: none;"><input type="checkbox" name="все" checked="checked" /></td>
             }
         </tr>
         <tr>
@@ -48,8 +50,18 @@
 <script type="text/javascript">
     var SupplyViewsF0Filter = (function () {
         let mainDiv = $('#supply_views_f0_filter');
-        $.datepicker.setDefaults({ dateFormat: 'dd.mm.y' });
-        $('input.datepicker').datepicker();
+        let inputOrdersMode = mainDiv.find('input.orders-mode');
+        let tdsAllOrders = mainDiv.find('td.all-orders');
+        mainDiv.find('input.datepicker').datepicker({ dateFormat: 'dd.mm.y' });
+        inputOrdersMode.click(function () {
+            let ordersMode = $(this).prop('checked');
+            if (ordersMode) {
+                tdsAllOrders.show();
+            } else {
+                tdsAllOrders.hide();
+            }
+            SupplyViewsF0Table.setOrdersMode(ordersMode);
+        });
         let getFilterFormData = function () {
             let pars = [];
             mainDiv.find('input[name]').each(function (index, element) {
@@ -74,6 +86,8 @@
                 event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
                 let b = $(button);
                 b.prop('disabled', true); setTimeout(function () { b.prop('disabled', false); }, 3000);
+                inputOrdersMode.prop('checked', false);
+                tdsAllOrders.hide();
                 let rqp = {
                     SessionId: Nskd.Server.SessionId,
                     Command: 'Supply.F0.ApplyFilter',
