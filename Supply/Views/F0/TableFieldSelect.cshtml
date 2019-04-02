@@ -1,13 +1,8 @@
-﻿@using FNet.Supply.Models
-@model F0Model
-@{
-    F0Model.FilteredData.ItemArray itemArray = PageData["CurrRow"];
-}
-<div>
-    <input type="text" name="@PageData["IdField"]"
+﻿<div>
+    <input type="text" name="@PageData["IdFieldName"]"
            data-modified="0"
-           data-id="@itemArray[PageData["IdField"]]"
-           value="@itemArray[PageData["NameField"]]"
+           data-id="@PageData["IdFieldValue"]"
+           value="@PageData["Value"]"
            style="border: none; background-color: transparent;"
            onkeyup="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')"
            onchange="this.setAttribute('data-modified', '1'); this.setAttribute('data-id', '')" />

@@ -44,6 +44,10 @@ namespace FNet.Supply.Models
 
         public class FilteredData
         {
+            private DataSet ds;
+            public ТаблицаДанных Шапка;
+            public ТаблицаДанных Таблица;
+
             private DataTable dt;
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
@@ -130,24 +134,140 @@ namespace FNet.Supply.Models
             {
                 if (m.rqp != null && m.rqp.SessionId != null)
                 {
-                    RequestPackage rqp = new RequestPackage();
-                    rqp.SessionId = m.rqp.SessionId;
-                    rqp.Command = "Supply.dbo.заказы_у_поставщиков__получить";
-                    rqp.Parameters = new RequestParameter[]
+                    RequestPackage rqp1 = new RequestPackage()
                     {
-                        new RequestParameter() { Name = "session_id", Value = m.rqp.SessionId },
-                        new RequestParameter() { Name = "все", Value = m.Filter.все }
+                        SessionId = m.rqp.SessionId,
+                        Command = "Supply.dbo.заказы_у_поставщиков__получить",
+                        Parameters = new RequestParameter[]
+                        {
+                            new RequestParameter() { Name = "session_id", Value = m.rqp.SessionId },
+                            new RequestParameter() { Name = "все", Value = m.Filter.все }
+                        }
                     };
-                    if (!String.IsNullOrWhiteSpace(m.Filter.дата_min)) rqp["дата_min"] = m.Filter.дата_min;
-                    if (!String.IsNullOrWhiteSpace(m.Filter.дата_max)) rqp["дата_max"] = m.Filter.дата_max;
-                    if (!String.IsNullOrWhiteSpace(m.Filter.менеджер)) rqp["менеджер"] = m.Filter.менеджер;
-                    if (!String.IsNullOrWhiteSpace(m.Filter.спецификация_номер)) rqp["спецификация_номер"] = m.Filter.спецификация_номер;
-                    if (!String.IsNullOrWhiteSpace(m.Filter.аукцион_номер)) rqp["аукцион_номер"] = m.Filter.аукцион_номер;
-                    ResponsePackage rsp = rqp.GetResponse("http://127.0.0.1:11012");
-                    if (rsp != null)
+                    if (!String.IsNullOrWhiteSpace(m.Filter.дата_min)) rqp1["дата_min"] = m.Filter.дата_min;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.дата_max)) rqp1["дата_max"] = m.Filter.дата_max;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.менеджер)) rqp1["менеджер"] = m.Filter.менеджер;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.спецификация_номер)) rqp1["спецификация_номер"] = m.Filter.спецификация_номер;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.аукцион_номер)) rqp1["аукцион_номер"] = m.Filter.аукцион_номер;
+                    ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
+                    if (rsp1 != null)
                     {
-                        dt = rsp.GetFirstTable();
+                        dt = rsp1.GetFirstTable();
                     }
+                    rqp1.Command = "Supply.dbo.заказы_у_поставщиков__получить_ds";
+                    rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
+                    if (rsp1 != null)
+                    {
+                        ds = rsp1.Data;
+                        if (ds != null)
+                        {
+                            if (ds.Tables.Count > 0)
+                            {
+                                Шапка = new ТаблицаДанных(ds.Tables[0]);
+                                Шапка.Sort = "[id] desc";
+                                if (ds.Tables.Count > 1)
+                                {
+                                    Таблица = new ТаблицаДанных(ds.Tables[1]);
+                                    Таблица.RowFilter = "[parent_uid] is null";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public class ТаблицаДанных
+        {
+            private DataTable dt;
+            private DataView dv;
+            private static String ConvertToString(Object v)
+            {
+                String s = String.Empty;
+                if (v != null && v != DBNull.Value)
+                {
+                    String tfn = v.GetType().FullName;
+                    switch (tfn)
+                    {
+                        case "System.Guid":
+                            s = ((Guid)v).ToString();
+                            break;
+                        case "System.Int32":
+                            s = ((Int32)v).ToString();
+                            break;
+                        case "System.Boolean":
+                            s = ((Boolean)v).ToString();
+                            break;
+                        case "System.String":
+                            s = (String)v;
+                            break;
+                        case "System.Decimal":
+                            s = ((Decimal)v).ToString("n3");
+                            break;
+                        case "System.DateTime":
+                            s = ((DateTime)v).ToString("dd.MM.yy");
+                            break;
+                        default:
+                            s = "FNet.Supply.Models.F0Model.ConvertToString() result: " + tfn;
+                            break;
+                    }
+                }
+                return s;
+            }
+            public ТаблицаДанных(DataTable dt)
+            {
+                if (dt != null)
+                {
+                    this.dt = dt;
+                    dv = dt.DefaultView;
+                }
+            }
+            public Int32 RowsCount
+            {
+                get => (dv == null) ? 0 : dv.Count;
+            }
+            public СтрокаДанных this[Int32 index]
+            {
+                get
+                {
+                    СтрокаДанных row = null;
+                    if (dv != null && index >= 0 && index < dv.Count)
+                    {
+                        row = new СтрокаДанных(dv[index]);
+                    }
+                    return row;
+                }
+            }
+            public class СтрокаДанных
+            {
+                private DataRowView drv;
+                public СтрокаДанных(DataRowView drv) { this.drv = drv; }
+                public String this[String fieldName]
+                {
+                    get
+                    {
+                        String v = String.Empty;
+                        if (!String.IsNullOrWhiteSpace(fieldName) && drv != null && drv.DataView.Table.Columns.Contains(fieldName))
+                        {
+                            v = ConvertToString(drv[fieldName]);
+                        }
+                        return v;
+                    }
+                }
+                
+            }
+            public String Sort
+            {
+                set
+                {
+                    dv.Sort = value;
+                }
+            }
+            public String RowFilter
+            {
+                set
+                {
+                    dv.RowFilter = value;
                 }
             }
         }
@@ -342,6 +462,7 @@ namespace FNet.Supply.Models
                 }
             }
         }
+
         public static String ConvertToString(Object v)
         {
             String s = String.Empty;
