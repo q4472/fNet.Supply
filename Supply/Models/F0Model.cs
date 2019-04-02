@@ -47,7 +47,7 @@ namespace FNet.Supply.Models
             private DataSet ds;
             public ТаблицаДанных Шапка;
             public ТаблицаДанных Таблица;
-
+            /*
             private DataTable dt;
             public Int32 RowsCount { get => (dt == null) ? 0 : dt.Rows.Count; }
             public class ItemArray
@@ -130,6 +130,7 @@ namespace FNet.Supply.Models
                     return items;
                 }
             }
+            */
             public FilteredData(F0Model m)
             {
                 if (m.rqp != null && m.rqp.SessionId != null)
@@ -150,12 +151,6 @@ namespace FNet.Supply.Models
                     if (!String.IsNullOrWhiteSpace(m.Filter.спецификация_номер)) rqp1["спецификация_номер"] = m.Filter.спецификация_номер;
                     if (!String.IsNullOrWhiteSpace(m.Filter.аукцион_номер)) rqp1["аукцион_номер"] = m.Filter.аукцион_номер;
                     ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
-                    if (rsp1 != null)
-                    {
-                        dt = rsp1.GetFirstTable();
-                    }
-                    rqp1.Command = "Supply.dbo.заказы_у_поставщиков__получить_ds";
-                    rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
                     if (rsp1 != null)
                     {
                         ds = rsp1.Data;
