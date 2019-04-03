@@ -101,13 +101,13 @@
                 let s = $(span);
                 let d = s.closest('div');
                 selectedInput = d.find('input');
-                if (selectedInput.attr('name') == 'заказ_поставщик') {
+                if (selectedInput.attr('name') == 'поставщик') {
                     ddsp.css('left', s.position().left);
                     ddsp.css('top', s.position().top + 48);
                     ddsp.mouseleave(function () { ddsp.off(); ddsp.hide(); });
                     ddsp.show();
                 }
-                if (selectedInput.attr('name') == 'заказ_состояние') {
+                if (selectedInput.attr('name') == 'состояние') {
                     ddss.css('left', s.position().left);
                     ddss.css('top', s.position().top + 48);
                     ddss.mouseleave(function () { ddss.off(); ddss.hide(); });
@@ -138,7 +138,7 @@
                 tInputs.each(function (index, element) {
                     let e = $(element);
                     let tr = e.closest('tr');
-                    if (e.attr('name') == 'заказ_поставщик') {
+                    if (e.attr('name') == 'поставщик') {
                         let v = {
                             order_uid: tr.attr('data-order_head_uid'),
                             supplier_uid: e.attr('data-id'),
@@ -146,7 +146,7 @@
                         };
                         rqp.Parameters.push({ Name: 'SetOrderSupplier', Value: v });
                     }
-                    if (e.attr('name') == 'заказ_состояние') {
+                    if (e.attr('name') == 'состояние') {
                         let v = {
                             order_uid: tr.attr('data-order_head_uid'),
                             state_uid: e.attr('data-id'),
@@ -237,7 +237,7 @@
                 tr.addClass('selected');
                 let order_uid = tr.attr('data-order_head_uid');
                 rqp.Command = 'Supply.F0.GetHeadDetail';
-                rqp.Parameters = [{ Name: 'order_uid', Value: order_uid }];
+                rqp.Parameters = [{ Name: 'uid', Value: order_uid }];
                 //console.log(rqp);
                 detail.html('');
                 Nskd.Http.post({
@@ -255,7 +255,7 @@
                 tr.addClass('selected');
                 let order_table_uid = tr.attr('data-order_table_uid');
                 rqp.Command = 'Supply.F0.GetTableDetail';
-                rqp.Parameters = [{ Name: 'order_table_uid', Value: order_table_uid }];
+                rqp.Parameters = [{ Name: 'uid', Value: order_table_uid }];
                 //console.log(rqp);
                 detail.html('');
                 Nskd.Http.post({
