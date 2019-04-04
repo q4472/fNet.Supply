@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Globalization;
 
 namespace FNet.Supply.Models
 {
@@ -52,22 +53,24 @@ namespace FNet.Supply.Models
         {
             private DataRowView drv;
             public СтрокаДанных(DataRowView drv) { this.drv = drv; }
-            public String this[String fieldName]
+            public String this[String fieldName, String format = null]
             {
                 get
                 {
                     String v = String.Empty;
-                    if (!String.IsNullOrWhiteSpace(fieldName) && drv != null && drv.DataView.Table.Columns.Contains(fieldName))
+                    if (!String.IsNullOrWhiteSpace(fieldName) 
+                        && drv != null 
+                        && drv.DataView.Table.Columns.Contains(fieldName))
                     {
-                        v = ConvertToString(drv[fieldName]);
+                        v = ConvertToString(drv[fieldName], format);
                     }
                     return v;
                 }
             }
-
         }
-        public static String ConvertToString(Object v)
+        public static String ConvertToString(Object v, String format = null)
         {
+            CultureInfo ic = CultureInfo.InvariantCulture;
             String s = String.Empty;
             if (v != null && v != DBNull.Value)
             {
@@ -78,19 +81,21 @@ namespace FNet.Supply.Models
                         s = ((Guid)v).ToString();
                         break;
                     case "System.Int32":
-                        s = ((Int32)v).ToString();
+                        s = ((Int32)v).ToString(ic);
                         break;
                     case "System.Boolean":
-                        s = ((Boolean)v).ToString();
+                        s = ((Boolean)v).ToString(ic);
                         break;
                     case "System.String":
                         s = (String)v;
                         break;
                     case "System.Decimal":
-                        s = ((Decimal)v).ToString("n3");
+                        if (String.IsNullOrWhiteSpace(format)) format = "n2";
+                        s = ((Decimal)v).ToString(format, ic);
                         break;
                     case "System.DateTime":
-                        s = ((DateTime)v).ToString("dd.MM.yy");
+                        if (String.IsNullOrWhiteSpace(format)) format = "dd.MM.yy";
+                        s = ((DateTime)v).ToString(format, ic);
                         break;
                     default:
                         s = "FNet.Supply.Models.Lib.ConvertToString() result: " + tfn;

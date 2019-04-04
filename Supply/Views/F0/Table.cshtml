@@ -55,24 +55,18 @@
             </tr>
             @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
             {
-                var row = Model.Data.Таблица[tri];
-                String цена1 = row["цена1"];
-                if (цена1.Length > 4) { цена1 = цена1.Substring(0, цена1.Length - 1); }
-                String количество1 = row["количество1"];
-                if (количество1.Length > 4) { количество1 = количество1.Substring(0, количество1.Length - 4); }
-                String срок_годности1 = row["срок_годности1"];
-                if (срок_годности1.Length == 8) { срок_годности1 = срок_годности1.Substring(3, 5); }
-                <tr class="goods-info not-in-order" data-order_table_uid="@row["uid"]">
+                var tRow = Model.Data.Таблица[tri];
+                <tr class="goods-info not-in-order" data-order_table_uid="@tRow["uid"]">
                     <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
                     <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
-                    <td colspan="4">@row["товар_описание"]</td> <!-- 03-06 -->
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@цена1</td> <!-- 07 -->
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@количество1</td> <!-- 08 -->
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@срок_годности1</td> <!-- 09 -->
-                    <td>@row["товар_спецификация_менеджер"]</td> <!-- 10 -->
-                    <td>@row["аукцион_номер"]</td> <!-- 11 -->
-                    <td style="text-align: right">@row["дата_поставки"]</td> <!-- 12 -->
-                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@row["товар_примечание"]</td> <!-- 13 -->
+                    <td colspan="4">@tRow["товар_описание"]</td> <!-- 03-06 -->
+                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td> <!-- 07 -->
+                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td> <!-- 08 -->
+                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td> <!-- 09 -->
+                    <td>@tRow["товар_спецификация_менеджер"]</td> <!-- 10 -->
+                    <td>@tRow["аукцион_номер"]</td> <!-- 11 -->
+                    <td style="text-align: right">@tRow["дата_поставки"]</td> <!-- 12 -->
+                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td> <!-- 13 -->
                 </tr>
             }
             @{ Model.Data.Таблица.RowFilter = "[parent_uid] is not null"; }
@@ -111,20 +105,13 @@
                 for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
                 {
                     var tRow = Model.Data.Таблица[tri];
-                    if (tRow["parent_uid"] != hRow["uid"]) { continue; }
-                    String цена1 = tRow["цена1"];
-                    if (цена1.Length > 4) { цена1 = цена1.Substring(0, цена1.Length - 1); }
-                    String количество1 = tRow["количество1"];
-                    if (количество1.Length > 4) { количество1 = количество1.Substring(0, количество1.Length - 4); }
-                    String срок_годности1 = tRow["срок_годности1"];
-                    if (срок_годности1.Length == 8) { срок_годности1 = срок_годности1.Substring(3, 5); }
                     <tr class="goods-info in-order" data-order_table_uid="@tRow["uid"]">
                         <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
                         <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
                         <td colspan="4">@tRow["товар_описание"]</td> <!-- 03-06 -->
-                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@цена1</td> <!-- 07 -->
-                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@количество1</td> <!-- 08 -->
-                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@срок_годности1</td> <!-- 09 -->
+                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td> <!-- 07 -->
+                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td> <!-- 08 -->
+                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td> <!-- 09 -->
                         <td>@tRow["товар_спецификация_менеджер"]</td> <!-- 10 -->
                         <td>@tRow["аукцион_номер"]</td> <!-- 11 -->
                         <td style="text-align: right">@tRow["дата_поставки"]</td> <!-- 12 -->

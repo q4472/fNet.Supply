@@ -40,26 +40,26 @@
                 <tr>
                     <td>Требование</td>
                     <td><input type="text" readonly="readonly" value="@Model["цена1"]" style="background-color: #dddddd;" /></td>
-                    <td><input type="text" readonly="readonly" value="@Model["количество1"]" style="background-color: #dddddd;" /></td>
-                    <td><input type="text" readonly="readonly" value="@Model["срок_годности1"]" style="background-color: #dddddd;" /></td>
+                    <td><input type="text" readonly="readonly" value="@Model["количество1", "n0"]" style="background-color: #dddddd;" /></td>
+                    <td><input type="text" readonly="readonly" value="@Model["срок_годности1", "MM.yy"]" style="background-color: #dddddd;" /></td>
                 </tr>
                 <tr>
                     <td>Контракт</td>
                     <td><input type="text" name="цена2" value="@Model["цена2"]" onchange="Nskd.Validator.nNorm(this, 2);" /></td>
-                    <td><input type="text" name="количество2" value="@Model["количество2"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
-                    <td><input type="text" name="срок_годности2" value="@Model["срок_годности2"]" class="datepicker" /></td>
+                    <td><input type="text" name="количество2" value="@Model["количество2", "n0"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
+                    <td><input type="text" name="срок_годности2" value="@Model["срок_годности2", "MM.yy"]" class="datepicker" /></td>
                 </tr>
                 <tr>
                     <td>Договор</td>
                     <td><input type="text" name="цена3" value="@Model["цена3"]" onchange="Nskd.Validator.nNorm(this, 2);" /></td>
-                    <td><input type="text" name="количество3" value="@Model["количество3"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
-                    <td><input type="text" name="срок_годности3" value="@Model["срок_годности3"]" class="datepicker" /></td>
+                    <td><input type="text" name="количество3" value="@Model["количество3", "n0"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
+                    <td><input type="text" name="срок_годности3" value="@Model["срок_годности3", "MM.yy"]" class="datepicker" /></td>
                 </tr>
                 <tr>
                     <td>Факт</td>
                     <td><input type="text" name="цена4" value="@Model["цена4"]" onchange="Nskd.Validator.nNorm(this, 2);" /></td>
-                    <td><input type="text" name="количество4" value="@Model["количество4"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
-                    <td><input type="text" name="срок_годности4" value="@Model["срок_годности4"]" class="datepicker" /></td>
+                    <td><input type="text" name="количество4" value="@Model["количество4", "n0"]" onchange="Nskd.Validator.nNorm(this, 0);" /></td>
+                    <td><input type="text" name="срок_годности4" value="@Model["срок_годности4", "MM.yy"]" class="datepicker" /></td>
                 </tr>
                 <tr>
                     <td>Примечание</td>
