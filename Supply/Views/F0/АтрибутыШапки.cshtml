@@ -15,15 +15,12 @@
     {
         <div style="float: left; border-right: 1px solid black;">
             <table data-order_head_uid="@Model["uid"]">
-                <!--<tr><td>uid:</td><td>@Model["uid"]</td></tr>-->
-                <tr><td>id:</td><td>@Model["id"]</td></tr>
-                <tr><td>обработано:</td><td>@(((String)Model["обработано"] == "True") ? "Да" : "Нет")</td></tr>
-                <!--<tr><td>поставщик:</td><td>@Model["поставщик"]</td></tr>-->
-                <tr><td>поставщик_наименование:</td><td>@Model["поставщик_наименование"]</td></tr>
-                <!--<tr><td>состояние:</td><td>@Model["состояние"]</td></tr>-->
-                <tr><td>состояние_наименование:</td><td>@Model["состояние_наименование"]</td></tr>
+                <tr><td>id:&nbsp;</td><td>@Model["id"]</td></tr>
+                <tr><td>обработано:&nbsp;</td><td>@(((String)Model["обработано"] == "True") ? "Да" : "Нет")</td></tr>
+                <tr><td>поставщик:&nbsp;</td><td>@Model["поставщик_наименование"]</td></tr>
+                <tr><td>состояние:&nbsp;</td><td>@Model["состояние_наименование"]</td></tr>
                 <tr>
-                    <td>номер:</td>
+                    <td>номер:&nbsp;</td>
                     <td>
                         <input type="text" name="номер" data-modified="0"
                                value="@Model["номер"]"
@@ -32,7 +29,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>дата_поставки:</td><!-- прогноз даты поставки к нам на склад по данным поставщика -->
+                    <td>дата_поставки:&nbsp;</td><!-- прогноз даты поставки к нам на склад по данным поставщика -->
                     <td>
                         <input type="text" name="дата_поставки" data-modified="0"
                                class="date-selector"
@@ -42,7 +39,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>примечание:</td>
+                    <td>примечание:&nbsp;</td>
                     <td>
                         <textarea name="примечание" data-modified="0"
                                   onchange="this.setAttribute('data-modified', '1')"

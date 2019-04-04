@@ -105,6 +105,7 @@
                 for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
                 {
                     var tRow = Model.Data.Таблица[tri];
+                    if (tRow["parent_uid"] != hRow["uid"]) { continue; }
                     <tr class="goods-info in-order" data-order_table_uid="@tRow["uid"]">
                         <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
                         <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
