@@ -22,11 +22,13 @@ namespace FNet.Supply.Models
         public class FilterData
         {
             public String все = "False"; // фильтр по полю "обработано". По умолчанию обработанные строки не показываем.
-            public String дата_min = "";
-            public String дата_max = "";
-            public String менеджер = "";
-            public String спецификация_номер = "";
-            public String аукцион_номер = "";
+            public String дата_min = String.Empty;
+            public String дата_max = String.Empty;
+            public String менеджер = String.Empty;
+            public String спецификация_номер = String.Empty;
+            public String аукцион_номер = String.Empty;
+            public String товар_описание = String.Empty;
+            public String товар_примечание = String.Empty;
 
             public FilterData(F0Model m)
             {
@@ -38,6 +40,8 @@ namespace FNet.Supply.Models
                     менеджер = (m.rqp["менеджер"] == null) ? "" : (String)m.rqp["менеджер"];
                     спецификация_номер = (m.rqp["спецификация_номер"] == null) ? "" : (String)m.rqp["спецификация_номер"];
                     аукцион_номер = (m.rqp["аукцион_номер"] == null) ? "" : (String)m.rqp["аукцион_номер"];
+                    товар_описание = (m.rqp["товар_описание"] == null) ? "" : (String)m.rqp["товар_описание"];
+                    товар_примечание = (m.rqp["товар_примечание"] == null) ? "" : (String)m.rqp["товар_примечание"];
                 }
             }
         }
@@ -65,6 +69,8 @@ namespace FNet.Supply.Models
                     if (!String.IsNullOrWhiteSpace(m.Filter.менеджер)) rqp1["менеджер"] = m.Filter.менеджер;
                     if (!String.IsNullOrWhiteSpace(m.Filter.спецификация_номер)) rqp1["спецификация_номер"] = m.Filter.спецификация_номер;
                     if (!String.IsNullOrWhiteSpace(m.Filter.аукцион_номер)) rqp1["аукцион_номер"] = m.Filter.аукцион_номер;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.товар_описание)) rqp1["товар_описание"] = m.Filter.товар_описание;
+                    if (!String.IsNullOrWhiteSpace(m.Filter.товар_примечание)) rqp1["товар_примечание"] = m.Filter.товар_примечание;
                     ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
                     if (rsp1 != null)
                     {

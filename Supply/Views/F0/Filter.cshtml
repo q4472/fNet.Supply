@@ -2,7 +2,7 @@
 @model F0Model
 <style type="text/css">
     #supply_views_f0_filter table tr {
-        height: 40px;
+        height: 32px;
     }
 
     #supply_views_f0_filter table td {
@@ -12,38 +12,46 @@
 <div id="supply_views_f0_filter" style="width: 100%; text-align: center;">
     <span style="font-size: 11pt; font-weight: bold;">Фильтр</span>
     <br /><br />
-    <table style="text-align: left;">
-        <tr>
-            <td>Заказы</td>
-            <td><input type="checkbox" class="orders-mode" /></td>
-            <td class="all-orders" style="display: none;">Все:</td>
-            @if (Model.Filter.все == "" || Model.Filter.все == "False")
-            {
-                <td colspan="2" class="all-orders" style="display: none;"><input type="checkbox" name="все" /></td>
-            }
-            else
-            {
-                <td colspan="2" class="all-orders" style="display: none;"><input type="checkbox" name="все" checked="checked" /></td>
-            }
-        </tr>
-        <tr>
-            <td>Дата:</td>
-            <td><input type="text" name="дата_min" class="datepicker" style="width: 60px;" value="@Model.Filter.дата_min" /></td>
-            <td><input type="text" name="дата_max" class="datepicker" style="width: 60px;" value="@Model.Filter.дата_max" /></td>
-        </tr>
-        <tr>
-            <td>Менеджер:</td>
-            <td colspan="2"><input type="text" name="менеджер" style="width: 130px;" value="@Model.Filter.менеджер" /></td>
-        </tr>
-        <tr>
-            <td>Аукцион:</td>
-            <td colspan="2"><input type="text" name="аукцион_номер" style="width: 130px;" value="" /></td>
-        </tr>
-        <tr>
-            <td>Спец-ия:</td>
-            <td colspan="2"><input type="text" name="спецификация_номер" style="width: 130px;" value="" /></td>
-        </tr>
-    </table>
+          <table style="text-align: left;">
+              <tr>
+                  <td>Заказы</td>
+                  <td><input type="checkbox" class="orders-mode" /></td>
+                  <td class="all-orders" style="display: none;">Все:</td>
+                  @if (Model.Filter.все == "" || Model.Filter.все == "False")
+                  {
+                      <td colspan="2" class="all-orders" style="display: none;"><input type="checkbox" name="все" /></td>
+                  }
+                  else
+                  {
+                      <td colspan="2" class="all-orders" style="display: none;"><input type="checkbox" name="все" checked="checked" /></td>
+                  }
+              </tr>
+              <tr>
+                  <td>Дата:</td>
+                  <td><input type="text" name="дата_min" class="datepicker" style="width: 60px;" value="@Model.Filter.дата_min" /></td>
+                  <td><input type="text" name="дата_max" class="datepicker" style="width: 60px;" value="@Model.Filter.дата_max" /></td>
+              </tr>
+              <tr>
+                  <td>Менеджер:</td>
+                  <td colspan="2"><input type="text" name="менеджер" style="width: 130px;" value="@Model.Filter.менеджер" /></td>
+              </tr>
+              <tr>
+                  <td>Аукцион:</td>
+                  <td colspan="2"><input type="text" name="аукцион_номер" style="width: 130px;" value="" /></td>
+              </tr>
+              <tr>
+                  <td>Спец-ия:</td>
+                  <td colspan="2"><input type="text" name="спецификация_номер" style="width: 130px;" value="" /></td>
+              </tr>
+              <tr>
+                  <td>Товар:</td>
+                  <td colspan="2"><input type="text" name="товар_описание" style="width: 130px;" value="@Model.Filter.менеджер" /></td>
+              </tr>
+              <tr>
+                  <td title="Примечание к товару">Примечание:</td>
+                  <td colspan="2"><input type="text" name="товар_примечание" style="width: 130px;" value="@Model.Filter.менеджер" /></td>
+              </tr>
+          </table>
     <br />
     <input type="button" value="Применить" onclick="SupplyViewsF0Filter.applyFilter(event, this);" style="font-size: 11pt;" />
 </div>

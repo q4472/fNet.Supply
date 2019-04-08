@@ -68,7 +68,7 @@
                     <td>@tRow["товар_спецификация_менеджер"]</td>
                     <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
                     <td>@tRow["аукцион_номер"]</td>
-                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td>
+                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
                 </tr>
             }
             @{ Model.Data.Таблица.RowFilter = "[parent_uid] is not null"; }
@@ -119,7 +119,7 @@
                         <td>@tRow["товар_спецификация_менеджер"]</td>
                         <td style="text-align: right">@tRow["передано_в_закупку_время"]</td>
                         <td>@tRow["аукцион_номер"]</td>
-                        <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td>
+                        <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
                     </tr>
                 }
             }
