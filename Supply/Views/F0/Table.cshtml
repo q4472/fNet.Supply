@@ -34,39 +34,41 @@
     {
         <table class="journal" style="margin: 6px;">
             <tr>
-                <th>Х</th> <!-- 01 -->
-                <th>№ наш</th> <!-- 02 -->
-                <th>Поставщик</th> <!-- 03 -->
-                <th>№ их</th> <!-- 04 -->
-                <th>Состояние заказа</th> <!-- 05 -->
-                <th colspan="8">Примечание</th> <!-- 06-13 -->
+                <th>Х</th>
+                <th>№ наш</th>
+                <th>Поставщик</th>
+                <th>№ их</th>
+                <th>Состояние заказа</th>
+                <th colspan="9">Примечание</th>
             </tr>
             <tr>
-                <th></th> <!-- 01 -->
-                <th>V</th> <!-- 02 -->
-                <th colspan="4">Товар</th> <!-- 03-06 -->
-                <th>Цена (т)</th> <!-- 07 -->
-                <th>Кол-во (т)</th> <!-- 08 -->
-                <th>Срок (т)</th> <!-- 09 -->
-                <th>Менеджер</th> <!-- 10 -->
-                <th>Аукцион</th> <!-- 11 -->
-                <th title="дата поставки к нам на склад по спецификации">Дата</th> <!-- 12 -->
-                <th>Примечание</th> <!-- 13 -->
+                <th></th>
+                <th>V</th>
+                <th colspan="4">Товар</th>
+                <th>Цена (т)</th>
+                <th>Кол-во (т)</th>
+                <th title="Срок годности">Срок (т)</th>
+                <th title="Требуемая дата поставки к нам на склад по спецификации">Дата</th>
+                <th>Менеджер</th>
+                <th title="Передано в закупку">Передано</th>
+                <th>Аукцион</th>
+                <th>Примечание</th>
             </tr>
             @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
             {
                 var tRow = Model.Data.Таблица[tri];
                 <tr class="goods-info not-in-order" data-order_table_uid="@tRow["uid"]">
-                    <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
-                    <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
-                    <td colspan="4">@tRow["товар_описание"]</td> <!-- 03-06 -->
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td> <!-- 07 -->
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td> <!-- 08 -->
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td> <!-- 09 -->
-                    <td>@tRow["товар_спецификация_менеджер"]</td> <!-- 10 -->
-                    <td>@tRow["аукцион_номер"]</td> <!-- 11 -->
-                    <td style="text-align: right">@tRow["дата_поставки"]</td> <!-- 12 -->
-                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td> <!-- 13 -->
+                    <td style="border-top: none; border-right: none;"></td>
+                    <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
+                    <td colspan="4">@tRow["товар_описание"]</td>
+                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td>
+                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td>
+                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
+                    <td style="text-align: right">@tRow["дата_поставки"]</td>
+                    <td>@tRow["товар_спецификация_менеджер"]</td>
+                    <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
+                    <td>@tRow["аукцион_номер"]</td>
+                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td>
                 </tr>
             }
             @{ Model.Data.Таблица.RowFilter = "[parent_uid] is not null"; }
@@ -78,45 +80,46 @@
                     {
                         <td style="border-right: none;">
                             <input type="checkbox" name="обработано" data-modified="0" checked="checked" />
-                        </td> <!-- 01 -->
+                        </td>
                     }
                     else
                     {
                         <td style="border-right: none;">
                             <input type="checkbox" name="обработано" data-modified="0" />
-                        </td> <!-- 01 -->
+                        </td>
                     }
-                    <td style="text-align: right;">@hRow["id"]</td> <!-- 02 -->
+                    <td style="text-align: right;">@hRow["id"]</td>
                     <td>
                         @RenderPage("~/Views/F0/TableFieldSelect.cshtml",
                             new { IdFieldName = "поставщик",
                                   IdFieldValue = hRow["поставшик"],
                                   Value = hRow["поставщик_наименование"] })
-                    </td> <!-- 03 -->
-                    <td onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["номер"]</td> <!-- 04 -->
+                    </td>
+                    <td onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["номер"]</td>
                     <td>
                         @RenderPage("~/Views/F0/TableFieldSelect.cshtml",
                             new { IdFieldName = "состояние",
                                   IdFieldValue = hRow["состояние"],
                                   Value = hRow["состояние_наименование"] })
-                    </td> <!-- 05 -->
-                    <td colspan="8" onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["примечание"]</td> <!-- 06-13 -->
+                    </td>
+                    <td colspan="9" onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["примечание"]</td>
                 </tr>
                 for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
                 {
                     var tRow = Model.Data.Таблица[tri];
                     if (tRow["parent_uid"] != hRow["uid"]) { continue; }
                     <tr class="goods-info in-order" data-order_table_uid="@tRow["uid"]">
-                        <td style="border-top: none; border-right: none;"></td> <!-- 01 -->
-                        <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td> <!-- 02 -->
-                        <td colspan="4">@tRow["товар_описание"]</td> <!-- 03-06 -->
-                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td> <!-- 07 -->
-                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td> <!-- 08 -->
-                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td> <!-- 09 -->
-                        <td>@tRow["товар_спецификация_менеджер"]</td> <!-- 10 -->
-                        <td>@tRow["аукцион_номер"]</td> <!-- 11 -->
-                        <td style="text-align: right">@tRow["дата_поставки"]</td> <!-- 12 -->
-                        <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td> <!-- 13 -->
+                        <td style="border-top: none; border-right: none;"></td>
+                        <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
+                        <td colspan="4">@tRow["товар_описание"]</td>
+                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td>
+                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td>
+                        <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
+                        <td style="text-align: right">@tRow["дата_поставки"]</td>
+                        <td>@tRow["товар_спецификация_менеджер"]</td>
+                        <td style="text-align: right">@tRow["передано_в_закупку_время"]</td>
+                        <td>@tRow["аукцион_номер"]</td>
+                        <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["товар_примечание"]</td>
                     </tr>
                 }
             }
