@@ -28,6 +28,9 @@
         border-right: 1px solid black;
         padding: 2px;
     }
+    #supply_views_f0_table table.journal td.дефектура {
+        background-color: #ffaaaa;
+    }
 </style>
 <div id="supply_views_f0_table" style="width: 100%;">
     @if (Model != null && Model.Data != null)
@@ -57,7 +60,7 @@
             @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
             {
                 var tRow = Model.Data.Таблица[tri];
-                <tr class="goods-info not-in-order" data-order_table_uid="@tRow["uid"]">
+                <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]">
                     <td style="border-top: none; border-right: none;"></td>
                     <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
                     <td colspan="4">@tRow["товар_описание"]</td>
@@ -68,7 +71,7 @@
                     <td>@tRow["товар_спецификация_менеджер"]</td>
                     <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
                     <td>@tRow["аукцион_номер"]</td>
-                    <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
+                    <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
                 </tr>
             }
             @{ Model.Data.Таблица.RowFilter = "[parent_uid] is not null"; }
@@ -108,7 +111,7 @@
                 {
                     var tRow = Model.Data.Таблица[tri];
                     if (tRow["parent_uid"] != hRow["uid"]) { continue; }
-                    <tr class="goods-info in-order" data-order_table_uid="@tRow["uid"]">
+                    <tr class="goods-info in-order-row" data-order_table_uid="@tRow["uid"]">
                         <td style="border-top: none; border-right: none;"></td>
                         <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
                         <td colspan="4">@tRow["товар_описание"]</td>
@@ -119,7 +122,7 @@
                         <td>@tRow["товар_спецификация_менеджер"]</td>
                         <td style="text-align: right">@tRow["передано_в_закупку_время"]</td>
                         <td>@tRow["аукцион_номер"]</td>
-                        <td onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
+                        <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
                     </tr>
                 }
             }
@@ -140,11 +143,12 @@
                 let tr = $(element);
                 tr.show();
                 if (ordersMode) {
-                    if (tr.hasClass('not-in-order')) tr.hide();
+                    if (tr.hasClass('not-in-order-row')) tr.hide();
                 } else {
                     if (tr.hasClass('order-info')) tr.hide();
-                    if (tr.hasClass('in-order')) tr.hide();
+                    if (tr.hasClass('in-order-row')) tr.hide();
                 }
+                tr.find('td.товар-примечание:contains("дефект")').addClass('дефектура');
             });
         }
         return {
