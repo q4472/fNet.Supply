@@ -28,90 +28,33 @@
         border-right: 1px solid black;
         padding: 2px;
     }
-    #supply_views_f0_table table.journal td.дефектура {
-        background-color: #ffaaaa;
-    }
+
+        #supply_views_f0_table table.journal td.дефектура {
+            background-color: #ffaaaa;
+        }
 </style>
 <div id="supply_views_f0_table" style="width: 100%;">
     @if (Model != null && Model.Data != null)
     {
-        <table class="journal" style="margin: 6px;">
-            <tr>
-                <th>Х</th>
-                <th>№ наш</th>
-                <th>Поставщик</th>
-                <th>№ их</th>
-                <th>Состояние заказа</th>
-                <th colspan="9">Примечание</th>
-            </tr>
-            <tr>
-                <th></th>
-                <th>V</th>
-                <th colspan="4">Товар</th>
-                <th>Цена (т)</th>
-                <th>Кол-во (т)</th>
-                <th title="Срок годности">Срок (т)</th>
-                <th title="Требуемая дата поставки к нам на склад по спецификации">Дата</th>
-                <th>Менеджер</th>
-                <th title="Передано в закупку">Передано</th>
-                <th>Аукцион</th>
-                <th>Примечание</th>
-            </tr>
-            @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
-            {
-                var tRow = Model.Data.Таблица[tri];
-                <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]">
-                    <td style="border-top: none; border-right: none;"></td>
-                    <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
-                    <td colspan="4">@tRow["товар_описание"]</td>
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td>
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td>
-                    <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
-                    <td style="text-align: right">@tRow["дата_поставки"]</td>
-                    <td>@tRow["товар_спецификация_менеджер"]</td>
-                    <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
-                    <td>@tRow["аукцион_номер"]</td>
-                    <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
+        <div style="border-bottom: 1px solid black; height: 340px; overflow: auto;">
+            <table class="journal" style="margin: 2px;">
+                <tr>
+                    <th></th>
+                    <th>V</th>
+                    <th colspan="4">Товар (нераспределённый)</th>
+                    <th>Цена (т)</th>
+                    <th>Кол-во (т)</th>
+                    <th title="Срок годности">Срок (т)</th>
+                    <th title="Требуемая дата поставки к нам на склад по спецификации">Дата</th>
+                    <th>Менеджер</th>
+                    <th title="Передано в закупку">Передано</th>
+                    <th>Аукцион</th>
+                    <th>Примечание</th>
                 </tr>
-            }
-            @{ Model.Data.Таблица.RowFilter = "[parent_uid] is not null"; }
-            @for (int hri = 0; hri < Model.Data.Шапка.RowsCount; hri++)
-            {
-                var hRow = Model.Data.Шапка[hri];
-                <tr class="order-info" data-order_head_uid="@hRow["uid"]">
-                    @if (hRow["обработано"] == "True")
-                    {
-                        <td style="border-right: none;">
-                            <input type="checkbox" name="обработано" data-modified="0" checked="checked" />
-                        </td>
-                    }
-                    else
-                    {
-                        <td style="border-right: none;">
-                            <input type="checkbox" name="обработано" data-modified="0" />
-                        </td>
-                    }
-                    <td style="text-align: right;">@hRow["id"]</td>
-                    <td>
-                        @RenderPage("~/Views/F0/TableFieldSelect.cshtml",
-                            new { IdFieldName = "поставщик",
-                                  IdFieldValue = hRow["поставшик"],
-                                  Value = hRow["поставщик_наименование"] })
-                    </td>
-                    <td onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["номер"]</td>
-                    <td>
-                        @RenderPage("~/Views/F0/TableFieldSelect.cshtml",
-                            new { IdFieldName = "состояние",
-                                  IdFieldValue = hRow["состояние"],
-                                  Value = hRow["состояние_наименование"] })
-                    </td>
-                    <td colspan="9" onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["примечание"]</td>
-                </tr>
-                for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
+                @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
                 {
                     var tRow = Model.Data.Таблица[tri];
-                    if (tRow["parent_uid"] != hRow["uid"]) { continue; }
-                    <tr class="goods-info in-order-row" data-order_table_uid="@tRow["uid"]">
+                    <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]">
                         <td style="border-top: none; border-right: none;"></td>
                         <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
                         <td colspan="4">@tRow["товар_описание"]</td>
@@ -120,14 +63,98 @@
                         <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
                         <td style="text-align: right">@tRow["дата_поставки"]</td>
                         <td>@tRow["товар_спецификация_менеджер"]</td>
-                        <td style="text-align: right">@tRow["передано_в_закупку_время"]</td>
+                        <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
                         <td>@tRow["аукцион_номер"]</td>
                         <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
                     </tr>
                 }
-            }
-            <tr style="border: 1px solid black"></tr>
-        </table>
+                <tr style="border: 1px solid black"></tr>
+            </table>
+        </div>
+        <div style="border-bottom: 1px solid black; height: 340px; overflow: auto;">
+            <table class="journal" style="margin: 2px;">
+                <tr>
+                    <th>Х</th>
+                    <th>№ наш</th>
+                    <th>Поставщик</th>
+                    <th>№ их</th>
+                    <th>Состояние заказа</th>
+                    <th colspan="9">Примечание</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>V</th>
+                    <th colspan="4">Товар</th>
+                    <th>Цена (т)</th>
+                    <th>Кол-во (т)</th>
+                    <th title="Срок годности">Срок (т)</th>
+                    <th title="Требуемая дата поставки к нам на склад по спецификации">Дата</th>
+                    <th>Менеджер</th>
+                    <th title="Передано в закупку">Передано</th>
+                    <th>Аукцион</th>
+                    <th>Примечание</th>
+                </tr>
+                @{ Model.Data.Таблица.RowFilter = "[parent_uid] is not null"; }
+                @for (int hri = 0; hri < Model.Data.Шапка.RowsCount; hri++)
+                {
+                    var hRow = Model.Data.Шапка[hri];
+                    <tr class="order-info" data-order_head_uid="@hRow["uid"]">
+                        @if (hRow["обработано"] == "True")
+                        {
+                            <td style="border-right: none;">
+                                <input type="checkbox" name="обработано" data-modified="0" checked="checked" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="border-right: none;">
+                                <input type="checkbox" name="обработано" data-modified="0" />
+                            </td>
+                        }
+                        <td style="text-align: right;">@hRow["id"]</td>
+                        <td>
+                            @RenderPage("~/Views/F0/TableFieldSelect.cshtml",
+                                new
+                                     {
+                                         IdFieldName = "поставщик",
+                                      IdFieldValue = hRow["поставшик"],
+                                      Value = hRow["поставщик_наименование"]
+                                     })
+                        </td>
+                        <td onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["номер"]</td>
+                        <td>
+                            @RenderPage("~/Views/F0/TableFieldSelect.cshtml",
+                                new
+                                     {
+                                         IdFieldName = "состояние",
+                                      IdFieldValue = hRow["состояние"],
+                                      Value = hRow["состояние_наименование"]
+                                     })
+                        </td>
+                        <td colspan="9" onclick="SupplyViewsF0Index.showHeadDetail(this);">@hRow["примечание"]</td>
+                    </tr>
+                    for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
+                    {
+                        var tRow = Model.Data.Таблица[tri];
+                        if (tRow["parent_uid"] != hRow["uid"]) { continue; }
+                        <tr class="goods-info in-order-row" data-order_table_uid="@tRow["uid"]">
+                            <td style="border-top: none; border-right: none;"></td>
+                            <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
+                            <td colspan="4">@tRow["товар_описание"]</td>
+                            <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td>
+                            <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td>
+                            <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
+                            <td style="text-align: right">@tRow["дата_поставки"]</td>
+                            <td>@tRow["товар_спецификация_менеджер"]</td>
+                            <td style="text-align: right">@tRow["передано_в_закупку_время"]</td>
+                            <td>@tRow["аукцион_номер"]</td>
+                            <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
+                        </tr>
+                    }
+                }
+                <tr style="border: 1px solid black"></tr>
+            </table>
+        </div>
     }
 </div>
 <script type="text/javascript">
@@ -143,10 +170,10 @@
                 let tr = $(element);
                 tr.show();
                 if (ordersMode) {
-                    if (tr.hasClass('not-in-order-row')) tr.hide();
+                    //if (tr.hasClass('not-in-order-row')) tr.hide();
                 } else {
-                    if (tr.hasClass('order-info')) tr.hide();
-                    if (tr.hasClass('in-order-row')) tr.hide();
+                    //if (tr.hasClass('order-info')) tr.hide();
+                    //if (tr.hasClass('in-order-row')) tr.hide();
                 }
                 tr.find('td.товар-примечание:contains("дефект")').addClass('дефектура');
             });

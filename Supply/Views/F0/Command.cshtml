@@ -58,7 +58,8 @@
         <tr><td>&nbsp;</td></tr>
         <tr><td><input type="button" value="Сохранить" style="font-size: 11pt;" onclick="SupplyViewsF0Index.save(this);" /></td></tr>
         <tr><td>&nbsp;</td></tr>
-        <tr><td><input type="button" value="Назначить поставщика" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setSupplier(event, this);" /></td></tr>
+        <tr><td><input type="button" value="Перенести в новый заказ" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setSupplier(event, this);" /></td></tr>
+        <tr><td><input type="button" value="Перенести в заказ" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setOrder(event, this);" /></td></tr>
         <tr><td><input type="button" value="Перенести в свободные" style="font-size: 11pt;" onclick="SupplyViewsF0Command.setAsFree(event, this);" /></td></tr>
         <tr><td><input type="button" value="Разделить строку" style="font-size: 11pt;" onclick="SupplyViewsF0Command.splitRow(event, this)" /></td></tr>
         <tr><td><input type="button" value="Заменить товар" style="font-size: 11pt;" onclick="" disabled="disabled" /></td></tr>
@@ -71,7 +72,7 @@
                 <h2>&nbsp;</h2>
             </div>
             <div class="body">
-                <div class="v1">
+                <div class="v1" style="display: none;">
                     <table style="border: none;">
                         <tr style="border: none;">
                             <td>Поставщик:</td>
@@ -94,12 +95,17 @@
                     </div>
                     @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
                 </div>
-                <div class="v2">
+                <div class="v2" style="display: none;">
                     <div class="args" style="display: none"></div>
                     <span>Количество в строке (по требованию): </span><span class="old-qty"></span><br />
                     <span>Количество в новой строке: </span>
                     <input type="text" /><br />
                     <input type="button" value="Ok" onclick="SupplyViewsF0Command.splitRow_();" />
+                </div>
+                <div class="v3" style="display: none;">
+                    <span>№ наш: </span>
+                    <input type="text" /><br />
+                    <input type="button" value="Ok" onclick="SupplyViewsF0Command.setOrder_();" />
                 </div>
             </div>
         </div>
@@ -160,6 +166,7 @@
                 if (!uids) { alert('Нет выбранных строк.'); return; }
                 modalDiv.find('div.v1').show();
                 modalDiv.find('div.v2').hide();
+                modalDiv.find('div.v3').hide();
                 modalDiv.show();
             },
             setSupplier_: function () {
@@ -171,6 +178,22 @@
                 if (supplier_uid && SupplyViewsF0Index) {
                     SupplyViewsF0Index.setSupplierFinish(uids, supplier_uid, supplier_name);
                 }
+            },
+            setOrder: function (event, button) {
+                event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
+                let b = $(button);
+                b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
+                uids = SupplyViewsF0Index.getSelectedRowUids();
+                if (!uids) { alert('Нет выбранных строк.'); return; }
+                modalDiv.find('div.v1').hide();
+                modalDiv.find('div.v2').hide();
+                modalDiv.find('div.v3').show();
+                modalDiv.show();
+            },
+            setOrder_: function () {
+                let orderNum = modalDiv.find('div.v3 input[type="text"]').val();
+                console.log(orderNum);
+                modalDiv.hide();
             },
             splitRow: function (event, button) {
                 event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
@@ -186,6 +209,7 @@
                     });
                     modalDiv.find('div.v1').hide();
                     modalDiv.find('div.v2').show();
+                    modalDiv.find('div.v3').hide();
                     modalDiv.show();
                 }
             },
