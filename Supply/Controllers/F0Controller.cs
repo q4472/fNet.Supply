@@ -10,9 +10,18 @@ namespace FNet.Supply.Controllers
         private Object v;
         private RequestPackage rqp;
 
+        private Object AddRowsToOrder()
+        {
+            //v += $"AddRowsToOrder({Nskd.Json.ToString(rqp)})";
+            F0Model m = new F0Model(rqp);
+            m.AddRowsToOrder();
+            m.ApplyFilter();
+            v = PartialView("~/Views/F0/Table.cshtml", m);
+            return v;
+        }
         private Object SplitRow()
         {
-            //v += $"SetAsFree({Nskd.Json.ToString(rqp)})";
+            //v += $"SplitRow({Nskd.Json.ToString(rqp)})";
             F0Model m = new F0Model(rqp);
             m.SplitRow();
             m.ApplyFilter();
@@ -87,6 +96,9 @@ namespace FNet.Supply.Controllers
             {
                 switch (rqp.Command)
                 {
+                    case "Supply.F0.AddRowsToOrder":
+                        v = AddRowsToOrder();
+                        break;
                     case "Supply.F0.SplitRow":
                         v = SplitRow();
                         break;

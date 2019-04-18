@@ -117,6 +117,7 @@
         let modalDiv = mainDiv.find('div.modal');
         let input = modalDiv.find('div.v1 input[type="text"]');
         let ddsp = modalDiv.find('div.v1 div.supply_views_f0_список_поставщиков');
+        let orderNumInput = modalDiv.find('div.v3 input[type="text"]');
         let uids = null;
         let trs = ddsp.find('table:eq(1) tr');
         trs.each(function () { this.onclick = null; });
@@ -185,15 +186,37 @@
                 b.prop('disabled', true); setInterval(function () { b.prop('disabled', false); }, 3000);
                 uids = SupplyViewsF0Index.getSelectedRowUids();
                 if (!uids) { alert('Нет выбранных строк.'); return; }
+                orderNumInput.on('change', function () {
+                    Nskd.Validator.nNorm(this, 0);
+                });
                 modalDiv.find('div.v1').hide();
                 modalDiv.find('div.v2').hide();
                 modalDiv.find('div.v3').show();
                 modalDiv.show();
             },
             setOrder_: function () {
-                let orderNum = modalDiv.find('div.v3 input[type="text"]').val();
-                console.log(orderNum);
+                orderNumInput.off('change');
                 modalDiv.hide();
+                let orderNum = parseInt(orderNumInput.val());
+                if (!isNaN(orderNum)) {
+                    let rqp = {
+                        SessionId: Nskd.Server.SessionId,
+                        Command: 'Supply.F0.AddRowsToOrder',
+                        Parameters: SupplyViewsF0Index.getFilterPars()
+                    };
+                    rqp.Parameters.push({ Name: 'id', Value: orderNum });
+                    rqp.Parameters.push({ Name: 'uids', Value: uids });
+                    SupplyViewsF0Index.filteredDataSectionHtml('');
+                    SupplyViewsF0Index.detailSectionHtml('');
+                    //console.log(rqp);
+                    Nskd.Http.post({
+                        url: '/supply/f0',
+                        rqp: rqp,
+                        done: function (data) {
+                            SupplyViewsF0Index.filteredDataSectionHtml(data);
+                        }
+                    });
+                }
             },
             splitRow: function (event, button) {
                 event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
@@ -203,7 +226,7 @@
                 if (v) {
                     modalDiv.find('div.v2 div.args').text(Nskd.Json.toString(v));
                     modalDiv.find('div.v2 span.old-qty').text(v.qty);
-                    modalDiv.find('div.v2 input[type="text"]').change(function () {
+                    modalDiv.find('div.v2 input[type="text"]').on('change', function () {
                         Nskd.Validator.nNorm(this, 0);
                         this.value = Nskd.Validator.numberNorm(this.value, 0, parseFloat(Nskd.Validator.numberNorm(v.qty)));
                     });
@@ -214,6 +237,7 @@
                 }
             },
             splitRow_: function () {
+                modalDiv.find('div.v2 input[type="text"]').off('change');
                 modalDiv.hide();
                 let iv = Nskd.Json.parse(modalDiv.find('div.v2 div.args').text());
                 let rv = modalDiv.find('div.v2 input[type="text"]').val();

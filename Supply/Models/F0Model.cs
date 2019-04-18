@@ -360,7 +360,22 @@ namespace FNet.Supply.Models
                     new RequestParameter(){ Name = "qty", Value = rqp["qty"] },
                 }
             };
-            ResponsePackage rsp = rqp1.GetResponse("http://127.0.0.1:11012");
+            ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
+        }
+        public void AddRowsToOrder()
+        {
+            RequestPackage rqp1 = new RequestPackage()
+            {
+                SessionId = rqp.SessionId,
+                Command = "[Supply].[dbo].[заказы_у_поставщиков__добавить_строки_к_заказу]",
+                Parameters = new RequestParameter[]
+                {
+                    new RequestParameter(){ Name = "session_id", Value = rqp.SessionId },
+                    new RequestParameter(){ Name = "h_id", Value = rqp["id"] },
+                    new RequestParameter(){ Name = "t_uids", Value = rqp["uids"] },
+                }
+            };
+            ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
         }
     }
 }
