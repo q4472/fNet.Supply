@@ -32,6 +32,10 @@
         #supply_views_f0_table table.journal td.дефектура {
             background-color: #ffaaaa;
         }
+
+        #supply_views_f0_table table.journal td.срочно {
+            background-color: #ffaaaa;
+        }
 </style>
 <div id="supply_views_f0_table" style="width: 100%;">
     @if (Model != null && Model.Data != null)
@@ -176,6 +180,9 @@
                     //if (tr.hasClass('in-order-row')) tr.hide();
                 }
                 tr.find('td.товар-примечание:contains("дефект")').addClass('дефектура');
+                tr.find('td.товар-примечание:contains("Дефект")').addClass('дефектура');
+                tr.find('td.товар-примечание:contains("срочно")').addClass('срочно');
+                tr.find('td.товар-примечание:contains("Срочно")').addClass('срочно');
             });
         }
         return {
