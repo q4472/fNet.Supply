@@ -49,11 +49,11 @@
             position: absolute;
             left: 240px;
             top: 26px;
-            right: 0;
-            bottom: 280px;
+            right: 0px;
+            bottom: 0px;
             overflow: auto;
         }
-
+        /*
         #supply_views_f0_index div.section-detail {
             border-left: 2px solid green;
             position: absolute;
@@ -64,6 +64,42 @@
             background-color: #bbffbb;
             overflow: hidden;
         }
+        */
+        #supply_views_f0_index div.detail-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+            #supply_views_f0_index div.detail-modal div.content {
+                background-color: #bbffbb;
+                margin: 15% auto;
+                padding: 10px;
+                border: 1px solid #888;
+                width: 740px;
+                height: 400px;
+            }
+
+                #supply_views_f0_index div.detail-modal div.content div.header span {
+                    color: #aaa;
+                    float: right;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+
+                    #supply_views_f0_index div.detail-modal div.content div.header span:hover,
+                    #supply_views_f0_index div.detail-modal div.content div.header span:focus {
+                        color: black;
+                        text-decoration: none;
+                        cursor: pointer;
+                    }
 </style>
 <div id="supply_views_f0_index">
     <div class="section-header"><span>Снабжение (закупки товаров)</span></div>
@@ -82,12 +118,22 @@
         @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
         @RenderPage("~/Views/F0/СписокСостоянийЗаказа.cshtml", Model)
     </div>
+    <div class="detail-modal">
+        <div class="content">
+            <div class="header">
+                <span onclick="$(this).closest('div.detail-modal').hide();">&times;</span>
+            </div>
+            <div class="body">
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
         let filteredData = mainDiv.find('div.section-filtered_data');
         let detail = mainDiv.find('div.section-detail');
+        let modal = mainDiv.find('div.detail-modal');
         //let order = detail.find('div.order');
         let dds = mainDiv.find('div.section-dropdowns');
         let ddsp = dds.find('.supply_views_f0_список_поставщиков');
@@ -239,12 +285,14 @@
                 rqp.Command = 'Supply.F0.GetHeadDetail';
                 rqp.Parameters = [{ Name: 'uid', Value: order_uid }];
                 //console.log(rqp);
-                detail.html('');
+                //detail.html('');
                 Nskd.Http.post({
                     url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
-                        detail.html(data);
+                        //detail.html(data);
+                        modal.find('div.body').html(data);
+                        modal.show();
                     }
                 });
             },
@@ -257,12 +305,14 @@
                 rqp.Command = 'Supply.F0.GetTableDetail';
                 rqp.Parameters = [{ Name: 'uid', Value: order_table_uid }];
                 //console.log(rqp);
-                detail.html('');
+                //detail.html('');
                 Nskd.Http.post({
                     url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
-                        detail.html(data);
+                        //detail.html(data);
+                        modal.find('div.body').html(data);
+                        modal.show();
                     }
                 });
             },
