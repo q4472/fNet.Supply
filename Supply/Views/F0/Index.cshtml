@@ -53,19 +53,7 @@
             bottom: 0px;
             overflow: auto;
         }
-        /*
-        #supply_views_f0_index div.section-detail {
-            border-left: 2px solid green;
-            position: absolute;
-            left: 240px;
-            right: 0;
-            bottom: 0;
-            height: 280px;
-            background-color: #bbffbb;
-            overflow: hidden;
-        }
-        */
-        #supply_views_f0_index div.detail-modal {
+        #supply_views_f0_index div.detail {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
             z-index: 1; /* Sit on top */
@@ -78,24 +66,24 @@
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
 
-            #supply_views_f0_index div.detail-modal div.content {
+            #supply_views_f0_index div.detail div.content {
                 background-color: #bbffbb;
                 margin: 15% auto;
                 padding: 10px;
                 border: 1px solid #888;
-                width: 740px;
+                width: 840px;
                 height: 400px;
             }
 
-                #supply_views_f0_index div.detail-modal div.content div.header span {
+                #supply_views_f0_index div.detail div.content div.header span {
                     color: #aaa;
                     float: right;
                     font-size: 28px;
                     font-weight: bold;
                 }
 
-                    #supply_views_f0_index div.detail-modal div.content div.header span:hover,
-                    #supply_views_f0_index div.detail-modal div.content div.header span:focus {
+                    #supply_views_f0_index div.detail div.content div.header span:hover,
+                    #supply_views_f0_index div.detail div.content div.header span:focus {
                         color: black;
                         text-decoration: none;
                         cursor: pointer;
@@ -112,16 +100,14 @@
     <div class="section-filtered_data">
         @RenderPage("~/Views/F0/Table.cshtml", Model)
     </div>
-    <div class="section-detail">
-    </div>
     <div class="section-dropdowns">
         @RenderPage("~/Views/F0/СписокПоставщиков.cshtml", Model)
         @RenderPage("~/Views/F0/СписокСостоянийЗаказа.cshtml", Model)
     </div>
-    <div class="detail-modal">
+    <div class="detail">
         <div class="content">
             <div class="header">
-                <span onclick="$(this).closest('div.detail-modal').hide();">&times;</span>
+                <span onclick="$(this).closest('div.detail').hide();">&times;</span>
             </div>
             <div class="body">
             </div>
@@ -132,9 +118,7 @@
     var SupplyViewsF0Index = (function () {
         let mainDiv = $('#supply_views_f0_index');
         let filteredData = mainDiv.find('div.section-filtered_data');
-        let detail = mainDiv.find('div.section-detail');
-        let modal = mainDiv.find('div.detail-modal');
-        //let order = detail.find('div.order');
+        let detail = mainDiv.find('div.detail');
         let dds = mainDiv.find('div.section-dropdowns');
         let ddsp = dds.find('.supply_views_f0_список_поставщиков');
         let ddss = dds.find('.supply_views_f0_список_состояний_заказа');
@@ -291,8 +275,8 @@
                     rqp: rqp,
                     done: function (data) {
                         //detail.html(data);
-                        modal.find('div.body').html(data);
-                        modal.show();
+                        detail.find('div.body').html(data);
+                        detail.show();
                     }
                 });
             },
@@ -311,8 +295,8 @@
                     rqp: rqp,
                     done: function (data) {
                         //detail.html(data);
-                        modal.find('div.body').html(data);
-                        modal.show();
+                        detail.find('div.body').html(data);
+                        detail.show();
                     }
                 });
             },

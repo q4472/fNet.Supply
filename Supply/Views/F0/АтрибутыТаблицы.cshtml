@@ -63,7 +63,19 @@
                 </tr>
                 <tr>
                     <td>Примечание</td>
-                    <td colspan="3"><textarea name="примечание" rows="7" style="width: 300px;">@Model["примечание"]</textarea></td>
+                    <td colspan="3"><textarea name="примечание" rows="7" style="width: 320px;">@Model["примечание"]</textarea></td>
+                </tr>
+                <tr>
+                    <td>Примечание<br />менеджера продаж</td>
+                    <td colspan="3"><div style="width: 320px; height: 80px; overflow:auto">@Model["примечание_менеджера_продаж"]</div></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3">@((Model["срочно"] == "True") ? "Срочно!" : "")</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="3"><div style="width: 320px; height: 60px; overflow:auto">@Model["файлы"]</div></td>
                 </tr>
             </table>
         </div>
@@ -83,25 +95,25 @@
 </div>
 <script type="text/javascript">
     var SupplyViewsF0АтрибутыЦены = (function () {
-        let main = $('#supply_views_f0_атрибуты_цены');
-        main.find('input.datepicker').datepicker({
+        let mainDiv = $('#supply_views_f0_атрибуты_цены');
+        mainDiv.find('input.datepicker').datepicker({
             dateFormat: "mm.y",
             firstDay: 1,
             changeYear: true
         });
-        let buttonSave = main.find('input.button-save');
+        let buttonSave = mainDiv.find('input.button-save');
         buttonSave.click(function () {
             let e = $(this);
             e.prop('disabled', true);
             save();
         });
-        let inputs = main.find('input[name]');
+        let inputs = mainDiv.find('input[name]');
         {
             inputs.attr('data-modified', '0');
             inputs.change(onDataChange);
             inputs.keyup(onDataChange);
         }
-        let textareas = main.find('textarea[name]');
+        let textareas = mainDiv.find('textarea[name]');
         {
             textareas.attr('data-modified', '0');
             textareas.change(onDataChange);
@@ -135,14 +147,14 @@
                 }
             });
             if (rqp.Parameters.length > 0) {
-                rqp.Parameters.push({ Name: 'uid', Value: main.find('input.order-table-uid').val() });
+                rqp.Parameters.push({ Name: 'uid', Value: mainDiv.find('input.order-table-uid').val() });
                 rqp.Parameters.push({ Name: 'fields', Value: fields });
-                main.html('');
+                mainDiv.html('');
                 Nskd.Http.post({
                     url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
-                        main.parent().html(data);
+                        mainDiv.parent().html(data);
                     }
                 });
             }
