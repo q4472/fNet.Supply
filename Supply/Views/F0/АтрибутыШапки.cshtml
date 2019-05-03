@@ -61,13 +61,83 @@
 </div>
 <script type="text/javascript">
     var SupplyViewsF0_атрибуты_заказа = (function () {
-        let main = $('div#supply_views_f0_атрибуты_заказа');
-        let dateSelectors = main.find('input.date-selector');
-        dateSelectors.datepicker({
+        let mainDiv = $('div#supply_views_f0_атрибуты_заказа');
+        mainDiv.find('input.date-selector').datepicker({
             dateFormat: 'dd.mm.y',
             firstDay: 1,
-            defaultDate: 0
+            changeYear: true
         });
+        let buttonSave = mainDiv.find('input.button-save');
+        buttonSave.click(function () {
+            $(this).prop('disabled', true);
+            save();
+            SupplyViewsF0Index.hideDetail();
+        });
+        let inputs = mainDiv.find('input[name]');
+        {
+            inputs.attr('data-modified', '0');
+            inputs.change(onDataChange);
+            inputs.keyup(onDataChange);
+        }
+        let textareas = mainDiv.find('textarea[name]');
+        {
+            textareas.attr('data-modified', '0');
+            textareas.change(onDataChange);
+            textareas.keyup(onDataChange);
+        }
+        function onDataChange() {
+            $(this).attr('data-modified', '1');
+            buttonSave.prop('disabled', false);
+        }
+        function save() {
+            let rqp = {
+                SessionId: Nskd.Server.SessionId,
+                Command: 'Supply.F0.OrderHeadUpdate',
+                Parameters: []
+            };
+            inputs.each(function (index, element) {
+                let e = $(element);
+                if (e.attr('data-modified') == '1') {
+                    let table = e.closest('table');
+                    if (e.attr('name') == 'номер') {
+                        let v = {
+                            order_uid: table.attr('data-order_head_uid'),
+                            номер: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetOrderNum', Value: v });
+                    }
+                    if (e.attr('name') == 'дата_поставки') {
+                        let v = {
+                            order_uid: table.attr('data-order_head_uid'),
+                            дата_поставки: e.val()
+                        };
+                        rqp.Parameters.push({ Name: 'SetOrderSDate', Value: v });
+                    }
+                }
+            });
+            textareas.each(function (index, element) {
+                let e = $(element);
+                if (e.attr('data-modified') == '1') {
+                    let table = e.closest('table');
+                    let v = {
+                        order_uid: table.attr('data-order_head_uid'),
+                        примечание: e.val()
+                    };
+                    rqp.Parameters.push({ Name: 'SetOrderComment', Value: v });
+                }
+            });
+            //console.log(rqp); return;
+            if (rqp.Parameters.length > 0) {
+                //filteredData.html('');
+                Nskd.Http.post({
+                    url: '/supply/f0',
+                    rqp: rqp,
+                    done: function (data) {
+                        //filteredData.html(data);
+                    }
+                });
+            }
+        }
     })();
 </script>
 

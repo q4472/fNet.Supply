@@ -224,7 +224,6 @@
                 //console.log(rqp); return;
                 if (rqp.Parameters.length > 0) {
                     filteredData.html('');
-                    detail.html('');
                     Nskd.Http.post({
                         url: '/supply/f0',
                         rqp: rqp,
@@ -337,6 +336,9 @@
                     pars = SupplyViewsF0Filter.getFilterFormData();
                 }
                 return pars;
+            },
+            hideDetail: function () {
+                detail.hide();
             }
         };
     })();

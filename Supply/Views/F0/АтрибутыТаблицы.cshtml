@@ -75,7 +75,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td colspan="3"><div style="width: 320px; height: 60px; overflow:auto">@Model["файлы"]</div></td>
+                    <td colspan="3"><div style="width: 320px; height: 60px; overflow:auto">@(Model["файлы"].Replace(">", ">\n"))</div></td>
                 </tr>
             </table>
         </div>
@@ -103,9 +103,9 @@
         });
         let buttonSave = mainDiv.find('input.button-save');
         buttonSave.click(function () {
-            let e = $(this);
-            e.prop('disabled', true);
+            $(this).prop('disabled', true);
             save();
+            SupplyViewsF0Index.hideDetail();
         });
         let inputs = mainDiv.find('input[name]');
         {
