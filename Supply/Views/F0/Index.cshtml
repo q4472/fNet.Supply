@@ -164,7 +164,6 @@
                 rqp.Command = 'Supply.F0.OrderHeadUpdate';
                 rqp.Parameters = [];
                 let tInputs = filteredData.find('input[data-modified="1"]');
-                //console.log(inputs);
                 tInputs.each(function (index, element) {
                     let e = $(element);
                     let tr = e.closest('tr');
@@ -191,35 +190,6 @@
                         };
                         rqp.Parameters.push({ Name: 'SetX', Value: v });
                     }
-                });
-                let dInputs = detail.find('input[data-modified="1"]');
-                dInputs.each(function (index, element) {
-                    let e = $(element);
-                    let table = e.closest('table');
-                    if (e.attr('name') == 'номер') {
-                        let v = {
-                            order_uid: table.attr('data-order_head_uid'),
-                            номер: e.val()
-                        };
-                        rqp.Parameters.push({ Name: 'SetOrderNum', Value: v });
-                    }
-                    if (e.attr('name') == 'дата_поставки') {
-                        let v = {
-                            order_uid: table.attr('data-order_head_uid'),
-                            дата_поставки: e.val()
-                        };
-                        rqp.Parameters.push({ Name: 'SetOrderSDate', Value: v });
-                    }
-                });
-                let textareas = detail.find('textarea[data-modified="1"]');
-                textareas.each(function (index, element) {
-                    let e = $(element);
-                    let table = e.closest('table');
-                    let v = {
-                        order_uid: table.attr('data-order_head_uid'),
-                        примечание: e.val()
-                    };
-                    rqp.Parameters.push({ Name: 'SetOrderComment', Value: v });
                 });
                 //console.log(rqp); return;
                 if (rqp.Parameters.length > 0) {
@@ -324,11 +294,8 @@
                 }
                 return v;
             },
-            filteredDataSectionHtml: function (html) {
+            setFilteredData: function (html) {
                 filteredData.html(html);
-            },
-            detailSectionHtml: function (html) {
-                detail.html(html);
             },
             getFilterPars: function () {
                 let pars = [];

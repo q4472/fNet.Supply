@@ -148,13 +148,12 @@
                         Parameters: SupplyViewsF0Index.getFilterPars()
                     };
                     rqp.Parameters.push({ Name: 'uids', Value: uids });
-                    SupplyViewsF0Index.filteredDataSectionHtml('');
-                    SupplyViewsF0Index.detailSectionHtml('');
+                    SupplyViewsF0Index.setFilteredData('');
                     Nskd.Http.post({
                         url: '/supply/f0',
                         rqp: rqp,
                         done: function (data) {
-                            SupplyViewsF0Index.filteredDataSectionHtml(data);
+                            SupplyViewsF0Index.setFilteredData(data);
                         }
                     });
                 }
@@ -206,14 +205,13 @@
                     };
                     rqp.Parameters.push({ Name: 'id', Value: orderNum });
                     rqp.Parameters.push({ Name: 'uids', Value: uids });
-                    SupplyViewsF0Index.filteredDataSectionHtml('');
-                    SupplyViewsF0Index.detailSectionHtml('');
+                    SupplyViewsF0Index.setFilteredData('');
                     //console.log(rqp);
                     Nskd.Http.post({
                         url: '/supply/f0',
                         rqp: rqp,
                         done: function (data) {
-                            SupplyViewsF0Index.filteredDataSectionHtml(data);
+                            SupplyViewsF0Index.setFilteredData(data);
                         }
                     });
                 }
@@ -249,14 +247,13 @@
                     };
                     rqp.Parameters.push({ Name: 'uid', Value: iv.uid });
                     rqp.Parameters.push({ Name: 'qty', Value: rv });
-                    SupplyViewsF0Index.filteredDataSectionHtml('');
-                    SupplyViewsF0Index.detailSectionHtml('');
+                    SupplyViewsF0Index.setFilteredData('');
                     //console.log(rqp); return;
                     Nskd.Http.post({
                         url: '/supply/f0',
                         rqp: rqp,
                         done: function (data) {
-                            SupplyViewsF0Index.filteredDataSectionHtml(data);
+                            SupplyViewsF0Index.setFilteredData(data);
                         }
                     });
                 }

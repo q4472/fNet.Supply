@@ -101,13 +101,12 @@
                     Command: 'Supply.F0.ApplyFilter',
                     Parameters: getFilterFormData()
                 };
-                SupplyViewsF0Index.filteredDataSectionHtml('');
-                SupplyViewsF0Index.detailSectionHtml('');
+                SupplyViewsF0Index.setFilteredData('');
                 Nskd.Http.post({
                     url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
-                        SupplyViewsF0Index.filteredDataSectionHtml(data);
+                        SupplyViewsF0Index.setFilteredData(data);
                     }
                 });
             },

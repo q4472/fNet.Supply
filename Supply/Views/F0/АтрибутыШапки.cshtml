@@ -128,12 +128,12 @@
             });
             //console.log(rqp); return;
             if (rqp.Parameters.length > 0) {
-                //filteredData.html('');
+                SupplyViewsF0Index.setFilteredData('');
                 Nskd.Http.post({
                     url: '/supply/f0',
                     rqp: rqp,
                     done: function (data) {
-                        //filteredData.html(data);
+                        SupplyViewsF0Index.setFilteredData(data);
                     }
                 });
             }
