@@ -96,6 +96,9 @@ namespace FNet.Supply.Controllers
             {
                 switch (rqp.Command)
                 {
+                    case "Supply.F0.TestForUpdate":
+                        v = "q";
+                        break;
                     case "Supply.F0.AddRowsToOrder":
                         v = AddRowsToOrder();
                         break;

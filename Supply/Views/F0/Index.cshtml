@@ -53,6 +53,7 @@
             bottom: 0px;
             overflow: auto;
         }
+
         #supply_views_f0_index div.detail {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
@@ -96,6 +97,7 @@
     </div>
     <div class="section-command">
         @RenderPage("~/Views/F0/Command.cshtml")
+        <div class="transport"></div>
     </div>
     <div class="section-filtered_data">
         @RenderPage("~/Views/F0/Table.cshtml", Model)
@@ -126,6 +128,34 @@
         let rqp = {
             SessionId: Nskd.Server.SessionId
         };
+
+        let xhr = null;
+        let count = 0;
+        let transport = mainDiv.find('div.section-command div.transport');
+        setInterval(function () {
+            if (xhr) {
+                xhr.abort();
+                xhr = null;
+            } else {
+                count++;
+                xhr = Nskd.Http.post({
+                    url: 'supply/f0',
+                    rqp: {
+                        SessionId: Nskd.Server.SessionId,
+                        Command: 'Supply.F0.TestForUpdate',
+                        Parameters: null
+                    },
+                    wMsg: null,
+                    done: function (data) {
+                        transport.text('done' + count + data);
+                    },
+                    fail: function (data) {
+                        transport.text('fail' + count + data);
+                    }
+                });
+            }
+        }, 3000);
+
         return {
             selectButtonClick: function (span) { // в файле TableFieldSelect.cshtml
                 let s = $(span);
