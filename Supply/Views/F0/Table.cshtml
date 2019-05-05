@@ -58,7 +58,7 @@
                 @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
                 {
                     var tRow = Model.Data.Таблица[tri];
-                    <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]">
+                    <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]" data-order_table_timestamp="@tRow["timestamp", "yyyy.MM.ddTHH:mm:ss.fffffff"]">
                         <td style="border-top: none; border-right: none;"></td>
                         <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
                         <td colspan="4">@tRow["товар_описание"]</td>
@@ -141,7 +141,7 @@
                     {
                         var tRow = Model.Data.Таблица[tri];
                         if (tRow["parent_uid"] != hRow["uid"]) { continue; }
-                        <tr class="goods-info in-order-row" data-order_table_uid="@tRow["uid"]">
+                        <tr class="goods-info in-order-row" data-order_table_uid="@tRow["uid"]" data-order_table_timestamp="@tRow["timestamp", "yyyy.MM.ddTHH:mm:ss.fffffff"]">
                             <td style="border-top: none; border-right: none;"></td>
                             <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
                             <td colspan="4">@tRow["товар_описание"]</td>
