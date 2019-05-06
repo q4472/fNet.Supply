@@ -149,6 +149,7 @@ namespace FNet.Supply.Models
             }
             return dt;
         }
+
         public СтрокаДанных GetHeadDetail()
         {
             СтрокаДанных row = null;
@@ -376,6 +377,33 @@ namespace FNet.Supply.Models
                 }
             };
             ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
+        }
+        public String TestForUpdate()
+        {
+            String result = $"FNet.Supply.Models.F0Model.TestForUpdate({rqp["timestamp"]})\n";
+            RequestPackage rqp1 = new RequestPackage()
+            {
+                SessionId = rqp.SessionId,
+                Command = "[Supply].[dbo].[заказы_у_поставщиков_таблица_аудит__получить]",
+                Parameters = new RequestParameter[]
+                {
+                    new RequestParameter() { Name = "session_id", Value = rqp.SessionId },
+                    new RequestParameter() { Name = "timestamp", Value = ((String)rqp["timestamp"]).Replace("T", " ") }
+                }
+            };
+            ResponsePackage rsp1 = rqp1.GetResponse("http://127.0.0.1:11012");
+            if (rsp1 != null && rsp1.Data != null && rsp1.Data.Tables.Count > 0)
+            {
+                DataTable dt = rsp1.Data.Tables[0];
+                result = Nskd.JsonV3.ToString(dt);
+                /*
+                foreach(DataRow dr in dt.Rows)
+                {
+                    result += Nskd.JsonV3.ToString(dr.ItemArray);
+                }
+                */
+            }
+            return result;
         }
     }
 }

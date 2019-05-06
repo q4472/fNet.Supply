@@ -215,7 +215,18 @@ Nskd.Utility.DataTable = (function () {
                             for (var ci = 0; ci < cols.length; ci++) {
                                 var col = cols[ci];
                                 if (col && (col.columnName == columnName)) {
-                                    v = row[ci];
+                                    if (Nskd.Js.is(row, 'array')) {
+                                        // вариант до 2016-10-25
+                                        v = row[ci];
+                                    } else if (Nskd.Js.is(row, 'object') &&
+                                        Nskd.Js.is(row.itemArray, 'array') &&
+                                        Nskd.Js.is(row.rowState, 'string')) {
+                                        // новый вариант
+                                        v = row.itemArray[ci];
+                                    } else {
+                                        // не то не сё
+                                        v = null;
+                                    }
                                     break;
                                 }
                             }

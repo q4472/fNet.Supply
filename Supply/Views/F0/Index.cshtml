@@ -129,32 +129,51 @@
             SessionId: Nskd.Server.SessionId
         };
 
-        let xhr = null;
-        let count = 0;
-        let transport = mainDiv.find('div.section-command div.transport');
-        setInterval(function () {
-            if (xhr) {
-                xhr.abort();
-                xhr = null;
-            } else {
-                count++;
-                xhr = Nskd.Http.post({
-                    url: 'supply/f0',
-                    rqp: {
-                        SessionId: Nskd.Server.SessionId,
-                        Command: 'Supply.F0.TestForUpdate',
-                        Parameters: null
-                    },
-                    wMsg: null,
-                    done: function (data) {
-                        transport.text('done' + count + data);
-                    },
-                    fail: function (data) {
-                        transport.text('fail' + count + data);
-                    }
-                });
+        let notInOrderRows = filteredData.find('tr.goods-info.not-in-order-row');
+        let firstTimestamp = null;
+        notInOrderRows.each(function (index, element) {
+            let temp = element.getAttribute('data-order_table_timestamp');
+            if (firstTimestamp == null || firstTimestamp > temp) {
+                firstTimestamp = temp;
             }
-        }, 3000);
+        });
+        if (firstTimestamp != null) {
+            let xhr = null;
+            let count = 0;
+            let transport = mainDiv.find('div.section-command div.transport');
+            setInterval(function () {
+                if (xhr != null) {
+                    xhr.abort();
+                    xhr = null;
+                } else {
+                    count++;
+                    xhr = Nskd.Http.post({
+                        url: '/supply/f0',
+                        rqp: {
+                            SessionId: Nskd.Server.SessionId,
+                            Command: 'Supply.F0.TestForUpdate',
+                            Parameters: [{ Name: 'timestamp', Value: firstTimestamp }]
+                        },
+                        wMsg: null,
+                        done: function (data) {
+                            let updateLogTable = Nskd.Json.parse(data); 
+                            let updates = 'done ' + count;
+                            if (updateLogTable != null && updateLogTable.rows) {
+                                $(updateLogTable.rows).each(function (index, value) {
+                                    let tUid = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "uid");
+                                    let датаПоставки = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "дата_поставки");
+                                    updates += ' ' + tUid + ' ' + датаПоставки;
+                                });
+                            }
+                            transport.text(updates);
+                        },
+                        fail: function (data) {
+                            transport.text('fail ' + count + ' ' + data);
+                        }
+                    });
+                }
+            }, 3000);
+        }
 
         return {
             selectButtonClick: function (span) { // в файле TableFieldSelect.cshtml

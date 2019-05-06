@@ -9,11 +9,20 @@ namespace FNet.Supply.Controllers
     {
         private Object v;
         private RequestPackage rqp;
+        F0Model m;
 
+        private Object TestForUpdate()
+        {
+            v += $"TestForUpdate({Nskd.Json.ToString(rqp)})\n";
+            try {
+                v = m.TestForUpdate();
+            }
+            catch (Exception e) { v += e.Message; }
+            return v;
+        }
         private Object AddRowsToOrder()
         {
-            //v += $"AddRowsToOrder({Nskd.Json.ToString(rqp)})";
-            F0Model m = new F0Model(rqp);
+            //v += $"AddRowsToOrder({Nskd.Json.ToString(rqp)})\n";
             m.AddRowsToOrder();
             m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
@@ -21,8 +30,7 @@ namespace FNet.Supply.Controllers
         }
         private Object SplitRow()
         {
-            //v += $"SplitRow({Nskd.Json.ToString(rqp)})";
-            F0Model m = new F0Model(rqp);
+            //v += $"SplitRow({Nskd.Json.ToString(rqp)})\n";
             m.SplitRow();
             m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
@@ -30,8 +38,7 @@ namespace FNet.Supply.Controllers
         }
         private Object SetAsFree()
         {
-            //v += $"SetAsFree({Nskd.Json.ToString(rqp)})";
-            F0Model m = new F0Model(rqp);
+            //v += $"SetAsFree({Nskd.Json.ToString(rqp)})\n";
             m.SetAsFree();
             m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
@@ -39,8 +46,7 @@ namespace FNet.Supply.Controllers
         }
         private Object ApplyFilter()
         {
-            //v += $"ApplyFilter({Nskd.Json.ToString(rqp)})";
-            F0Model m = new F0Model(rqp);
+            //v += $"ApplyFilter({Nskd.Json.ToString(rqp)})\n";
             m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
             return v;
@@ -48,7 +54,6 @@ namespace FNet.Supply.Controllers
         private Object GetTableDetail()
         {
             //v += $"GetTableDetail({Nskd.Json.ToString(rqp)})\n";
-            F0Model m = new F0Model(rqp);
             var items = m.GetTableDetail();
             v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
             return v;
@@ -56,15 +61,13 @@ namespace FNet.Supply.Controllers
         private Object OrderTableUpdate()
         {
             //v += $"OrderTableUpdate({Nskd.Json.ToString(rqp)})\n";
-            F0Model m = new F0Model(rqp);
             m.OrderTableUpdate();
             //v = PartialView("~/Views/F0/АтрибутыТаблицы.cshtml", items);
             return v;
         }
         private Object SetSupplier()
         {
-            //v += $"SetSupplier({Nskd.Json.ToString(rqp)})";
-            F0Model m = new F0Model(rqp);
+            //v += $"SetSupplier({Nskd.Json.ToString(rqp)})\n";
             m.SetSupplier();
             m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
@@ -73,7 +76,6 @@ namespace FNet.Supply.Controllers
         private Object GetHeadDetail()
         {
             //v += $"GetHeadDetail({Nskd.Json.ToString(rqp)})\n";
-            F0Model m = new F0Model(rqp);
             var items = m.GetHeadDetail();
             v = PartialView("~/Views/F0/АтрибутыШапки.cshtml", items);
             return v;
@@ -81,7 +83,6 @@ namespace FNet.Supply.Controllers
         private Object OrderHeadUpdate()
         {
             v += $"OrderHeadUpdate({Nskd.Json.ToString(rqp)})\n";
-            F0Model m = new F0Model(rqp);
             m.OrderHeadUpdate();
             m.ApplyFilter();
             v = PartialView("~/Views/F0/Table.cshtml", m);
@@ -94,10 +95,11 @@ namespace FNet.Supply.Controllers
             rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
             if (rqp != null)
             {
+                m = new F0Model(rqp);
                 switch (rqp.Command)
                 {
                     case "Supply.F0.TestForUpdate":
-                        v = "q";
+                        v = TestForUpdate();
                         break;
                     case "Supply.F0.AddRowsToOrder":
                         v = AddRowsToOrder();
@@ -128,7 +130,6 @@ namespace FNet.Supply.Controllers
                         break;
                     default:
                         //v += $"Неизвестная команда: '{rqp.Command}'.\n";
-                        F0Model m = new F0Model(rqp);
                         m.ApplyFilter();
                         v = PartialView("~/Views/F0/Index.cshtml", m);
                         break;
