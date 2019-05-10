@@ -75,7 +75,18 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td colspan="3"><div style="width: 320px; height: 60px; overflow:auto">@(Model["файлы"].Replace(">", ">\n"))</div></td>
+                    <td colspan="3">
+                        @{
+                            String[] files = Model["файлы"].Split(new String[] { "<file>" }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (String file in files)
+                            {
+                                // <id>h{8}</id><name>.*</name>
+                                String fileId = file.Substring(4, 8);
+                                String fileName = file.Substring(23, file.IndexOf("</name>") - 23);
+                                <a href="/supply/f0/filedownload/@fileId">@fileName</a><br />
+                            }
+                        }
+                    </td>
                 </tr>
             </table>
         </div>

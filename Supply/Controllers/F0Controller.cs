@@ -14,7 +14,8 @@ namespace FNet.Supply.Controllers
         private Object TestForUpdate()
         {
             v += $"TestForUpdate({Nskd.Json.ToString(rqp)})\n";
-            try {
+            try
+            {
                 v = m.TestForUpdate();
             }
             catch (Exception e) { v += e.Message; }
@@ -92,6 +93,18 @@ namespace FNet.Supply.Controllers
         public Object Index()
         {
             v = "FNet.Supply.Controllers.F0Controller.Index()\n";
+            if (Request.HttpMethod == "GET" && Request.Path.Length == 32 && Request.Path.Substring(0, 24) == "/supply/f0/filedownload/")
+            {
+                // Path = "/supply/f0/filedownload/01cc6f8b"
+                String fileId = Request.Path.Substring(24, 8);
+                Object[] file = F0Model.FileDownload(fileId);
+                String fileName = (String)file[0];
+                Byte[] fileStreamBuffer = (Byte[])file[1];
+                FileContentResult fileContentResult = new FileContentResult(fileStreamBuffer, "application/octet-stream");
+                fileContentResult.FileDownloadName = fileName;
+                return fileContentResult;
+
+            }
             rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
             if (rqp != null)
             {

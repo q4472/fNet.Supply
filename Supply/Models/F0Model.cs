@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Data;
+using System.IO;
 using static FNet.Supply.Models.Lib;
 
 namespace FNet.Supply.Models
@@ -156,7 +157,8 @@ namespace FNet.Supply.Models
             if (rqp != null && rqp.SessionId != null)
             {
                 Guid.TryParse(rqp["uid"] as String, out Guid uid);
-                RequestPackage rqp1 = new RequestPackage() {
+                RequestPackage rqp1 = new RequestPackage()
+                {
                     SessionId = rqp.SessionId,
                     Command = "Supply.dbo.заказы_у_поставщиков_шапка__получить",
                     Parameters = new RequestParameter[]
@@ -404,6 +406,25 @@ namespace FNet.Supply.Models
                 */
             }
             return result;
+        }
+        public static Object[] FileDownload(String fileId)
+        {
+            String fileName = null;
+            Byte[] fileStreamBuffer = null;
+            String absoluteDirectoryPath = @"\\TS\sotrudniki\Соколов Евгений Анатольевич\DeliverySchedule\F3";
+            DirectoryInfo di = new DirectoryInfo(absoluteDirectoryPath);
+            FileInfo[] files = di.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                if (file.Name.Length > 8 && file.Name.Substring(0, 8) == fileId)
+                {
+                    fileName = file.Name.Substring(9, file.Name.Length - 9);
+                    FileStream fileStream = file.OpenRead();
+                    fileStreamBuffer = new Byte[fileStream.Length];
+                    fileStream.Read(fileStreamBuffer, 0, fileStreamBuffer.Length);
+                }
+            }
+            return new Object[] { fileName, fileStreamBuffer }; 
         }
     }
 }
