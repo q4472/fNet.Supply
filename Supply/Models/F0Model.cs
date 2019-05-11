@@ -9,6 +9,8 @@ namespace FNet.Supply.Models
 {
     public class F0Model
     {
+        private const String absoluteExchangeDirectoryPath = @"\\TS\sotrudniki\Соколов Евгений Анатольевич\DeliverySchedule\F3";
+
         private RequestPackage rqp;
         public FilterData Filter;
         public FilteredData Data;
@@ -411,17 +413,17 @@ namespace FNet.Supply.Models
         {
             String fileName = null;
             Byte[] fileStreamBuffer = null;
-            String absoluteDirectoryPath = @"\\TS\sotrudniki\Соколов Евгений Анатольевич\DeliverySchedule\F3";
-            DirectoryInfo di = new DirectoryInfo(absoluteDirectoryPath);
+            DirectoryInfo di = new DirectoryInfo(absoluteExchangeDirectoryPath);
             FileInfo[] files = di.GetFiles();
             foreach (FileInfo file in files)
             {
-                if (file.Name.Length > 8 && file.Name.Substring(0, 8) == fileId)
+                if (file.Name.Length > 9 && file.Name.Substring(0, 8) == fileId && file.Length < Int32.MaxValue)
                 {
                     fileName = file.Name.Substring(9, file.Name.Length - 9);
+                    fileStreamBuffer = new Byte[file.Length];
                     FileStream fileStream = file.OpenRead();
-                    fileStreamBuffer = new Byte[fileStream.Length];
-                    fileStream.Read(fileStreamBuffer, 0, fileStreamBuffer.Length);
+                    fileStream.Read(fileStreamBuffer, 0, (Int32)file.Length);
+                    fileStream.Close();
                 }
             }
             return new Object[] { fileName, fileStreamBuffer }; 
