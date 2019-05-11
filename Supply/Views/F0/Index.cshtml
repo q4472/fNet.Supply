@@ -162,7 +162,8 @@
                                 $(updateLogTable.rows).each(function (index, value) {
                                     let tUid = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "uid");
                                     let датаПоставки = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "дата_поставки");
-                                    updates += ' ' + tUid + ' ' + датаПоставки;
+                                    let примечание = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "примечание");
+                                    updates += ' ' + tUid + ' ' + датаПоставки + примечание;
                                 });
                             }
                             transport.text(updates);

@@ -69,7 +69,7 @@
                         <td>@tRow["товар_спецификация_менеджер"]</td>
                         <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
                         <td>@tRow["аукцион_номер"]</td>
-                        <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["примечание"]</td>
+                        <td class="товар-примечание" onclick="SupplyViewsF0Index.showTableDetail(this);">@(Html.Raw(tRow["примечание"]))</td>
                     </tr>
                 }
                 <tr style="border: 1px solid black"></tr>
@@ -181,8 +181,7 @@
                 }
                 tr.find('td.товар-примечание:contains("дефект")').addClass('дефектура');
                 tr.find('td.товар-примечание:contains("Дефект")').addClass('дефектура');
-                tr.find('td.товар-примечание:contains("срочно")').addClass('срочно');
-                tr.find('td.товар-примечание:contains("Срочно")').addClass('срочно');
+                tr.find('td.товар-примечание:contains("!!")').addClass('срочно');
             });
         }
         return {

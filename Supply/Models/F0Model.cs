@@ -400,12 +400,6 @@ namespace FNet.Supply.Models
             {
                 DataTable dt = rsp1.Data.Tables[0];
                 result = Nskd.JsonV3.ToString(dt);
-                /*
-                foreach(DataRow dr in dt.Rows)
-                {
-                    result += Nskd.JsonV3.ToString(dr.ItemArray);
-                }
-                */
             }
             return result;
         }
