@@ -156,14 +156,26 @@
                         },
                         wMsg: null,
                         done: function (data) {
-                            let updateLogTable = Nskd.Json.parse(data); 
+                            let updateLogTable = Nskd.Json.parse(data);
                             let updates = 'done ' + count;
                             if (updateLogTable != null && updateLogTable.rows) {
                                 $(updateLogTable.rows).each(function (index, value) {
+
+                                    // разбираем запись таблицы аудита
+                                    let aTime = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "a_time");
                                     let tUid = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "uid");
-                                    let датаПоставки = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "дата_поставки");
                                     let примечание = Nskd.Utility.DataTable.getValueByColumnName(updateLogTable, index, "примечание");
-                                    updates += ' ' + tUid + ' ' + датаПоставки + примечание;
+
+                                    // строка в таблице на экране
+                                    let tr = filteredData.find('tr.goods-info.not-in-order-row[data-order_table_uid="' + tUid + '"]');
+                                    let trTime = parseDateTime(tr.attr('data-order_table_timestamp'));
+
+                                    // проверяем ксть ли что-то новое
+                                    if (aTime > trTime) {
+                                        tr.attr('data-order_table_timestamp', toDateTimeString(aTime))
+                                        tr.find('td.товар-примечание').html(примечание);
+                                        updates += ' +';
+                                    }
                                 });
                             }
                             transport.text(updates);
@@ -176,6 +188,27 @@
             }, 3000);
         }
 
+        function parseDateTime(str) {
+            return new Date(
+                parseInt(str.substr(0, 4)),
+                parseInt(str.substr(5, 2)) - 1,
+                parseInt(str.substr(8, 2)),
+                parseInt(str.substr(11, 2)),
+                parseInt(str.substr(14, 2)),
+                parseInt(str.substr(17, 2)),
+                parseInt(str.substr(20, 3))
+            );
+        }
+        function toDateTimeString(date) {
+            let y = '' + date.getFullYear();
+            let M = '' + (date.getMonth() + 1); if (M.length < 2) M = '0' + M;
+            let d = '' + date.getDate();  if (d.length < 2) d = '0' + d;
+            let h = '' + date.getHours();  if (h.length < 2) h = '0' + h;
+            let m = '' + date.getMinutes();  if (m.length < 2) m = '0' + m;
+            let s = '' + date.getSeconds(); if (s.length < 2) s = '0' + s;
+            let f = '' + date.getMilliseconds(); while (f.length < 3) f = '0' + f;
+            return '' + y + '-' + M + '-' + d + ' ' + h + ':' + m + ':' + s + '.' + f;
+        }
         return {
             selectButtonClick: function (span) { // в файле TableFieldSelect.cshtml
                 let s = $(span);

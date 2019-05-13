@@ -403,24 +403,25 @@ namespace FNet.Supply.Models
             }
             return result;
         }
-        public static Object[] FileDownload(String fileId)
+        public static (String, Byte[]) FileDownload(String fileId)
         {
-            String fileName = null;
-            Byte[] fileStreamBuffer = null;
+            (String FileName, Byte[] FileContents) c = (null, null);
             DirectoryInfo di = new DirectoryInfo(absoluteExchangeDirectoryPath);
             FileInfo[] files = di.GetFiles();
             foreach (FileInfo file in files)
             {
                 if (file.Name.Length > 9 && file.Name.Substring(0, 8) == fileId && file.Length < Int32.MaxValue)
                 {
-                    fileName = file.Name.Substring(9, file.Name.Length - 9);
-                    fileStreamBuffer = new Byte[file.Length];
-                    FileStream fileStream = file.OpenRead();
-                    fileStream.Read(fileStreamBuffer, 0, (Int32)file.Length);
-                    fileStream.Close();
+                    c.FileName = file.Name.Substring(9, file.Name.Length - 9);
+                    c.FileContents = new Byte[file.Length];
+                    using (FileStream fileStream = file.OpenRead())
+                    {
+                        fileStream.Read(c.FileContents, 0, (Int32)file.Length);
+                    }
+                    break;
                 }
             }
-            return new Object[] { fileName, fileStreamBuffer }; 
+            return c; 
         }
     }
 }

@@ -97,13 +97,10 @@ namespace FNet.Supply.Controllers
             {
                 // Path = "/supply/f0/filedownload/01cc6f8b"
                 String fileId = Request.Path.Substring(24, 8);
-                Object[] file = F0Model.FileDownload(fileId);
-                String fileName = (String)file[0];
-                Byte[] fileStreamBuffer = (Byte[])file[1];
-                FileContentResult fileContentResult = new FileContentResult(fileStreamBuffer, "application/octet-stream");
-                fileContentResult.FileDownloadName = fileName;
+                var (FileName, FileContents) = F0Model.FileDownload(fileId);
+                FileContentResult fileContentResult = new FileContentResult(FileContents, "application/octet-stream");
+                fileContentResult.FileDownloadName = FileName;
                 return fileContentResult;
-
             }
             rqp = RequestPackage.ParseRequest(Request.InputStream, Request.ContentEncoding);
             if (rqp != null)

@@ -58,14 +58,14 @@
                 @for (int tri = 0; tri < Model.Data.Таблица.RowsCount; tri++)
                 {
                     var tRow = Model.Data.Таблица[tri];
-                    <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]" data-order_table_timestamp="@tRow["timestamp", "yyyy.MM.ddTHH:mm:ss.fffffff"]">
+                    <tr class="goods-info not-in-order-row" data-order_table_uid="@tRow["uid"]" data-order_table_timestamp="@tRow["timestamp", "yyyy-MM-dd HH:mm:ss.fffffff"]">
                         <td style="border-top: none; border-right: none;"></td>
                         <td style="border-top: none;"><input type="checkbox" name="выбрано" data-modified="0" /></td>
                         <td colspan="4">@tRow["товар_описание"]</td>
                         <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td>
                         <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td>
                         <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
-                        <td style="text-align: right">@tRow["дата_поставки"]</td>
+                        <td class="товар-дата-поставки" style="text-align: right">@tRow["дата_поставки"]</td>
                         <td>@tRow["товар_спецификация_менеджер"]</td>
                         <td style="text-align: right;">@tRow["передано_в_закупку_время"]</td>
                         <td>@tRow["аукцион_номер"]</td>
@@ -148,7 +148,7 @@
                             <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["цена1"]</td>
                             <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["количество1", "n0"]</td>
                             <td style="text-align: right" onclick="SupplyViewsF0Index.showTableDetail(this);">@tRow["срок_годности1", "MM.yy"]</td>
-                            <td style="text-align: right">@tRow["дата_поставки"]</td>
+                            <td class="товар-дата-поставки" style="text-align: right">@tRow["дата_поставки"]</td>
                             <td>@tRow["товар_спецификация_менеджер"]</td>
                             <td style="text-align: right">@tRow["передано_в_закупку_время"]</td>
                             <td>@tRow["аукцион_номер"]</td>
